@@ -17,6 +17,7 @@
             <a href="/operateur/dashboard"><i class="ti ti-layout-dashboard"></i> Tableau de bord</a>
             <a href="/users"><i class="ti ti-users"></i> Utilisateurs</a>
             <a href="/configurations"><i class="ti ti-settings"></i> Configurations</a>
+            <a href="/operateur"><i class="ti ti-building-bank"></i> Opérateurs</a>
             <a href="/type-operations"><i class="ti ti-category"></i> Types d'operation</a>
             <a href="/frais-operations"><i class="ti ti-receipt-2"></i> Frais d'operation</a>
             <a href="/operateur/situation-gain" class="active"><i class="ti ti-chart-bar"></i> Situation des gains</a>
@@ -31,11 +32,13 @@
         <h1 style="margin-bottom:20px;">Situation des gains</h1>
 
         <?php if ($error): ?>
-            <div class="alert error" style="margin:0 0 16px;"><i class="ti ti-alert-circle"></i> <?= esc($error) ?></div>
+            <div class="alert error" style="margin:0 0 16px;"><i class="ti ti-alert-circle"></i> <?= esc($error) ?>
+            </div>
         <?php endif; ?>
 
         <div class="form-card" style="margin-bottom:24px;">
-            <form method="get" action="/operateur/situation-gain" style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;">
+            <form method="get" action="/operateur/situation-gain"
+                  style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;">
                 <div class="field" style="margin-bottom:0;flex:1;min-width:180px;">
                     <label>Jusqu'au</label>
                     <input type="date" name="date" value="<?= esc($date) ?>">
@@ -47,16 +50,157 @@
         </div>
 
         <?php if ($situation): ?>
+
             <div class="stat-grid">
+
+
                 <div class="stat-card">
-                    <div class="stat-label"><i class="ti ti-coin"></i> Gain total</div>
-                    <div class="stat-value"><?= esc(number_format((float) $situation['total_gain'], 0, ',', ' ')) ?> Ar</div>
+
+                    <div class="stat-label">
+                        <i class="ti ti-building-bank"></i>
+                        Gain opérateur principal
+                    </div>
+
+                    <div class="stat-value">
+
+                        <?= esc(
+                                number_format(
+                                        (float)$situation['total_operateur_principal'],
+                                        0,
+                                        ',',
+                                        ' '
+                                )
+                        ) ?> Ar
+
+                    </div>
+
                 </div>
+
+
                 <div class="stat-card">
-                    <div class="stat-label"><i class="ti ti-arrows-exchange"></i> Transactions</div>
-                    <div class="stat-value"><?= esc($situation['nombre_transaction']) ?></div>
+
+                    <div class="stat-label">
+
+                        <i class="ti ti-building-community"></i>
+
+                        Gain autres opérateurs
+
+                    </div>
+
+
+                    <div class="stat-value">
+
+                        <?= esc(
+                                number_format(
+                                        (float)$situation['total_autres_operateurs'],
+                                        0,
+                                        ',',
+                                        ' '
+                                )
+                        ) ?> Ar
+
+
+                    </div>
+
+
                 </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-label">
+
+                        <i class="ti ti-arrows-exchange"></i>
+
+                        Transactions
+
+                    </div>
+
+
+                    <div class="stat-value">
+
+                        <?= esc($situation['nombre_transaction']) ?>
+
+                    </div>
+
+
+                </div>
+
+
             </div>
+
+
+        <?php endif; ?>
+
+        <?php if ($situation): ?>
+
+            <div class="table-card" style="margin-top:24px;">
+
+                <table class="data">
+
+                    <tr>
+                        <th>Type opération</th>
+                        <th>Gain opérateur principal</th>
+                        <th>Gain autre opérateur</th>
+                        <th>Nombre transactions</th>
+                    </tr>
+
+
+                    <?php foreach ($situation['par_operation'] as $ligne): ?>
+
+
+                        <tr>
+
+                            <td>
+                                <?= esc($ligne['type_operation_libelle']) ?>
+                            </td>
+
+
+                            <td class="money">
+
+                                <?= esc(
+                                        number_format(
+                                                (float)$ligne['gain_operateur_principal'],
+                                                0,
+                                                ',',
+                                                ' '
+                                        )
+                                ) ?> Ar
+
+                            </td>
+
+
+                            <td class="money">
+
+                                <?= esc(
+                                        number_format(
+                                                (float)$ligne['gain_autre_operateur'],
+                                                0,
+                                                ',',
+                                                ' '
+                                        )
+                                ) ?> Ar
+
+                            </td>
+
+
+                            <td>
+
+                                <?= esc($ligne['nombre_transaction']) ?>
+
+                            </td>
+
+
+                        </tr>
+
+
+                    <?php endforeach; ?>
+
+
+                </table>
+
+            </div>
+
         <?php endif; ?>
 
     </main>

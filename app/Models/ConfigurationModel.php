@@ -17,14 +17,13 @@ class ConfigurationModel extends Model
     ];
 
     protected $validationRules = [
-        'prefix' => 'required|max_length[10]|is_unique[configuration.prefix,id,{id}]',
+        'prefix' => 'required|max_length[10]',
         'operateur_id' => 'required',
     ];
 
     protected $validationMessages = [
         'prefix' => [
-            'required' => 'Le préfixe est obligatoire.',
-            'is_unique' => 'Ce préfixe existe déjà.'
+            'required' => 'Le préfixe est obligatoire.'
         ],
         'operateur_id' => [
             'required' => 'L\'operateur est obligatoire.',

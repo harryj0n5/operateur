@@ -19,7 +19,7 @@ class ConfigurationService
     public function getAll(): array
     {
         return $this->configurationModel
-            ->select('configuration.*, operateur.libelle as operateur_libelle')
+            ->select('configuration.*, operateur.libelle as operateur_libelle, operateur.principale as is_principale')
             ->join('operateur', 'operateur.id = configuration.operateur_id')
             ->findAll();
     }
@@ -43,10 +43,10 @@ class ConfigurationService
 
     public function create(array $data): array
     {
-        $data['prefix'] = trim((string) ($data['prefix'] ?? ''));
+        $data['prefix'] = trim((string)($data['prefix'] ?? ''));
 
         if (!empty($data['operateur_id'])) {
-            $this->verifierOperateur((int) $data['operateur_id']);
+            $this->verifierOperateur((int)$data['operateur_id']);
         }
 
         $id = $this->configurationModel->insert($data);
@@ -68,10 +68,10 @@ class ConfigurationService
             throw new \RuntimeException("Configuration introuvable.");
         }
 
-        $data['prefix'] = trim((string) ($data['prefix'] ?? ''));
+        $data['prefix'] = trim((string)($data['prefix'] ?? ''));
 
         if (!empty($data['operateur_id'])) {
-            $this->verifierOperateur((int) $data['operateur_id']);
+            $this->verifierOperateur((int)$data['operateur_id']);
         }
 
         $updated = $this->configurationModel->update($id, $data);
