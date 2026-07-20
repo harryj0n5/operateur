@@ -31,7 +31,7 @@ $routes->post(
 );
 
 
-$routes->get(
+$routes->post(
     'users/delete/(:num)',
     'UserController::delete/$1'
 );
