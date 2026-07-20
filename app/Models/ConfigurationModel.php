@@ -16,14 +16,13 @@ class ConfigurationModel extends Model
     ];
 
     protected $validationRules = [
-        'prefix' => 'required|min_length[1]|max_length[20]'
+        'prefix' => 'required|max_length[10]|is_unique[configuration.prefix]'
     ];
 
     protected $validationMessages = [
         'prefix' => [
             'required' => 'Le préfixe est obligatoire.',
-            'min_length' => 'Le préfixe doit contenir au moins 1 caractère.',
-            'max_length' => 'Le préfixe ne doit pas dépasser 20 caractères.'
+            'is_unique' => 'Ce préfixe existe déjà.'
         ]
     ];
 }

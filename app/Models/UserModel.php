@@ -10,31 +10,33 @@ class UserModel extends Model
     protected $primaryKey = 'id';
 
     protected $returnType = 'array';
-    protected $useAutoIncrement = true;
 
     protected $allowedFields = [
         'telephone',
-        'idtypeUser'
+        'solde',
+        'type_user_id'
     ];
 
-    protected $useTimestamps = false;
-
     protected $validationRules = [
-        'telephone' => 'required|min_length[10]|max_length[15]|is_unique[user.telephone]',
-        'idtypeUser' => 'required|integer'
+        'telephone' => 'required|max_length[15]|is_unique[user.telephone]',
+        'solde' => 'required|numeric',
+        'type_user_id' => 'required|integer'
     ];
 
     protected $validationMessages = [
         'telephone' => [
             'required' => 'Le téléphone est obligatoire.',
-            'min_length' => 'Le téléphone doit contenir au moins 10 caractères.',
-            'max_length' => 'Le téléphone ne doit pas dépasser 15 caractères.',
-            'is_unique' => 'Ce téléphone existe déjà.'
+            'is_unique' => 'Ce numéro existe déjà.'
         ],
 
-        'idtypeUser' => [
+        'solde' => [
+            'required' => 'Le solde est obligatoire.',
+            'numeric' => 'Le solde doit être numérique.'
+        ],
+
+        'type_user_id' => [
             'required' => 'Le type utilisateur est obligatoire.',
-            'integer' => 'Le type utilisateur doit être un nombre.'
+            'integer' => 'Le type utilisateur est invalide.'
         ]
     ];
 }
