@@ -15,18 +15,17 @@ class HistoriqueTransactionModel extends Model
         'montant',
         'frais',
         'type_mouvement',
-        'solde_apres',
         'date',
         'user_id',
-        'destinataire_id',
-        'type_operation_id'
+        'destinataire_numero',
+        'type_operation_id',
+        'frais_retrait_inclus'
     ];
 
     protected $validationRules = [
         'montant' => 'required|numeric',
         'frais' => 'required|numeric',
         'type_mouvement' => 'required|in_list[credit,debit]',
-        'solde_apres' => 'required|numeric',
         'user_id' => 'required|integer',
         'type_operation_id' => 'required|integer'
     ];
@@ -45,11 +44,6 @@ class HistoriqueTransactionModel extends Model
         'type_mouvement' => [
             'required' => 'Le type de mouvement est obligatoire.',
             'in_list' => 'Le mouvement doit être credit ou debit.'
-        ],
-
-        'solde_apres' => [
-            'required' => 'Le solde après opération est obligatoire.',
-            'numeric' => 'Le solde doit être numérique.'
         ],
 
         'user_id' => [
