@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 $prefixes = $prefixes ?? [];
 $prefixesStr = implode(',', $prefixes); // ex: "033,037"
 $placeholder = !empty($prefixes)
         ? 'Ex: ' . $prefixes[0] . 'XXXXXXX'
-        : 'Numéro de téléphone';
+        : 'Numero de telephone';
 ?>
 
 <!doctype html>
@@ -12,9 +12,7 @@ $placeholder = !empty($prefixes)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vola - Connexion</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
@@ -43,11 +41,11 @@ $placeholder = !empty($prefixes)
 
     <div class="auth-card">
         <h1>Connexion</h1>
-        <p class="sub">Entrez votre numéro pour accéder à votre compte.</p>
+        <p class="sub">Entrez votre numero pour acceder a votre compte.</p>
 
         <form id="loginForm">
             <div class="field">
-                <label for="telephone">Numéro de téléphone</label>
+                <label for="telephone">Numero de telephone</label>
                 <input
                         type="tel"
                         id="telephone"
@@ -57,7 +55,7 @@ $placeholder = !empty($prefixes)
                         required
                 >
                 <div class="hint">
-                    <span class="chip-hint"><i class="ti ti-shield-check"></i> Préfixes acceptés : <?= esc(implode(', ', $prefixes)) ?></span>
+                    <span class="chip-hint"><i class="ti ti-shield-check"></i> Prefixes acceptes : <?= esc(implode(', ', $prefixes)) ?></span>
                 </div>
             </div>
 
@@ -87,10 +85,10 @@ $placeholder = !empty($prefixes)
         event.preventDefault();
         const telephone = telephoneInput.value.trim();
 
-        // Vérification côté client avant même d'appeler l'API
+        // Verification cote client avant meme d'appeler l'API
         const prefixeValide = prefixesAutorises.some(p => telephone.startsWith(p));
         if (prefixesAutorises.length && !prefixeValide) {
-            showError('Le numéro doit commencer par : ' + prefixesAutorises.join(', '));
+            showError('Le numero doit commencer par : ' + prefixesAutorises.join(', '));
             return;
         }
 
@@ -111,10 +109,12 @@ $placeholder = !empty($prefixes)
                 showError(data.error);
             }
         } catch (error) {
-            showError('Une erreur est survenue. Veuillez réessayer.');
+            showError('Une erreur est survenue. Veuillez reessayer.');
         }
     });
 </script>
 
 </body>
 </html>
+
+

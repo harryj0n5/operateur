@@ -1,12 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vola - Retrait</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
@@ -31,12 +29,12 @@
             <?= csrf_field() ?>
 
             <div class="field">
-                <label for="montant">Montant à retirer</label>
+                <label for="montant">Montant a retirer</label>
                 <div class="amount-input-wrap">
                     <input type="number" id="montant" name="montant" min="1" step="1" placeholder="0" required>
                     <span class="suffix">Ar</span>
                 </div>
-                <div class="hint" id="feePreview">Les frais dépendent du montant retiré.</div>
+                <div class="hint" id="feePreview">Les frais dependent du montant retire.</div>
             </div>
 
             <button type="submit" class="btn btn-primary" id="submitBtn">
@@ -53,8 +51,8 @@
         <h3>Confirmer le retrait</h3>
         <div class="fee-box">
             <div class="fee-row"><span>Montant du retrait</span><span class="val" id="sMontant">0 Ar</span></div>
-            <div class="fee-row"><span>Frais appliqués</span><span class="val" id="sFrais">0 Ar</span></div>
-            <div class="fee-row total"><span>Débité de votre solde</span><span class="val" id="sTotal">0 Ar</span></div>
+            <div class="fee-row"><span>Frais appliques</span><span class="val" id="sFrais">0 Ar</span></div>
+            <div class="fee-row total"><span>Debite de votre solde</span><span class="val" id="sTotal">0 Ar</span></div>
         </div>
         <div class="sheet-actions">
             <button type="button" class="btn btn-outline" id="cancelConfirm">Annuler</button>
@@ -84,9 +82,9 @@
     montantInput.addEventListener('input', function () {
         const montant = Number(montantInput.value);
         if (montant > 0) {
-            feePreview.textContent = 'Frais estimés : ' + formatAr(calculerFrais(montant));
+            feePreview.textContent = 'Frais estimes : ' + formatAr(calculerFrais(montant));
         } else {
-            feePreview.textContent = 'Les frais dépendent du montant retiré.';
+            feePreview.textContent = 'Les frais dependent du montant retire.';
         }
     });
 
@@ -121,3 +119,5 @@
 
 </body>
 </html>
+
+
