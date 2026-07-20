@@ -1,0 +1,13 @@
+CRITICAL - 2026-07-20 06:57:18 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "users/login.php"
+[Method: GET, Route: /]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('users/login.php')
+ 2 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('users/login', [], true)
+ 3 APPPATH\Controllers\UserController.php(21): view('users/login', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->index()
+ 5 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+ 6 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')

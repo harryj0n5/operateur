@@ -3,4 +3,5 @@
 use CodeIgniter\Router\RouteCollection;
 
 /** @var RouteCollection $routes */
-$routes->get('/', 'Home::index');
+$routes->get('/', 'UserController::index');
+$routes->post('user/login', 'UserController::login');
