@@ -1,38 +1,69 @@
-<h1>Situation des gains</h1>
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vola - Situation des gains</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
 
-<p><a href="/operateur/dashboard">&larr; Retour au dashboard</a></p>
+<div class="admin-shell">
 
-<?php if ($error): ?>
-    <p style="color: red;"><?= esc($error) ?></p>
-<?php endif; ?>
+    <aside class="admin-sidebar">
+        <div class="brand"><span class="brand-mark">V</span> Vola</div>
+        <nav class="admin-nav">
+            <a href="/operateur/dashboard"><i class="ti ti-layout-dashboard"></i> Tableau de bord</a>
+            <a href="/users"><i class="ti ti-users"></i> Utilisateurs</a>
+            <a href="/configurations"><i class="ti ti-settings"></i> Configurations</a>
+            <a href="/type-operations"><i class="ti ti-category"></i> Types d'opération</a>
+            <a href="/frais-operations"><i class="ti ti-receipt-2"></i> Frais d'opération</a>
+            <a href="/operateur/situation-gain" class="active"><i class="ti ti-chart-bar"></i> Situation des gains</a>
+            <a href="/operateur/situation-gain-client"><i class="ti ti-user-search"></i> Situation client</a>
+            <a href="/user/logout" style="margin-top:16px;"><i class="ti ti-logout"></i> Déconnexion</a>
+        </nav>
+    </aside>
 
-<form method="get" action="/operateur/situation-gain">
+    <main class="admin-main">
 
-    <label>Jusqu'au</label>
-    <input type="date" name="date" value="<?= esc($date) ?>">
+        <a href="/operateur/dashboard" class="back-link"><i class="ti ti-arrow-left"></i> Retour au dashboard</a>
+        <h1 style="margin-bottom:20px;">Situation des gains</h1>
 
-    <button>
-        Afficher
-    </button>
+        <?php if ($error): ?>
+            <div class="alert error" style="margin:0 0 16px;"><i class="ti ti-alert-circle"></i> <?= esc($error) ?></div>
+        <?php endif; ?>
 
-</form>
+        <div class="form-card" style="margin-bottom:24px;">
+            <form method="get" action="/operateur/situation-gain" style="display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;">
+                <div class="field" style="margin-bottom:0;flex:1;min-width:180px;">
+                    <label>Jusqu'au</label>
+                    <input type="date" name="date" value="<?= esc($date) ?>">
+                </div>
+                <button class="btn btn-secondary" style="width:auto;padding:13px 22px;">
+                    <i class="ti ti-search"></i> Afficher
+                </button>
+            </form>
+        </div>
 
-<br>
+        <?php if ($situation): ?>
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-label"><i class="ti ti-coin"></i> Gain total</div>
+                    <div class="stat-value"><?= esc(number_format((float) $situation['total_gain'], 0, ',', ' ')) ?> Ar</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label"><i class="ti ti-arrows-exchange"></i> Transactions</div>
+                    <div class="stat-value"><?= esc($situation['nombre_transaction']) ?></div>
+                </div>
+            </div>
+        <?php endif; ?>
 
-<?php if ($situation): ?>
+    </main>
 
-    <table border="1">
+</div>
 
-        <tr>
-            <th>Gain total</th>
-            <th>Nombre de transactions</th>
-        </tr>
-
-        <tr>
-            <td><?= esc($situation['total_gain']) ?></td>
-            <td><?= esc($situation['nombre_transaction']) ?></td>
-        </tr>
-
-    </table>
-
-<?php endif; ?>
+</body>
+</html>

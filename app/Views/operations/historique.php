@@ -3,47 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Mobile Money - Historique</title>
+    <title>Vola - Historique</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+    <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
 
-<h1>Historique des transactions</h1>
+<div class="app" style="padding-bottom:24px;">
 
-<?php if (empty($historique)): ?>
-    <p>Aucune transaction pour le moment.</p>
-<?php else: ?>
+    <div class="topbar">
+        <a href="/client/dashboard" class="back-btn" aria-label="Retour"><i class="ti ti-arrow-left"></i></a>
+        <h1>Historique des transactions</h1>
+    </div>
 
-    <table border="1">
-        <tr>
-            <th>Date</th>
-            <th>Opération</th>
-            <th>Sens</th>
-            <th>Montant</th>
-            <th>Frais</th>
-            <th>Contrepartie</th>
-            <th>Solde après</th>
-        </tr>
+    <div class="form-page" style="padding-top:16px;">
 
-        <?php foreach ($historique as $ligne): ?>
-            <tr>
-                <td><?= esc($ligne['date']) ?></td>
-                <td><?= esc($ligne['type_operation_libelle']) ?></td>
-                <td>
-                    <?= $ligne['type_mouvement'] === 'credit'
-                        ? '<span style="color: green;">+ Crédit</span>'
-                        : '<span style="color: red;">- Débit</span>' ?>
-                </td>
-                <td><?= esc($ligne['montant']) ?> Ar</td>
-                <td><?= esc($ligne['frais']) ?> Ar</td>
-                <td><?= $ligne['contrepartie_telephone'] ? esc($ligne['contrepartie_telephone']) : '-' ?></td>
-                <td><?= esc($ligne['solde_apres']) ?> Ar</td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+        <?php if (empty($historique)): ?>
 
-<?php endif; ?>
+            <div class="empty-state">
+                <i class="ti ti-receipt-off"></i>
+                <p style="font-weight:600;color:var(--ink-700);margin-bottom:4px;">Aucune transaction pour le moment</p>
+                <p style="font-size:13px;">Vos dépôts, retraits et transferts apparaîtront ici.</p>
+            </div>
 
-<a href="/client/dashboard">Retour au tableau de bord</a>
+        <?php else: ?>
+
+            <div class="list">
+                <?php foreach ($historique as $ligne): ?>
+                    <?php $isCredit = $ligne['type_mouvement'] === 'credit'; ?>
+                    <div class="tx-row">
+                        <span class="tx-icon <?= $isCredit ? 'credit' : 'debit' ?>">
+                            <i class="ti <?= $isCredit ? 'ti-arrow-down-left' : 'ti-arrow-up-right' ?>"></i>
+                        </span>
+                        <div class="tx-main">
+                            <div class="tx-title"><?= esc($ligne['type_operation_libelle']) ?></div>
+                            <div class="tx-sub">
+                                <?= esc($ligne['date']) ?>
+                                <?php if ($ligne['contrepartie_telephone']): ?>
+                                    &middot; <?= esc($ligne['contrepartie_telephone']) ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <div class="tx-amounts">
+                            <div class="tx-amount <?= $isCredit ? 'credit' : 'debit' ?>">
+                                <?= $isCredit ? '+' : '-' ?><?= esc(number_format((float) $ligne['montant'], 0, ',', ' ')) ?> Ar
+                            </div>
+                            <div class="tx-fee">Frais : <?= esc(number_format((float) $ligne['frais'], 0, ',', ' ')) ?> Ar</div>
+                            <div class="tx-balance">Solde : <?= esc(number_format((float) $ligne['solde_apres'], 0, ',', ' ')) ?> Ar</div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+        <?php endif; ?>
+
+    </div>
+
+</div>
 
 </body>
 </html>
