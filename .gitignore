@@ -7,3 +7,4 @@
 .idea/phpunit.xml
 .idea/prettier.xml
 .idea/vcs.xml
+.idea/dataSources.xml
