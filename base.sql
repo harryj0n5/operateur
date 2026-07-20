@@ -22,10 +22,21 @@ CREATE TABLE user
         REFERENCES type_user (id)
 );
 
+CREATE TABLE operateur
+(
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    libelle           TEXT    NOT NULL,
+    principale        BOOLEAN NOT NULL DEFAULT 0,
+    pourcentage_frais REAL    NOT NULL DEFAULT 0
+);
+
 CREATE TABLE configuration
 (
-    id     INTEGER PRIMARY KEY AUTOINCREMENT,
-    prefix TEXT NOT NULL UNIQUE
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    prefix       TEXT    NOT NULL UNIQUE,
+    operateur_id INTEGER NOT NULL,
+    FOREIGN KEY (operateur_id)
+        REFERENCES operateur (id)
 );
 
 CREATE TABLE type_operation
@@ -48,19 +59,17 @@ CREATE TABLE frais_operation
 
 CREATE TABLE historique_transaction
 (
-    id                INTEGER PRIMARY KEY AUTOINCREMENT,
-    montant           REAL    NOT NULL,
-    frais             REAL    NOT NULL DEFAULT 0,
-    type_mouvement    TEXT    NOT NULL CHECK (type_mouvement IN ('credit', 'debit')),
-    solde_apres       REAL    NOT NULL,
-    date              TEXT             DEFAULT CURRENT_TIMESTAMP,
-    user_id           INTEGER NOT NULL,
-    destinataire_id   INTEGER,
-    type_operation_id INTEGER NOT NULL,
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    montant             REAL    NOT NULL,
+    frais               REAL    NOT NULL DEFAULT 0,
+    type_mouvement      TEXT    NOT NULL CHECK (type_mouvement IN ('credit', 'debit')),
+    solde_apres         REAL    NOT NULL,
+    date                TEXT             DEFAULT CURRENT_TIMESTAMP,
+    user_id             INTEGER NOT NULL,
+    destinataire_numero TEXT,
+    type_operation_id   INTEGER NOT NULL,
 
     FOREIGN KEY (user_id)
-        REFERENCES user (id),
-    FOREIGN KEY (destinataire_id)
         REFERENCES user (id),
     FOREIGN KEY (type_operation_id)
         REFERENCES type_operation (id)
@@ -76,9 +85,14 @@ VALUES ('0338632043', 0, 1),     -- operateur
        ('0331234567', 50000, 2), -- client de test avec solde initial
        ('0379876543', 20000, 2); -- client de test avec solde initial
 
-INSERT INTO configuration(prefix)
-VALUES ('033'),
-       ('037');
+INSERT INTO operateur(libelle, principale, pourcentage_frais)
+VALUES ('Orange Money', 1, 0),
+       ('Yas', 0, 0.03),
+       ('Airtel', 0, 0.04);
+
+INSERT INTO configuration(prefix, operateur_id)
+VALUES ('033', 1),
+       ('037', 1);
 
 INSERT INTO type_operation(libelle)
 VALUES ('Depot'),

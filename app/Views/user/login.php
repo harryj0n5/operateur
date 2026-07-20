@@ -19,164 +19,163 @@ $placeholder = !empty($prefixes)
     <link rel="stylesheet" href="/assets/bootstrap/icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 
-
     <style>
+
+        :root {
+            --vola-primary: #0d6efd;
+            --vola-primary-dark: #0b5ed7;
+            --vola-accent: #4c8df8;
+            --vola-bg: #f4f7fb;
+        }
+
+        * {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
 
         body {
             min-height: 100vh;
-            background: #f4f7fb;
+            background: var(--vola-bg);
         }
-
 
         .auth-wrapper {
-
             min-height: 100vh;
-
         }
-
 
         .hero {
-
-            background: linear-gradient(
-                    135deg,
-                    #0d6efd,
-                    #4c8df8
-            );
-
+            background: linear-gradient(135deg, var(--vola-primary), var(--vola-accent));
             color: white;
-
             position: relative;
-
             overflow: hidden;
-
+            padding: 2rem;
         }
-
 
         .hero::before {
-
             content: "";
-
             position: absolute;
-
             width: 350px;
             height: 350px;
-
             background: rgba(255, 255, 255, .15);
-
             border-radius: 50%;
-
             top: -100px;
             left: -100px;
-
         }
-
 
         .hero::after {
-
             content: "";
-
             position: absolute;
-
             width: 300px;
             height: 300px;
-
             background: rgba(255, 255, 255, .1);
-
             border-radius: 50%;
-
             bottom: -120px;
             right: -100px;
-
         }
-
 
         .brand-icon {
-
             width: 100px;
             height: 100px;
-
             border-radius: 50%;
-
             background: rgba(255, 255, 255, .18);
-
             display: flex;
-
             align-items: center;
             justify-content: center;
-
             font-size: 45px;
-
             margin: auto;
-
             backdrop-filter: blur(10px);
-
+            border: 1px solid rgba(255, 255, 255, .25);
         }
 
+        .hero h1 {
+            letter-spacing: -1px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, .15);
+        }
+
+        .hero .lead {
+            opacity: .92;
+            max-width: 320px;
+            margin: 0 auto;
+        }
 
         .login-card {
-
             max-width: 430px;
-
             width: 100%;
-
-            border-radius: 28px !important;
-
+            border-radius: 24px !important;
+            box-shadow: 0 20px 60px rgba(13, 110, 253, .12) !important;
         }
 
+        .login-card .card-body {
+            padding: 3rem !important;
+        }
+
+        .form-label {
+            font-size: .9rem;
+            color: #344054;
+            margin-bottom: .5rem;
+        }
 
         .form-control {
-
-            height: 55px;
-
-            border-radius: 0 14px 14px 0;
-
+            height: 52px;
+            border-radius: 0 12px 12px 0;
+            border: 1px solid #dfe4ea;
+            font-size: .95rem;
         }
 
+        .form-control:focus {
+            border-color: var(--vola-primary);
+            box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .12);
+        }
 
         .input-group-text {
-
-            border-radius: 14px 0 0 14px;
-
+            border-radius: 12px 0 0 12px;
             background: white;
-
+            border: 1px solid #dfe4ea;
+            border-right: none;
+            color: #6b7280;
         }
 
+        .form-text {
+            font-size: .82rem;
+            color: #6b7280;
+        }
 
         .btn-login {
-
-            height: 55px;
-
-            border-radius: 14px;
-
+            height: 52px;
+            border-radius: 12px;
             font-weight: 600;
-
-            transition: .25s;
-
+            font-size: .95rem;
+            background: var(--vola-primary);
+            border: none;
+            transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
         }
-
 
         .btn-login:hover {
-
+            background: var(--vola-primary-dark);
             transform: translateY(-2px);
-
-            box-shadow: 0 10px 25px rgba(13, 110, 253, .3);
-
+            box-shadow: 0 12px 28px rgba(13, 110, 253, .35);
         }
 
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        #errorMessage {
+            border-radius: 12px;
+            font-size: .9rem;
+        }
 
         @media (max-width: 768px) {
 
             .hero {
-
                 display: none;
+            }
 
+            .login-card .card-body {
+                padding: 2rem !important;
             }
 
         }
 
-
     </style>
-
 
 </head>
 
