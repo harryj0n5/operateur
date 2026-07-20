@@ -138,7 +138,10 @@ class UserController extends BaseController
         }
 
         $configurationModel = new ConfigurationModel();
-        $prefixes = array_column($configurationModel->select('prefix')->findAll(), 'prefix');
+        $prefixes = $configurationModel->select('prefix')
+            ->findAll();
+
+        $prefixes = array_column($prefixes, 'prefix');
 
         return view('user/login', ['prefixes' => $prefixes]);
     }
@@ -228,6 +231,31 @@ class UserController extends BaseController
         }
 
         return view('user/situation_gain', [
+            'date' => $date,
+            'situation' => $situation,
+            'error' => $error
+        ]);
+    }
+
+    /**
+     * NOUVEAU : "Situation des montants à envoyer à chaque opérateur".
+     * Nécessite une route, par exemple :
+     *   $routes->get('operateur/montants-a-envoyer', 'UserController::situationMontantsOperateurs');
+     * et une vue user/situation_montants_operateurs.php.
+     */
+    public function situationMontantsOperateurs()
+    {
+        $date = $this->request->getGet('date') ?: date('Y-m-d');
+        $situation = null;
+        $error = null;
+
+        try {
+            $situation = $this->userService->situationMontantsOperateurs($date);
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+        }
+
+        return view('user/situation_montants_operateurs', [
             'date' => $date,
             'situation' => $situation,
             'error' => $error
@@ -352,4 +380,3 @@ class UserController extends BaseController
         return view('operations/historique', ['historique' => $historique]);
     }
 }
-

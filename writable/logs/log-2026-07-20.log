@@ -1,0 +1,12 @@
+CRITICAL - 2026-07-20 18:49:27 --> ErrorException: Trying to access array offset on value of type null
+[Method: GET, Route: operations/historique]
+in APPPATH\Services\TransactionService.php on line 307.
+ 1 APPPATH\Services\TransactionService.php(307): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Trying to access array offset on value of type null', 'D:\\Cours_S4\\SI\\PROJETS\\operateur\\app\\Services\\TransactionService.php', 307)
+ 2 APPPATH\Controllers\UserController.php(375): App\Services\TransactionService->historiqueDetaille(5)
+ 3 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->historique()
+ 4 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+ 5 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')

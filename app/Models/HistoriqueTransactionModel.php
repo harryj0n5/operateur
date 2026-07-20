@@ -17,7 +17,7 @@ class HistoriqueTransactionModel extends Model
         'frais_operateur2',
         'type_mouvement',
         'date',
-        'user_id',
+        'numero',
         'destinataire_numero',
         'type_operation_id',
         'frais_retrait_inclus'
@@ -28,7 +28,7 @@ class HistoriqueTransactionModel extends Model
         'frais' => 'required|numeric',
         'frais_operateur2' => 'numeric',
         'type_mouvement' => 'required|in_list[credit,debit]',
-        'user_id' => 'required|integer',
+        'numero' => 'required',
         'type_operation_id' => 'required|integer'
     ];
 
@@ -51,9 +51,8 @@ class HistoriqueTransactionModel extends Model
             'in_list' => 'Le mouvement doit être credit ou debit.'
         ],
 
-        'user_id' => [
-            'required' => "L'utilisateur est obligatoire.",
-            'integer' => "L'utilisateur est invalide."
+        'numero' => [
+            'required' => "L'utilisateur est obligatoire."
         ],
 
         'type_operation_id' => [

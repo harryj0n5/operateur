@@ -65,13 +65,11 @@ CREATE TABLE historique_transaction
     frais_operateur2     REAL    NOT NULL DEFAULT 0,
     type_mouvement       TEXT    NOT NULL CHECK (type_mouvement IN ('credit', 'debit')),
     date                 TEXT             DEFAULT CURRENT_TIMESTAMP,
-    user_id              INTEGER NOT NULL,
+    numero               TEXT,
     destinataire_numero  TEXT,
     type_operation_id    INTEGER NOT NULL,
     frais_retrait_inclus BOOLEAN NOT NULL DEFAULT 0,
 
-    FOREIGN KEY (user_id)
-        REFERENCES user (id),
     FOREIGN KEY (type_operation_id)
         REFERENCES type_operation (id)
 );

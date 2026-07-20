@@ -49,7 +49,8 @@
                                 <?= $isCredit ? '+' : '-' ?><?= esc(number_format((float)$ligne['montant'], 0, ',', ' ')) ?>
                                 Ar
                             </div>
-                            <div class="tx-fee">Frais : <?= esc(number_format((float)$ligne['frais'], 0, ',', ' ')) ?>
+                            <div class="tx-fee">Frais
+                                : <?= esc(number_format((float)$ligne['frais'] + $ligne['frais_operateur2'], 0, ',', ' ')) ?>
                                 Ar
                             </div>
                         </div>

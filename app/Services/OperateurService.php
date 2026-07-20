@@ -23,11 +23,28 @@ class OperateurService
         return $this->operateurModel->find($id);
     }
 
+    private function retirerStatutPrincipalDesAutres(?int $exceptId = null): void
+    {
+        $operateurs = $this->operateurModel->where('principale', 1)->findAll();
+
+        foreach ($operateurs as $operateur) {
+            if ($exceptId !== null && (int)$operateur['id'] === $exceptId) {
+                continue;
+            }
+
+            $this->operateurModel->update($operateur['id'], ['principale' => 0]);
+        }
+    }
+
     public function create(array $data): array
     {
-        $data['libelle'] = trim((string) ($data['libelle'] ?? ''));
+        $data['libelle'] = trim((string)($data['libelle'] ?? ''));
         $data['principale'] = !empty($data['principale']) ? 1 : 0;
         $data['pourcentage_frais'] = $data['pourcentage_frais'] ?? 0;
+
+        if ($data['principale']) {
+            $this->retirerStatutPrincipalDesAutres();
+        }
 
         $id = $this->operateurModel->insert($data);
 
@@ -48,9 +65,13 @@ class OperateurService
             throw new \RuntimeException("Opérateur introuvable.");
         }
 
-        $data['libelle'] = trim((string) ($data['libelle'] ?? ''));
+        $data['libelle'] = trim((string)($data['libelle'] ?? ''));
         $data['principale'] = !empty($data['principale']) ? 1 : 0;
         $data['pourcentage_frais'] = $data['pourcentage_frais'] ?? 0;
+
+        if ($data['principale']) {
+            $this->retirerStatutPrincipalDesAutres($id);
+        }
 
         $updated = $this->operateurModel->update($id, $data);
 
