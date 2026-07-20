@@ -72,7 +72,7 @@ VALUES ('Operateur'),
        ('Client');
 
 INSERT INTO user(telephone, solde, type_user_id)
-VALUES ('0348632043', 0, 1),     -- operateur
+VALUES ('0338632043', 0, 1),     -- operateur
        ('0331234567', 50000, 2), -- client de test avec solde initial
        ('0379876543', 20000, 2); -- client de test avec solde initial
 

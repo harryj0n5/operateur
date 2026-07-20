@@ -13,9 +13,9 @@ $routes->group('users', ['filter' => 'auth:operateur'], function ($routes) {
     $routes->get('/', 'UserController::index');
     $routes->get('create', 'UserController::create');
     $routes->post('store', 'UserController::store');
-    $routes->get('(:num)/edit', 'UserController::edit/$1');
-    $routes->post('(:num)/update', 'UserController::update/$1');
-    $routes->post('(:num)/delete', 'UserController::delete/$1');
+    $routes->get('edit/(:num)', 'UserController::edit/$1');
+    $routes->post('update/(:num)', 'UserController::update/$1');
+    $routes->post('delete/(:num)', 'UserController::delete/$1');
 });
 
 $routes->group('configurations', ['filter' => 'auth:operateur'], function ($routes) {

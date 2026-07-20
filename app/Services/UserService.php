@@ -153,11 +153,9 @@ class UserService
             );
         }
 
-        // Valeurs par défaut
         $data['solde'] = $data['solde'] ?? 0;
         $data['type_user_id'] = $data['type_user_id'] ?? 2;
 
-        // Insertion (la vérification d'unicité du téléphone est gérée par le modèle)
         $id = $this->userModel->insert($data);
 
         if (!$id) {
@@ -171,18 +169,5 @@ class UserService
 
         // Retourner l'utilisateur créé
         return $this->getUserById($id);
-    }
-
-    public function soldeClient(int $clientId)
-    {
-        $user = $this->getUserById($clientId);
-
-        if (!$user) {
-            throw new \RuntimeException(
-                "Utilisateur introuvable."
-            );
-        }
-
-        return $user['solde'];
     }
 }

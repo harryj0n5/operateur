@@ -62,7 +62,7 @@ $placeholder = !empty($prefixes)
             const data = await response.json();
 
             if (response.ok) {
-                window.location.href = Number(data.type_user_id) === 1 ? '/operateur/dashboard' : '/client/dashboard';
+                window.location.href = Number(data.type_user_id) === 1 ? '/users/' : '/client/dashboard';
             } else {
                 document.getElementById('errorMessage').textContent = data.error;
             }

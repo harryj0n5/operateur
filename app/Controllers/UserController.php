@@ -131,7 +131,7 @@ class UserController extends BaseController
     {
         if (session()->get('user_id')) {
             return (int)session()->get('type_user_id') === 1
-                ? redirect()->to('/operateur/dashboard')
+                ? redirect()->to('/users/')
                 : redirect()->to('/client/dashboard');
         }
 
@@ -192,6 +192,6 @@ class UserController extends BaseController
         return view('user/dashboard', ['solde' => $solde]);
     }
 
-    
+
 }
 
