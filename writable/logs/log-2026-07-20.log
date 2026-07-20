@@ -1,109 +1,75 @@
-CRITICAL - 2026-07-20 06:57:18 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "users/login.php"
-[Method: GET, Route: /]
-in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
- 1 SYSTEMPATH\View\View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('users/login.php')
- 2 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('users/login', [], true)
- 3 APPPATH\Controllers\UserController.php(21): view('users/login', [...])
- 4 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->index()
- 5 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
- 6 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
- 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-10 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')
-CRITICAL - 2026-07-20 07:35:07 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "users/index.php"
-[Method: GET, Route: users]
-in SYSTEMPATH/Exceptions/FrameworkException.php on line 39.
- 1 SYSTEMPATH/View/View.php(228): CodeIgniter\Exceptions\FrameworkException::forInvalidFile()
- 2 SYSTEMPATH/Common.php(1268): CodeIgniter\View\View->render()
- 3 APPPATH/Controllers/UserController.php(24): view()
- 4 SYSTEMPATH/CodeIgniter.php(974): App\Controllers\UserController->index()
- 5 SYSTEMPATH/CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
- 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
- 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
- 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
- 9 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
-CRITICAL - 2026-07-20 07:38:09 --> Error: Call to undefined method App\Services\UserService::creer()
-[Method: POST, Route: users/store]
-in APPPATH/Controllers/UserController.php on line 45.
- 1 SYSTEMPATH/CodeIgniter.php(974): App\Controllers\UserController->store()
- 2 SYSTEMPATH/CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
- 3 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
- 4 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
- 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
-CRITICAL - 2026-07-20 07:39:23 --> Error: Call to undefined method App\Services\UserService::creer()
-[Method: POST, Route: users/store]
-in APPPATH/Controllers/UserController.php on line 45.
- 1 SYSTEMPATH/CodeIgniter.php(974): App\Controllers\UserController->store()
- 2 SYSTEMPATH/CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
- 3 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
- 4 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
- 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
-CRITICAL - 2026-07-20 07:39:31 --> Error: Call to undefined method App\Services\UserService::creer()
-[Method: POST, Route: users/store]
-in APPPATH/Controllers/UserController.php on line 45.
- 1 SYSTEMPATH/CodeIgniter.php(974): App\Controllers\UserController->store()
- 2 SYSTEMPATH/CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController()
- 3 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
- 4 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
- 5 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
- 6 FCPATH/index.php(59): CodeIgniter\Boot::bootWeb()
-CRITICAL - 2026-07-20 08:05:37 --> ParseError: syntax error, unexpected token "public", expecting end of file
-[Method: GET, Route: /]
-in APPPATH\Services\UserService.php on line 154.
- 1 SYSTEMPATH\Autoloader\Autoloader.php(320): CodeIgniter\Autoloader\Autoloader->includeFile('D:\\Cours_S4\\SI\\PROJETS\\operateur\\app\\Services\\UserService.php')
- 2 SYSTEMPATH\Autoloader\Autoloader.php(296): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Services\\UserService')
- 3 APPPATH\Controllers\UserController.php(16): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Services\\UserService')
- 4 SYSTEMPATH\CodeIgniter.php(944): App\Controllers\UserController->__construct()
- 5 SYSTEMPATH\CodeIgniter.php(511): CodeIgniter\CodeIgniter->createController()
- 6 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
- 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-10 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')
-CRITICAL - 2026-07-20 08:05:37 --> ParseError: syntax error, unexpected token "public", expecting end of file
-[Method: GET, Route: /]
-in APPPATH\Services\UserService.php on line 154.
- 1 SYSTEMPATH\Autoloader\Autoloader.php(320): CodeIgniter\Autoloader\Autoloader->includeFile('D:\\Cours_S4\\SI\\PROJETS\\operateur\\app\\Services\\UserService.php')
- 2 SYSTEMPATH\Autoloader\Autoloader.php(296): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Services\\UserService')
- 3 APPPATH\Controllers\UserController.php(16): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Services\\UserService')
- 4 SYSTEMPATH\CodeIgniter.php(944): App\Controllers\UserController->__construct()
- 5 SYSTEMPATH\CodeIgniter.php(511): CodeIgniter\CodeIgniter->createController()
- 6 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
- 7 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
- 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
- 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
-10 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')
-CRITICAL - 2026-07-20 08:06:26 --> CodeIgniter\Filters\Exceptions\FilterException: "auth" filter must have a matching alias defined.
+CRITICAL - 2026-07-20 08:10:43 --> RuntimeException: Utilisateur introuvable.
 [Method: GET, Route: client/dashboard]
-in SYSTEMPATH\Filters\Filters.php on line 590.
- 1 SYSTEMPATH\Filters\Filters.php(590): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('auth')
- 2 SYSTEMPATH\Filters\Filters.php(641): CodeIgniter\Filters\Filters->enableFilter('auth:client', 'before')
- 3 SYSTEMPATH\CodeIgniter.php(476): CodeIgniter\Filters\Filters->enableFilters([...], 'before')
+in APPPATH\Services\UserService.php on line 146.
+ 1 APPPATH\Controllers\UserController.php(178): App\Services\UserService->soldeClient(4)
+ 2 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->dashboard_client()
+ 3 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
  4 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
  6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
  8 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')
-CRITICAL - 2026-07-20 08:06:27 --> CodeIgniter\Filters\Exceptions\FilterException: "auth" filter must have a matching alias defined.
+CRITICAL - 2026-07-20 08:10:44 --> RuntimeException: Utilisateur introuvable.
 [Method: GET, Route: client/dashboard]
-in SYSTEMPATH\Filters\Filters.php on line 590.
- 1 SYSTEMPATH\Filters\Filters.php(590): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('auth')
- 2 SYSTEMPATH\Filters\Filters.php(641): CodeIgniter\Filters\Filters->enableFilter('auth:client', 'before')
- 3 SYSTEMPATH\CodeIgniter.php(476): CodeIgniter\Filters\Filters->enableFilters([...], 'before')
+in APPPATH\Services\UserService.php on line 146.
+ 1 APPPATH\Controllers\UserController.php(178): App\Services\UserService->soldeClient(4)
+ 2 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->dashboard_client()
+ 3 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
  4 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
  6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
  8 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')
-CRITICAL - 2026-07-20 08:06:27 --> CodeIgniter\Filters\Exceptions\FilterException: "auth" filter must have a matching alias defined.
+CRITICAL - 2026-07-20 08:10:44 --> RuntimeException: Utilisateur introuvable.
 [Method: GET, Route: client/dashboard]
-in SYSTEMPATH\Filters\Filters.php on line 590.
- 1 SYSTEMPATH\Filters\Filters.php(590): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('auth')
- 2 SYSTEMPATH\Filters\Filters.php(641): CodeIgniter\Filters\Filters->enableFilter('auth:client', 'before')
- 3 SYSTEMPATH\CodeIgniter.php(476): CodeIgniter\Filters\Filters->enableFilters([...], 'before')
+in APPPATH\Services\UserService.php on line 146.
+ 1 APPPATH\Controllers\UserController.php(178): App\Services\UserService->soldeClient(4)
+ 2 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->dashboard_client()
+ 3 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+ 4 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')
+CRITICAL - 2026-07-20 08:10:56 --> RuntimeException: Utilisateur introuvable.
+[Method: GET, Route: client/dashboard]
+in APPPATH\Services\UserService.php on line 146.
+ 1 APPPATH\Controllers\UserController.php(178): App\Services\UserService->soldeClient(4)
+ 2 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->dashboard_client()
+ 3 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+ 4 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')
+CRITICAL - 2026-07-20 08:10:57 --> RuntimeException: Utilisateur introuvable.
+[Method: GET, Route: client/dashboard]
+in APPPATH\Services\UserService.php on line 146.
+ 1 APPPATH\Controllers\UserController.php(178): App\Services\UserService->soldeClient(4)
+ 2 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->dashboard_client()
+ 3 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+ 4 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')
+CRITICAL - 2026-07-20 08:12:01 --> RuntimeException: Utilisateur introuvable.
+[Method: GET, Route: client/dashboard]
+in APPPATH\Services\UserService.php on line 146.
+ 1 APPPATH\Controllers\UserController.php(178): App\Services\UserService->soldeClient(4)
+ 2 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->dashboard_client()
+ 3 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+ 4 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')
+CRITICAL - 2026-07-20 08:12:02 --> RuntimeException: Utilisateur introuvable.
+[Method: GET, Route: client/dashboard]
+in APPPATH\Services\UserService.php on line 146.
+ 1 APPPATH\Controllers\UserController.php(178): App\Services\UserService->soldeClient(4)
+ 2 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->dashboard_client()
+ 3 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
  4 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
  5 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
  6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))

@@ -12,7 +12,7 @@ $solde = $solde ?? 0;
 <body>
 
 <h1>Bienvenue sur votre tableau de bord</h1>
-<p>Votre solde actuel est : <?= esc($solde) ?> FCFA</p>
+<p>Votre solde actuel est : <?= esc($solde) ?> Ariary</p>
 
 <nav>
     <ul>

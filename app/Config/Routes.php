@@ -25,7 +25,7 @@ $routes->post(
 );
 
 $routes->group('client', ['filter' => 'auth:client'], function ($routes) {
-    $routes->get('dashboard', 'UserController::dashboard_user');
+    $routes->get('dashboard', 'UserController::dashboard_client');
     $routes->get('solde', 'UserController::solde');
     $routes->post('depot', 'UserController::depot');
     $routes->post('retrait', 'UserController::retrait');
