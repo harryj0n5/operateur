@@ -35,5 +35,5 @@ $routes->get(
     'users/delete/(:num)',
     'UserController::delete/$1'
 );
-$routes->get('/', 'UserController::index');
+$routes->get('/', 'UserController::seConnecter');
 $routes->post('user/login', 'UserController::login');

@@ -2,9 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\ConfigurationModel;
 use App\Services\UserService;
-
-
 use CodeIgniter\HTTP\ResponseInterface;
 
 class UserController extends BaseController
@@ -18,12 +17,6 @@ class UserController extends BaseController
         $this->userService = new UserService();
     }
 
-
-
-    /**
-     * GET /users
-     * Liste tous les utilisateurs
-     */
     public function index()
     {
         $users = $this->userService->getAllUsers();
@@ -80,6 +73,7 @@ class UserController extends BaseController
             'user' => $user
         ]);
     }
+
     public function update($id)
     {
         $data = [
@@ -107,17 +101,39 @@ class UserController extends BaseController
             ->to('/users');
     }
 
+    public function seConnecter()
+    {
+        if (session()->get('user_id')) {
+            return session()->get('type_user_id') === 1
+                ? redirect()->to('/operateur/dashboard')
+                : redirect()->to('/client/dashboard');
+        }
+
+        $configurationModel = new ConfigurationModel();
+        $prefixes = array_column($configurationModel->select('prefix')->findAll(), 'prefix');
+
+        return view('user/login', ['prefixes' => $prefixes]);
+    }
 
     public function login()
     {
-        $telephone = $this->request->getPost('telephone');
+        $json = $this->request->getJSON(true); // true = tableau associatif
+        $telephone = $json['telephone'] ?? null;
 
-        if (!$telephone) {
-            return $this->response->setStatusCode(400)->setJSON(['error' => 'Le numéro de téléphone est requis.']);
+        if (!$telephone || !preg_match('/^0\d{9}$/', $telephone)) {
+            return $this->response->setStatusCode(400)->setJSON(['error' => 'Numéro de téléphone invalide.']);
         }
+
 
         try {
             $user = $this->userService->loginOuCreer($telephone);
+
+            session()->set([
+                'user_id' => $user['id'],
+                'type_user_id' => $user['type_user_id'],
+                'telephone' => $user['telephone'],
+            ]);
+
             return $this->response->setStatusCode(200)->setJSON($user);
         } catch (\RuntimeException $e) {
             return $this->response->setStatusCode(400)->setJSON(['error' => $e->getMessage()]);
