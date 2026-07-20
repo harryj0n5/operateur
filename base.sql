@@ -15,7 +15,6 @@ CREATE TABLE user
 (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     telephone    TEXT    NOT NULL UNIQUE,
-    solde        REAL    NOT NULL DEFAULT 0,
     type_user_id INTEGER NOT NULL,
 
     FOREIGN KEY (type_user_id)
@@ -59,15 +58,15 @@ CREATE TABLE frais_operation
 
 CREATE TABLE historique_transaction
 (
-    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
-    montant             REAL    NOT NULL,
-    frais               REAL    NOT NULL DEFAULT 0,
-    type_mouvement      TEXT    NOT NULL CHECK (type_mouvement IN ('credit', 'debit')),
-    solde_apres         REAL    NOT NULL,
-    date                TEXT             DEFAULT CURRENT_TIMESTAMP,
-    user_id             INTEGER NOT NULL,
-    destinataire_numero TEXT,
-    type_operation_id   INTEGER NOT NULL,
+    id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+    montant              REAL    NOT NULL,
+    frais                REAL    NOT NULL DEFAULT 0,
+    type_mouvement       TEXT    NOT NULL CHECK (type_mouvement IN ('credit', 'debit')),
+    date                 TEXT             DEFAULT CURRENT_TIMESTAMP,
+    user_id              INTEGER NOT NULL,
+    destinataire_numero  TEXT,
+    type_operation_id    INTEGER NOT NULL,
+    frais_retrait_inclus BOOLEAN NOT NULL DEFAULT 0,
 
     FOREIGN KEY (user_id)
         REFERENCES user (id),
@@ -80,10 +79,10 @@ INSERT INTO type_user(libelle)
 VALUES ('Operateur'),
        ('Client');
 
-INSERT INTO user(telephone, solde, type_user_id)
-VALUES ('0338632043', 0, 1),     -- operateur
-       ('0331234567', 50000, 2), -- client de test avec solde initial
-       ('0379876543', 20000, 2); -- client de test avec solde initial
+INSERT INTO user(telephone, type_user_id)
+VALUES ('0338632043', 1), -- operateur
+       ('0331234567', 2), -- client de test avec solde initial
+       ('0379876543', 2); -- client de test avec solde initial
 
 INSERT INTO operateur(libelle, principale, pourcentage_frais)
 VALUES ('Orange Money', 1, 0),
