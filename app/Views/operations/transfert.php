@@ -11,7 +11,6 @@
 
 <body>
     <div class="app" style="padding-bottom:24px;">
-
         <div class="topbar">
             <a href="<?= site_url('client/dashboard') ?>" class="back-btn">
                 <i class="ti ti-arrow-left"></i>
@@ -39,9 +38,15 @@
 
                 <div class="field">
                     <label>Numéros des destinataires</label>
+
                     <div id="destinataires">
                         <div class="dest-item">
-                            <input type="text" name="telephones[]" placeholder="Ex: 034XXXXXXX" required>
+                            <input type="text" name="destinataires[0][telephone]" placeholder="Ex: 034XXXXXXX" required>
+
+                            <label>
+                                <input type="checkbox" name="destinataires[0][inclure_frais]" value="1">
+                                Inclure frais retrait
+                            </label>
                         </div>
                     </div>
 
@@ -53,18 +58,20 @@
 
                 <div class="field">
                     <label for="montant">Montant total à transférer</label>
+
                     <div class="amount-input-wrap">
                         <input type="number" id="montant" name="montant" min="1" step="1" placeholder="0" required>
                         <span class="suffix">Ar</span>
                     </div>
+
                     <div class="hint" id="feePreview">
                         Les frais dépendent du montant transféré.
                     </div>
                 </div>
 
                 <label>
-                    <input type="checkbox" name="inclure_frais_retrait" value="1">
-                    Inclure les frais de retrait
+                    <input type="checkbox" id="inclureTous">
+                    Inclure les frais de retrait pour tous
                 </label>
 
                 <br><br>
@@ -113,6 +120,7 @@
                 <button type="button" class="btn btn-outline" id="cancelConfirm">
                     Annuler
                 </button>
+
                 <button type="button" class="btn btn-primary" id="validateConfirm">
                     Confirmer
                 </button>
@@ -122,16 +130,21 @@
 
     <script>
         const bareme = <?= json_encode($bareme) ?>;
+
         const form = document.getElementById('transfertForm');
         const container = document.getElementById('destinataires');
         const montantInput = document.getElementById('montant');
         const feePreview = document.getElementById('feePreview');
         const backdrop = document.getElementById('confirmBackdrop');
+        const inclureTous = document.getElementById('inclureTous');
 
-        function calculerFrais(montant) {
+        let indexDest = 1;
+
+        function calculerFrais(montant, type = 3) {
             const tranche = bareme.find(t =>
                 montant >= Number(t.montant_min) &&
-                montant <= Number(t.montant_max)
+                montant <= Number(t.montant_max) &&
+                Number(t.type_operation_id) === type
             );
 
             return tranche ? Number(tranche.frais) : 0;
@@ -144,11 +157,25 @@
         document.getElementById('addDest').addEventListener('click', function () {
             const div = document.createElement('div');
             div.className = "dest-item";
+
             div.innerHTML = `
-        <input type="text" name="telephones[]" placeholder="Ex: 034XXXXXXX" required>
+        <input type="text" name="destinataires[${indexDest}][telephone]" placeholder="Ex: 034XXXXXXX" required>
+
+        <label>
+            <input type="checkbox" name="destinataires[${indexDest}][inclure_frais]" value="1">
+            Inclure frais retrait
+        </label>
+
         <button type="button" class="remove">✕</button>
     `;
+
             container.appendChild(div);
+
+            if (inclureTous.checked) {
+                div.querySelector('input[type="checkbox"]').checked = true;
+            }
+
+            indexDest++;
         });
 
         container.addEventListener('click', function (e) {
@@ -159,31 +186,45 @@
             }
         });
 
+        inclureTous.addEventListener('change', function () {
+            document.querySelectorAll('input[name*="[inclure_frais]"]').forEach(c => {
+                c.checked = inclureTous.checked;
+            });
+        });
+
         montantInput.addEventListener('input', function () {
             const montant = Number(montantInput.value);
 
             if (montant > 0) {
-                feePreview.textContent =
-                    "Frais estimés : " + formatAr(calculerFrais(montant));
+                feePreview.textContent = "Frais estimés : " + formatAr(calculerFrais(montant));
             } else {
-                feePreview.textContent =
-                    "Les frais dépendent du montant transféré.";
+                feePreview.textContent = "Les frais dépendent du montant transféré.";
             }
         });
 
         form.addEventListener('submit', function (e) {
             const montant = Number(montantInput.value);
-            const nombres = document.querySelectorAll('input[name="telephones[]"]');
+            const destinataires = document.querySelectorAll('input[name*="[telephone]"]');
 
-            if (!montant || montant <= 0) {
+            if (!montant || montant <= 0 || destinataires.length === 0) {
                 return;
             }
 
             e.preventDefault();
 
-            const nombre = nombres.length;
+            const nombre = destinataires.length;
             const part = montant / nombre;
-            const frais = calculerFrais(part) * nombre;
+
+            let frais = 0;
+
+            document.querySelectorAll('input[name*="[inclure_frais]"]').forEach(c => {
+                if (c.checked) {
+                    frais += calculerFrais(part, 2);
+                }
+            });
+
+            frais += calculerFrais(part, 3) * nombre;
+
             const total = montant + frais;
 
             document.getElementById('sNombre').textContent = nombre;
@@ -204,7 +245,6 @@
             form.submit();
         });
     </script>
-
 </body>
 
 </html>

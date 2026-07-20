@@ -66,7 +66,7 @@ class UserController extends BaseController
 
     public function edit($id)
     {
-        $user = $this->userService->getUserById((int)$id);
+        $user = $this->userService->getUserById((int) $id);
 
 
         if (!$user) {
@@ -91,7 +91,7 @@ class UserController extends BaseController
 
 
             $this->userService->updateUser(
-                (int)$id,
+                (int) $id,
                 $data
             );
 
@@ -114,7 +114,7 @@ class UserController extends BaseController
     {
         try {
 
-            $this->userService->deleteUser((int)$id);
+            $this->userService->deleteUser((int) $id);
 
             return redirect()
                 ->to('/users')
@@ -132,7 +132,7 @@ class UserController extends BaseController
     public function seConnecter()
     {
         if (session()->get('user_id')) {
-            return (int)session()->get('type_user_id') === 1
+            return (int) session()->get('type_user_id') === 1
                 ? redirect()->to('/operateur/dashboard')
                 : redirect()->to('/client/dashboard');
         }
@@ -178,7 +178,7 @@ class UserController extends BaseController
     {
         $userId = session()->get('user_id');
 
-        if (!$userId || (int)session()->get('type_user_id') !== 2) {
+        if (!$userId || (int) session()->get('type_user_id') !== 2) {
             return redirect()->to('/');
         }
 
@@ -239,7 +239,7 @@ class UserController extends BaseController
 
         if ($clientId) {
             try {
-                $situation = $this->userService->situationGainClient((int)$clientId, $date);
+                $situation = $this->userService->situationGainClient((int) $clientId, $date);
             } catch (\Exception $e) {
                 $error = $e->getMessage();
             }
@@ -262,7 +262,7 @@ class UserController extends BaseController
     public function storeDepot()
     {
         $userId = session()->get('user_id');
-        $montant = (float)$this->request->getPost('montant');
+        $montant = (float) $this->request->getPost('montant');
 
         try {
             $this->transactionService->depot($userId, $montant);
@@ -287,7 +287,7 @@ class UserController extends BaseController
     public function storeRetrait()
     {
         $userId = session()->get('user_id');
-        $montant = (float)$this->request->getPost('montant');
+        $montant = (float) $this->request->getPost('montant');
 
         try {
             $this->transactionService->retrait($userId, $montant);
@@ -312,15 +312,25 @@ class UserController extends BaseController
     public function storeTransfert()
     {
         $userId = session()->get('user_id');
-        $telephoneDestinataire = $this->request->getPost('telephone_destinataire');
-        $montant = (float)$this->request->getPost('montant');
-
+        $destinataires = $this->request->getPost('destinataires');
+        $montant = (float) $this->request->getPost('montant');
         try {
-            $this->transactionService->transfert($userId, $telephoneDestinataire, $montant);
+            $this->transactionService->transfertMultiple(
+                $userId,
+                $destinataires,
+                $montant
+            );
             return redirect()->to('/operations/transfert')
-                ->with('success', 'Transfert de ' . $montant . ' Ar vers ' . $telephoneDestinataire . ' effectué.');
+                ->with(
+                    'success',
+                    'Transfert multiple effectué.'
+                );
+
         } catch (\RuntimeException $e) {
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
+
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
         }
     }
 
