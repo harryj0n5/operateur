@@ -297,17 +297,25 @@ class UserController extends BaseController
         }
     }
 
-    public function transfert(): string
-    {
-        $fraisModel = new FraisOperationModel();
+   public function transfert(): string
+{
+    $fraisModel = new FraisOperationModel();
 
-        $bareme = $fraisModel
-            ->where('type_operation_id', 3)
-            ->orderBy('montant_min', 'ASC')
-            ->findAll();
+    $baremeTransfert = $fraisModel
+        ->where('type_operation_id', 3)
+        ->orderBy('montant_min', 'ASC')
+        ->findAll();
 
-        return view('operations/transfert', ['bareme' => $bareme]);
-    }
+    $baremeRetrait = $fraisModel
+        ->where('type_operation_id', 2)
+        ->orderBy('montant_min', 'ASC')
+        ->findAll();
+
+    return view('operations/transfert', [
+        'baremeTransfert' => $baremeTransfert,
+        'baremeRetrait' => $baremeRetrait
+    ]);
+}
 
     public function storeTransfert()
     {

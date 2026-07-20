@@ -28,17 +28,23 @@ class TransactionService
         $this->configurationModel = new ConfigurationModel();
         $this->operateurModel = new OperateurModel();
     }
+    private function calculerFrais(
+        float $montant,
+        int $typeOperationId
+    ): float {
 
-    private function calculerFrais(float $montant, int $typeOperationId): float
-    {
         $tranche = $this->fraisModel
             ->where('type_operation_id', $typeOperationId)
             ->where('montant_min <=', $montant)
             ->where('montant_max >=', $montant)
             ->first();
 
-        return $tranche ? (float) $tranche['frais'] : 0;
+
+        return $tranche
+            ? (float) $tranche['frais']
+            : 0;
     }
+
 
     /**
      * Le solde n'est pas stocké sur la table user : il est recalculé
@@ -56,7 +62,13 @@ class TransactionService
             if ($transaction['type_mouvement'] === 'credit') {
                 $solde += (float) $transaction['montant'];
             } elseif ($transaction['type_mouvement'] === 'debit') {
-                $solde -= (float) $transaction['montant'];
+
+                $solde -= (
+                    (float) $transaction['montant']
+                    +
+                    (float) $transaction['frais']
+                );
+
             }
         }
 
@@ -119,7 +131,7 @@ class TransactionService
 
         $this->historiqueModel->insert([
             'montant' => $montant,
-            'frais' => $frais,
+            'frais' => 0,
             'frais_operateur2' => 0,
             'type_mouvement' => 'debit',
             'user_id' => $userId,
@@ -156,66 +168,93 @@ class TransactionService
         $nombre = count($destinataires);
         $montantParDestinataire = $montantTotal / $nombre;
 
-        /*
-            Vérification même opérateur
-        */
+
+        // Vérification opérateur identique
         $operateurId = null;
+
         foreach ($destinataires as $dest) {
+
             $telephone = $dest['telephone'];
+
+            if (!preg_match('/^0[0-9]{9}$/', $telephone)) {
+                throw new \RuntimeException(
+                    "Numéro invalide : " . $telephone
+                );
+            }
+
+
             $prefix = substr($telephone, 0, 3);
+
+
             $config = $this->configurationModel
                 ->where('prefix', $prefix)
                 ->first();
 
+
             if (!$config) {
                 throw new \RuntimeException(
-                    "Préfixe inconnu : " . $prefix
+                    "Préfixe non configuré : " . $prefix
                 );
             }
 
+
             if ($operateurId === null) {
+
                 $operateurId = $config['operateur_id'];
+
             } elseif ($operateurId != $config['operateur_id']) {
+
                 throw new \RuntimeException(
-                    "Tous les destinataires doivent appartenir au même opérateur."
+                    "Les destinataires doivent être du même opérateur."
                 );
+
             }
         }
 
-        /*
-            Vérification du solde AVANT toute écriture, sur le total
-            (montant + tous les frais cumulés), pour éviter un transfert
-            partiel si le solde est insuffisant à mi-parcours.
-        */
-        $fraisTotalEstime = 0.0;
+
+
+        // Vérification solde
+        $fraisTotal = 0;
+
         foreach ($destinataires as $dest) {
-            $inclureFrais = !empty($dest['inclure_frais']);
-            $fraisTotalEstime += $this->calculerFraisEnvoi(
+
+            $inclure = !empty($dest['inclure_frais']);
+
+
+            $fraisTotal += $this->calculerFraisEnvoi(
                 $montantParDestinataire,
-                $inclureFrais,
+                $inclure,
                 $operateurId
             );
         }
 
+
         $solde = $this->soldeUser($userId);
-        if ($solde < ($montantTotal + $fraisTotalEstime)) {
-            throw new \RuntimeException("Solde insuffisant.");
+
+
+        if ($solde < ($montantTotal + $fraisTotal)) {
+            throw new \RuntimeException(
+                "Solde insuffisant."
+            );
         }
 
-        /*
-            Effectuer chaque transfert
-        */
+
+
         $result = null;
+
+
         foreach ($destinataires as $dest) {
-            $inclureFrais = !empty($dest['inclure_frais']);
+
             $result = $this->transfertAvecOption(
                 $userId,
                 $dest['telephone'],
                 $montantParDestinataire,
-                $inclureFrais,
+                !empty($dest['inclure_frais']),
                 $operateurId
             );
+
         }
+
 
         return $result;
     }
@@ -227,13 +266,41 @@ class TransactionService
      *   ET que l'opérateur du destinataire est l'opérateur principal :
      *   il n'y a pas de frais de retrait pour les autres opérateurs.
      */
-    private function calculerFraisEnvoi(float $montant, bool $inclureFraisRetrait, int $operateurId): float
-    {
-        $frais = $this->calculerFrais($montant, self::TYPE_TRANSFERT);
+    private function calculerFraisEnvoi(
+        float $montant,
+        bool $inclureFraisRetrait,
+        int $operateurId
+    ): float {
 
-        if ($inclureFraisRetrait && !$this->estAutreOperateur($operateurId)) {
-            $frais += $this->calculerFrais($montant, self::TYPE_RETRAIT);
+        // Toujours appliquer le frais transfert
+        $frais = $this->calculerFrais(
+            $montant,
+            self::TYPE_TRANSFERT
+        );
+
+
+        // Vérification opérateur
+        $operateur = $this->operateurModel->find($operateurId);
+
+
+        if (!$operateur) {
+            throw new \RuntimeException("Opérateur introuvable.");
         }
+
+
+        // Ajouter frais retrait seulement opérateur principal
+        if (
+            $inclureFraisRetrait
+            && (int) $operateur['principale'] === 1
+        ) {
+
+            $frais += $this->calculerFrais(
+                $montant,
+                self::TYPE_RETRAIT
+            );
+
+        }
+
 
         return $frais;
     }
@@ -255,16 +322,57 @@ class TransactionService
         $destinataire = $this->userModel
             ->where('telephone', $telephoneDestinataire)
             ->first();
+
+
+        // Si le numéro n'existe pas encore,
+// création automatique du client
+
         if (!$destinataire) {
-            throw new \RuntimeException("Destinataire introuvable : " . $telephoneDestinataire);
+
+            $id = $this->userModel->insert([
+                'telephone' => $telephoneDestinataire,
+                'type_user_id' => 2,
+                'solde' => 0
+            ]);
+
+
+            $destinataire = [
+                'id' => $id,
+                'telephone' => $telephoneDestinataire,
+                'type_user_id' => 2
+            ];
         }
 
         if ($destinataire['id'] == $emetteur['id']) {
             throw new \RuntimeException("Impossible de transférer à vous-même.");
         }
 
-        $fraisRetraitInclus = $inclureFraisRetrait && !$this->estAutreOperateur($operateurId);
-        $frais = $this->calculerFraisEnvoi($montant, $inclureFraisRetrait, $operateurId);
+        $operateur = $this->operateurModel->find($operateurId);
+
+        if (!$operateur) {
+            throw new \RuntimeException("Opérateur introuvable.");
+        }
+
+
+        $fraisRetraitInclus = false;
+
+
+        $frais = $this->calculerFrais(
+            $montant,
+            self::TYPE_TRANSFERT
+        );
+
+
+        // Ajout frais retrait uniquement opérateur principal
+        if ($inclureFraisRetrait && (int) $operateur['principale'] === 1) {
+
+            $frais += $this->calculerFrais(
+                $montant,
+                self::TYPE_RETRAIT
+            );
+
+            $fraisRetraitInclus = true;
+        }
         $totalDebit = $montant + $frais;
 
         $soldeEmetteur = $this->soldeUser($emetteur['id']);
@@ -307,16 +415,7 @@ class TransactionService
     /**
      * Un opérateur est "autre" (non principal) quand principale = 0.
      */
-    private function estAutreOperateur(int $operateurId): bool
-    {
-        $operateur = $this->operateurModel->find($operateurId);
 
-        if (!$operateur) {
-            throw new \RuntimeException("Opérateur introuvable.");
-        }
-
-        return (int) $operateur['principale'] === 0;
-    }
 
     public function historique(int $userId): array
     {
