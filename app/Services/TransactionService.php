@@ -50,6 +50,42 @@ class TransactionService
         return $solde;
     }
 
+    private function getOperateurParTelephone(string $telephone): ?array
+    {
+        $prefixes = $this->configurationModel
+            ->findAll();
+
+        foreach ($prefixes as $prefix) {
+            if (str_starts_with($telephone, $prefix['prefix'])) {
+
+                return db_connect()
+                    ->table('operateur')
+                    ->where('id', $prefix['operateur_id'])
+                    ->get()
+                    ->getRowArray();
+            }
+        }
+
+        return null;
+    }
+
+    private function calculerFraisOperateur2(
+        float  $frais,
+        ?array $operateur
+    ): float
+    {
+
+        if (!$operateur) {
+            return 0;
+        }
+
+        if ($operateur['principale']) {
+            return 0;
+        }
+
+        return $frais * ((float)$operateur['pourcentage_frais'] / 100);
+    }
+
     private function calculerFrais(float $montant, int $typeOperationId): float
     {
         $tranche = $this->fraisModel
@@ -91,6 +127,7 @@ class TransactionService
         $this->historiqueModel->insert([
             'montant' => $montant,
             'frais' => 0,
+            'frais_operateur2' => 0,
             'type_mouvement' => 'credit',
             'user_id' => $userId,
             'destinataire_numero' => null,
@@ -166,7 +203,23 @@ class TransactionService
             throw new \RuntimeException("Ce préfixe n'est pas pris en charge par l'opérateur.");
         }
 
-        $frais = $this->calculerFrais($montant, self::TYPE_TRANSFERT);
+        $frais = $this->calculerFrais(
+            $montant,
+            self::TYPE_TRANSFERT
+        );
+
+
+        $operateurDestinataire =
+            $this->getOperateurParTelephone($telephoneDestinataire);
+
+
+        $frais_operateur2 =
+            $this->calculerFraisOperateur2(
+                $frais,
+                $operateurDestinataire
+            );
+
+
         $totalDebit = $montant + $frais;
 
         if ($this->soldeClient($userId) < $totalDebit) {
@@ -179,17 +232,18 @@ class TransactionService
         $this->historiqueModel->insert([
             'montant' => $montant,
             'frais' => $frais,
+            'frais_operateur2' => $frais_operateur2,
             'type_mouvement' => 'debit',
             'user_id' => $emetteur['id'],
             'destinataire_numero' => $telephoneDestinataire,
             'type_operation_id' => self::TYPE_TRANSFERT,
         ]);
 
-        // On ne crédite que si le destinataire possède réellement un compte.
         if ($destinataire) {
             $this->historiqueModel->insert([
                 'montant' => $montant,
                 'frais' => 0,
+                'frais_operateur2' => 0,
                 'type_mouvement' => 'credit',
                 'user_id' => $destinataire['id'],
                 'destinataire_numero' => $emetteur['telephone'],
@@ -228,5 +282,103 @@ class TransactionService
         }
 
         return $lignes;
+    }
+
+    public function transfertMultiple(
+        int   $userId,
+        array $telephones,
+        float $montant,
+        bool  $inclureFraisRetrait
+    ): array
+    {
+        $nombre = count($telephones);
+
+        if ($nombre <= 0) {
+            throw new \RuntimeException("Aucun destinataire.");
+        }
+
+
+        $montantParPersonne = $montant / $nombre;
+
+
+        $fraisTransfert =
+            $this->calculerFrais(
+                $montantParPersonne,
+                self::TYPE_TRANSFERT
+            ) * $nombre;
+
+
+        $fraisRetrait = 0;
+
+
+        if ($inclureFraisRetrait) {
+
+            $fraisRetrait =
+                $this->calculerFrais(
+                    $montantParPersonne,
+                    self::TYPE_RETRAIT
+                ) * $nombre;
+        }
+
+
+        $fraisTotal = $fraisTransfert + $fraisRetrait;
+
+
+        $totalDebit = $montant + $fraisTotal;
+
+
+        if ($this->soldeClient($userId) < $totalDebit) {
+            throw new \RuntimeException("Solde insuffisant.");
+        }
+
+
+        $db = db_connect();
+        $db->transStart();
+
+
+        foreach ($telephones as $telephone) {
+
+            $this->historiqueModel->insert([
+                'montant' => $montantParPersonne,
+                'frais' => $fraisTransfert / $nombre,
+                'frais_operateur2' => 0,
+                'type_mouvement' => 'debit',
+                'user_id' => $userId,
+                'destinataire_numero' => $telephone,
+                'type_operation_id' => self::TYPE_TRANSFERT,
+                'frais_retrait_inclus' => $inclureFraisRetrait
+            ]);
+
+        }
+
+
+        // Enregistrement du frais de retrait séparément
+        if ($inclureFraisRetrait && $fraisRetrait > 0) {
+
+            $this->historiqueModel->insert([
+                'montant' => 0,
+                'frais' => $fraisRetrait,
+                'frais_operateur2' => 0,
+                'type_mouvement' => 'debit',
+                'user_id' => $userId,
+                'destinataire_numero' => null,
+                'type_operation_id' => self::TYPE_RETRAIT,
+                'frais_retrait_inclus' => true
+            ]);
+
+        }
+
+
+        $db->transComplete();
+
+
+        if ($db->transStatus() === false) {
+            throw new \RuntimeException(
+                "Erreur lors du transfert."
+            );
+        }
+
+
+        return $this->userModel->find($userId);
     }
 }

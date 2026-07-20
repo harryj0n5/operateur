@@ -49,13 +49,32 @@
             </div>
             <div class="stat-card">
                 <div class="stat-label"><i class="ti ti-coin"></i> Gains du jour</div>
-                <div class="stat-value"><?= esc(number_format((float)$gain['total_gain'], 0, ',', ' ')) ?> Ar</div>
+                <div class="stat-value"><?= esc(number_format((float)$gain['total_operateur_principal'], 0, ',', ' ')) ?>
+                    Ar
+                </div>
+
                 <div class="stat-sub"><?= esc($date) ?></div>
             </div>
             <div class="stat-card">
                 <div class="stat-label"><i class="ti ti-arrows-exchange"></i> Transactions</div>
                 <div class="stat-value"><?= esc($gain['nombre_transaction']) ?></div>
                 <div class="stat-sub">Realisees aujourd'hui</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-label">
+                <i class="ti ti-building-bank"></i>
+                Autres opérateurs
+            </div>
+
+            <div class="stat-value">
+                <?= esc(number_format((float)$gain['total_autres_operateurs'], 0, ',', ' ')) ?>
+                Ar
+            </div>
+
+            <div class="stat-sub">
+                Commissions transferts externes
             </div>
         </div>
 
