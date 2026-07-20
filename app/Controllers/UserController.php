@@ -131,7 +131,7 @@ class UserController extends BaseController
     {
         if (session()->get('user_id')) {
             return (int)session()->get('type_user_id') === 1
-                ? redirect()->to('/users/')
+                ? redirect()->to('/operateur/dashboard')
                 : redirect()->to('/client/dashboard');
         }
 
@@ -190,6 +190,66 @@ class UserController extends BaseController
 
         $solde = $user['solde'];
         return view('user/dashboard', ['solde' => $solde]);
+    }
+
+    public function dashboardOperateur()
+    {
+        $date = date('Y-m-d');
+
+        try {
+            $gain = $this->userService->situationGain($date);
+        } catch (\Exception $e) {
+            $gain = ['total_gain' => 0, 'nombre_transaction' => 0];
+        }
+
+        return view('user/dashboard_operateur', [
+            'date' => $date,
+            'gain' => $gain,
+            'nbUsers' => count($this->userService->getAllUsers())
+        ]);
+    }
+
+    public function situationGain()
+    {
+        $date = $this->request->getGet('date') ?: date('Y-m-d');
+        $situation = null;
+        $error = null;
+
+        try {
+            $situation = $this->userService->situationGain($date);
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+        }
+
+        return view('user/situation_gain', [
+            'date' => $date,
+            'situation' => $situation,
+            'error' => $error
+        ]);
+    }
+
+    public function situationGainClient()
+    {
+        $clientId = $this->request->getGet('client_id');
+        $date = $this->request->getGet('date') ?: date('Y-m-d');
+        $situation = null;
+        $error = null;
+
+        if ($clientId) {
+            try {
+                $situation = $this->userService->situationGainClient((int)$clientId, $date);
+            } catch (\Exception $e) {
+                $error = $e->getMessage();
+            }
+        }
+
+        return view('user/situation_gain_client', [
+            'clients' => $this->userService->getClients(),
+            'clientId' => $clientId,
+            'date' => $date,
+            'situation' => $situation,
+            'error' => $error
+        ]);
     }
 
 

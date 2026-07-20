@@ -45,6 +45,12 @@ $routes->group('frais-operations', ['filter' => 'auth:operateur'], function ($ro
     $routes->post('(:num)/delete', 'FraisOperationController::delete/$1');
 });
 
+$routes->group('operateur', ['filter' => 'auth:operateur'], function ($routes) {
+    $routes->get('dashboard', 'UserController::dashboardOperateur');
+    $routes->get('situation-gain', 'UserController::situationGain');
+    $routes->get('situation-gain-client', 'UserController::situationGainClient');
+});
+
 $routes->group('client', ['filter' => 'auth:client'], function ($routes) {
     $routes->get('dashboard', 'UserController::dashboard_client');
     $routes->get('solde', 'UserController::solde');

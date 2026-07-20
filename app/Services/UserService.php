@@ -99,7 +99,7 @@ class UserService
             );
         }
 
-        $data['telephone'] = trim((string)($data['telephone'] ?? ''));
+        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
 
         // Vérifie le préfixe uniquement si le numéro a changé
         if ($data['telephone'] !== '' && $data['telephone'] !== $user['telephone'] && !$this->prefixeValide($data['telephone'])) {
@@ -138,7 +138,7 @@ class UserService
 
     public function creerUser(array $data): array
     {
-        $data['telephone'] = trim((string)($data['telephone'] ?? ''));
+        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
 
         if ($data['telephone'] === '') {
             throw new \RuntimeException(
@@ -170,4 +170,108 @@ class UserService
         // Retourner l'utilisateur créé
         return $this->getUserById($id);
     }
+
+    public function situationGain(string $date): array
+    {
+        $builder = $this->userModel->db
+            ->table('historique_transaction');
+
+
+        $result = $builder
+            ->select('
+            SUM(frais) AS total_gain,
+            COUNT(id) AS nombre_transaction
+        ')
+            ->where('date <=', $date)
+            ->get()
+            ->getRowArray();
+
+
+        return [
+            'total_gain' => $result['total_gain'] ?? 0,
+            'nombre_transaction' => $result['nombre_transaction'] ?? 0
+        ];
+    }
+    public function situationGainClient(int $clientId, string $date): array
+    {
+        // Récupérer le client
+        $client = $this->getUserById($clientId);
+
+
+        if (!$client) {
+            throw new \RuntimeException(
+                "Client introuvable."
+            );
+        }
+
+
+        if ($client['type_user_id'] != 2) {
+            throw new \RuntimeException(
+                "Cet utilisateur n'est pas un client."
+            );
+        }
+
+
+        $db = $this->userModel->db;
+
+
+        $transaction = $db->table('historique_transaction')
+            ->select("
+            COUNT(id) AS nombre_transaction,
+
+            SUM(
+                CASE 
+                    WHEN type_mouvement = 'credit'
+                    THEN montant
+                    ELSE 0
+                END
+            ) AS total_credit,
+
+            SUM(
+                CASE
+                    WHEN type_mouvement = 'debit'
+                    THEN montant
+                    ELSE 0
+                END
+            ) AS total_debit,
+
+            SUM(frais) AS total_frais
+        ")
+            ->where('user_id', $clientId)
+            ->where('date <=', $date)
+            ->get()
+            ->getRowArray();
+
+
+
+        return [
+            'client_id' => $client['id'],
+            'telephone' => $client['telephone'],
+
+            'date_situation' => $date,
+
+            'solde_actuel' => $client['solde'],
+
+            'nombre_transaction' =>
+                $transaction['nombre_transaction'] ?? 0,
+
+            'total_credit' =>
+                $transaction['total_credit'] ?? 0,
+
+            'total_debit' =>
+                $transaction['total_debit'] ?? 0,
+
+            'total_frais' =>
+                $transaction['total_frais'] ?? 0
+        ];
+    }
+
+    public function getClients(): array
+    {
+        return $this->userModel
+            ->where('type_user_id', 2)
+            ->orderBy('telephone', 'ASC')
+            ->findAll();
+    }
+
 }
