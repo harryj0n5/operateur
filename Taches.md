@@ -19,13 +19,15 @@
 ## Etape 3 : Definir les metiers et les services
 
 - Login: automatique via un numero de telephone valide, pas d'inscription, pas de mot de passe, pas de mail, pas de
-  pseudo.
-- Gestion des utilisateurs: création, modification, suppression des utilisateurs.
-- Configuration des prefix et des numeros de telephone valides pour l'authentification.
-- CRUD des frais et des transactions: création, lecture, mise à jour et suppression des frais et des transactions.
-- Situation des transactions: visualisation de l'historique des transactions et gain via les frais.
-- Situation des clients: soldes, historique des transactions, et autres informations pertinentes sur les clients.
-- Operations clients:
+  pseudo. (Juan)
+- Gestion des utilisateurs: création, modification, suppression des utilisateurs. (Harry)
+- Configuration des prefix et des numeros de telephone valides pour l'authentification. (Harry)
+- CRUD des frais et des transactions: création, lecture, mise à jour et suppression des frais et des transactions. (
+  Harry)
+- Situation des transactions: visualisation de l'historique des transactions et gain via les frais. (Harry)
+- Situation des clients: soldes, historique des transactions, et autres informations pertinentes sur les clients. (
+  Harry)
+- Operations clients: (Juan)
     - Voir le solde (coté client) : calcul du solde en fonction des transactions et des frais appliqués.
     - Faire un depot: pas besoin de confirmation operateur, frais appliqué automatiquement.
     - Faire un retrait: pas besoin de confirmation operateur, frais appliqué automatiquement.
@@ -35,12 +37,12 @@
 
 ## Etape 4 : Creer les controllers et les routes
 
-- Créer les controllers pour gérer les différentes fonctionnalités du projet.
-- Définir les routes pour chaque fonctionnalité
-- Assurer que les routes sont sécurisées et accessibles uniquement aux utilisateurs autorisés.
+- Créer les controllers pour gérer les différentes fonctionnalités du projet. (Tous)
+- Définir les routes pour chaque fonctionnalité (Tous)
+- Assurer que les routes sont sécurisées et accessibles uniquement aux utilisateurs autorisés. (Juan)
 
 ## Etape 5 : Creer les vues et les interfaces utilisateur
 
-- Concevoir les interfaces utilisateur pour chaque fonctionnalité du projet.
-- Assurer que les interfaces sont intuitives et faciles à utiliser.
-- Intégrer les vues avec les controllers pour permettre l'interaction entre l'utilisateur et le système.
+- Concevoir les interfaces utilisateur pour chaque fonctionnalité du projet. (Tous)
+- Assurer que les interfaces sont intuitives et faciles à utiliser. (Tous)
+- Intégrer les vues avec les controllers pour permettre l'interaction entre l'utilisateur et le système. (Tous)
