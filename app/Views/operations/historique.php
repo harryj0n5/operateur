@@ -46,10 +46,12 @@
                         </div>
                         <div class="tx-amounts">
                             <div class="tx-amount <?= $isCredit ? 'credit' : 'debit' ?>">
-                                <?= $isCredit ? '+' : '-' ?><?= esc(number_format((float) $ligne['montant'], 0, ',', ' ')) ?> Ar
+                                <?= $isCredit ? '+' : '-' ?><?= esc(number_format((float)$ligne['montant'], 0, ',', ' ')) ?>
+                                Ar
                             </div>
-                            <div class="tx-fee">Frais : <?= esc(number_format((float) $ligne['frais'], 0, ',', ' ')) ?> Ar</div>
-                            <div class="tx-balance">Solde : <?= esc(number_format((float) $ligne['solde_apres'], 0, ',', ' ')) ?> Ar</div>
+                            <div class="tx-fee">Frais : <?= esc(number_format((float)$ligne['frais'], 0, ',', ' ')) ?>
+                                Ar
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
