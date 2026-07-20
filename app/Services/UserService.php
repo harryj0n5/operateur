@@ -49,4 +49,53 @@ class UserService
 
         return $this->userModel->find($id);
     }
+    public function getAllUsers(): array
+    {
+        return $this->userModel->findAll();
+    }
+
+    public function getUserById(int $id): array|null
+    {
+        return $this->userModel
+            ->find($id);
+    }
+    public function deleteUser(int $id): bool
+    {
+
+        $user = $this->getUserById($id);
+
+
+        if (!$user) {
+            throw new \RuntimeException(
+                "Utilisateur introuvable."
+            );
+        }
+
+
+        return $this->userModel
+            ->delete($id);
+    }
+    public function updateUser(
+        int $id,
+        array $data
+    ): array {
+
+        $user = $this->getUserById($id);
+
+
+        if (!$user) {
+            throw new \RuntimeException(
+                "Utilisateur introuvable."
+            );
+        }
+
+
+        $this->userModel
+            ->update($id, $data);
+
+
+        return $this->getUserById($id);
+    }
+
+
 }
