@@ -96,7 +96,7 @@ class UserService
             );
         }
 
-        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
+        $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         if ($data['telephone'] === '') {
             throw new \RuntimeException(
@@ -150,10 +150,10 @@ class UserService
 
         return $user['solde'];
     }
-}
+
     public function creerUser(array $data): array
     {
-        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
+        $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         if ($data['telephone'] === '') {
             throw new \RuntimeException(
