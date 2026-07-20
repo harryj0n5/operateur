@@ -179,4 +179,4 @@ class UserController extends BaseController
         return view('user/dashboard', ["solde" => $solde]);
     }
 }
-}
+
