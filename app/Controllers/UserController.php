@@ -23,6 +23,13 @@ class UserController extends BaseController
 
         try {
             $user = $this->userService->loginOuCreer($telephone);
+
+            session()->set([
+                'user_id' => $user['id'],
+                'type_user_id' => $user['type_user_id'],
+                'telephone' => $user['telephone'],
+            ]);
+
             return $this->response->setStatusCode(200)->setJSON($user);
         } catch (\RuntimeException $e) {
             return $this->response->setStatusCode(400)->setJSON(['error' => $e->getMessage()]);
