@@ -16,6 +16,7 @@
         <nav class="admin-nav">
             <a href="/operateur/dashboard"><i class="ti ti-layout-dashboard"></i> Tableau de bord</a>
             <a href="/users"><i class="ti ti-users"></i> Utilisateurs</a>
+            <a href="/operateur"><i class="ti ti-building-bank"></i> Opérateurs</a>
             <a href="/configurations"><i class="ti ti-settings"></i> Configurations</a>
             <a href="/type-operations"><i class="ti ti-category"></i> Types d'operation</a>
             <a href="/frais-operations" class="active"><i class="ti ti-receipt-2"></i> Frais d'operation</a>

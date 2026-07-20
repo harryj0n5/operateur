@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS historique_transaction;
 DROP TABLE IF EXISTS frais_operation;
 DROP TABLE IF EXISTS configuration;
+DROP TABLE IF EXISTS operateur;
 DROP TABLE IF EXISTS type_operation;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS type_user;
@@ -87,8 +88,8 @@ VALUES ('0338632043', 1), -- operateur
 
 INSERT INTO operateur(libelle, principale, pourcentage_frais)
 VALUES ('Orange Money', 1, 0),
-       ('Yas', 0, 0.03),
-       ('Airtel', 0, 0.04);
+       ('Yas', 0, 20),
+       ('Airtel', 0, 40);
 
 INSERT INTO configuration(prefix, operateur_id)
 VALUES ('033', 1),

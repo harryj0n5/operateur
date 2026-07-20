@@ -213,26 +213,46 @@ class UserService
         $dateFinJournee = $date . ' 23:59:59';
 
         $lignes = $this->historiqueModel
-            ->select('type_operation.libelle as type_operation_libelle, SUM(historique_transaction.frais) as total_gain, COUNT(historique_transaction.id) as nombre_transaction')
-            ->join('type_operation', 'type_operation.id = historique_transaction.type_operation_id')
-            ->where('historique_transaction.date >=', $dateDebutJournee)
-            ->where('historique_transaction.date <=', $dateFinJournee)
-            ->groupBy('historique_transaction.type_operation_id')
+            ->select('
+            type_operation.libelle as type_operation_libelle,
+            SUM(historique_transaction.frais) as gain_operateur_principal,
+            SUM(historique_transaction.frais_operateur2) as gain_autre_operateur,
+            COUNT(historique_transaction.id) as nombre_transaction
+        ')
+            ->join(
+                'type_operation',
+                'type_operation.id = historique_transaction.type_operation_id'
+            )
+            ->where(
+                'historique_transaction.date >=',
+                $dateDebutJournee
+            )
+            ->where(
+                'historique_transaction.date <=',
+                $dateFinJournee
+            )
+            ->groupBy(
+                'historique_transaction.type_operation_id'
+            )
             ->findAll();
 
-        $totalGeneral = 0;
+        $totalPrincipal = 0;
+        $totalAutre = 0;
         $nombreTotal = 0;
 
+
         foreach ($lignes as $ligne) {
-            $totalGeneral += (float)$ligne['total_gain'];
+            $totalPrincipal += (float)$ligne['gain_operateur_principal'];
+            $totalAutre += (float)$ligne['gain_autre_operateur'];
             $nombreTotal += (int)$ligne['nombre_transaction'];
         }
 
         return [
             'date' => $date,
             'par_operation' => $lignes,
-            'total_gain' => $totalGeneral,
-            'nombre_transaction' => $nombreTotal,
+            'total_operateur_principal' => $totalPrincipal,
+            'total_autres_operateurs' => $totalAutre,
+            'nombre_transaction' => $nombreTotal
         ];
     }
 

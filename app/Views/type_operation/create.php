@@ -16,6 +16,7 @@
         <nav class="admin-nav">
             <a href="/operateur/dashboard"><i class="ti ti-layout-dashboard"></i> Tableau de bord</a>
             <a href="/users"><i class="ti ti-users"></i> Utilisateurs</a>
+            <a href="/operateur"><i class="ti ti-building-bank"></i> Opérateurs</a>
             <a href="/configurations"><i class="ti ti-settings"></i> Configurations</a>
             <a href="/type-operations" class="active"><i class="ti ti-category"></i> Types d'operation</a>
             <a href="/frais-operations"><i class="ti ti-receipt-2"></i> Frais d'operation</a>
@@ -31,7 +32,8 @@
         <h1 style="margin-bottom:20px;">Ajouter un type d'operation</h1>
 
         <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert error" style="margin:0 0 16px;"><i class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
+            <div class="alert error" style="margin:0 0 16px;"><i
+                        class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
         <?php endif; ?>
 
         <div class="form-card">
