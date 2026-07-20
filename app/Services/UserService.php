@@ -9,6 +9,10 @@ use App\Models\UserModel;
 
 class UserService
 {
+    private const TYPE_DEPOT = 1;
+    private const TYPE_RETRAIT = 2;
+    private const TYPE_TRANSFERT = 3;
+
     protected UserModel $userModel;
     private ConfigurationModel $configurationModel;
     protected HistoriqueTransactionModel $historiqueTransactionModel;
@@ -93,34 +97,58 @@ class UserService
 
     public function updateUser(int $id, array $data): array
     {
+
         $user = $this->getUserById($id);
 
         if (!$user) {
-            throw new \RuntimeException(
-                "Utilisateur introuvable."
-            );
+            throw new \RuntimeException("Utilisateur introuvable.");
         }
 
         $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
-        // Vérifie le préfixe uniquement si le numéro a changé
-        if ($data['telephone'] !== '' && $data['telephone'] !== $user['telephone'] && !$this->prefixeValide($data['telephone'])) {
-            throw new \RuntimeException(
-                "Ce préfixe n'est pas pris en charge par l'opérateur."
-            );
+        if ($data['telephone'] !== '' && $data['telephone'] !== $user['telephone']) {
+            $existant = $this->userModel->where('telephone', $data['telephone'])->first();
+            if ($existant && (int)$existant['id'] !== $id) {
+                throw new \RuntimeException("Ce numéro existe déjà.");
+            }
+
+            if (!$this->prefixeValide($data['telephone'])) {
+                throw new \RuntimeException("Ce préfixe n'est pas pris en charge par l'opérateur.");
+            }
         }
 
-        $data['solde'] = $data['solde'] ?? $user['solde'];
+        $ancienSolde = (float)$user['solde'];
+        $nouveauSolde = isset($data['solde']) ? (float)$data['solde'] : $ancienSolde;
+
+        $data['solde'] = $nouveauSolde;
         $data['type_user_id'] = $data['type_user_id'] ?? $user['type_user_id'];
 
-        $updated = $this->userModel
-            ->update($id, $data);
+        $db = db_connect();
+        $db->transStart();
+
+        $updated = $this->userModel->update($id, $data);
 
         if (!$updated) {
             throw new \RuntimeException(
                 implode(", ", $this->userModel->errors() ?: ["Échec de la mise à jour."])
             );
         }
+
+        if ($nouveauSolde !== $ancienSolde) {
+            $ecart = $nouveauSolde - $ancienSolde;
+
+            $this->historiqueTransactionModel->insert([
+                'montant' => abs($ecart),
+                'frais' => 0,
+                'type_mouvement' => $ecart > 0 ? 'credit' : 'debit',
+                'solde_apres' => $nouveauSolde,
+                'user_id' => $id,
+                'destinataire_id' => null,
+                'type_operation_id' => $ecart > 0 ? self::TYPE_DEPOT : self::TYPE_RETRAIT,
+            ]);
+        }
+
+        $db->transComplete();
 
         return $this->getUserById($id);
     }
@@ -148,7 +176,11 @@ class UserService
             );
         }
 
-        // Vérification du préfixe opérateur
+        $existant = $this->userModel->where('telephone', $data['telephone'])->first();
+        if ($existant) {
+            throw new \RuntimeException("Ce numéro existe déjà.");
+        }
+        
         if (!$this->prefixeValide($data['telephone'])) {
             throw new \RuntimeException(
                 "Ce préfixe n'est pas pris en charge par l'opérateur."
@@ -169,7 +201,6 @@ class UserService
             );
         }
 
-        // Retourner l'utilisateur créé
         return $this->getUserById($id);
     }
 

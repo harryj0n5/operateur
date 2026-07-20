@@ -8,7 +8,6 @@ use App\Models\FraisOperationModel;
 
 class TransactionService
 {
-    // Ids fixes correspondant aux inserts de base.sql
     private const TYPE_DEPOT = 1;
     private const TYPE_RETRAIT = 2;
     private const TYPE_TRANSFERT = 3;

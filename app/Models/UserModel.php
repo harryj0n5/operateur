@@ -18,7 +18,7 @@ class UserModel extends Model
     ];
 
     protected $validationRules = [
-        'telephone' => 'required|max_length[15]|is_unique[user.telephone,id,{id}]',
+        'telephone' => 'required|max_length[15]',
         'solde' => 'required|numeric',
         'type_user_id' => 'required|integer'
     ];
@@ -26,7 +26,6 @@ class UserModel extends Model
     protected $validationMessages = [
         'telephone' => [
             'required' => 'Le téléphone est obligatoire.',
-            'is_unique' => 'Ce numéro existe déjà.'
         ],
 
         'solde' => [
