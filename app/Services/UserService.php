@@ -13,6 +13,7 @@ class UserService
     private ConfigurationModel $configurationModel;
     protected HistoriqueTransactionModel $historiqueTransactionModel;
     protected TypeUserModel $typeUserModel;
+    private HistoriqueTransactionModel $historiqueModel;
 
     public function __construct()
     {
@@ -20,6 +21,7 @@ class UserService
         $this->configurationModel = new ConfigurationModel();
         $this->historiqueTransactionModel = new HistoriqueTransactionModel();
         $this->typeUserModel = new TypeUserModel();
+        $this->historiqueModel = new HistoriqueTransactionModel();
     }
 
     public function prefixeValide(string $telephone): bool
@@ -99,7 +101,7 @@ class UserService
             );
         }
 
-        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
+        $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         // Vérifie le préfixe uniquement si le numéro a changé
         if ($data['telephone'] !== '' && $data['telephone'] !== $user['telephone'] && !$this->prefixeValide($data['telephone'])) {
@@ -138,7 +140,7 @@ class UserService
 
     public function creerUser(array $data): array
     {
-        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
+        $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         if ($data['telephone'] === '') {
             throw new \RuntimeException(
@@ -173,96 +175,67 @@ class UserService
 
     public function situationGain(string $date): array
     {
-        $builder = $this->userModel->db
-            ->table('historique_transaction');
+        $dateDebutJournee = $date . ' 00:00:00';
+        $dateFinJournee = $date . ' 23:59:59';
 
+        $lignes = $this->historiqueModel
+            ->select('type_operation.libelle as type_operation_libelle, SUM(historique_transaction.frais) as total_gain, COUNT(historique_transaction.id) as nombre_transaction')
+            ->join('type_operation', 'type_operation.id = historique_transaction.type_operation_id')
+            ->where('historique_transaction.date >=', $dateDebutJournee)
+            ->where('historique_transaction.date <=', $dateFinJournee)
+            ->groupBy('historique_transaction.type_operation_id')
+            ->findAll();
 
-        $result = $builder
-            ->select('
-            SUM(frais) AS total_gain,
-            COUNT(id) AS nombre_transaction
-        ')
-            ->where('date <=', $date)
-            ->get()
-            ->getRowArray();
+        $totalGeneral = 0;
+        $nombreTotal = 0;
 
+        foreach ($lignes as $ligne) {
+            $totalGeneral += (float)$ligne['total_gain'];
+            $nombreTotal += (int)$ligne['nombre_transaction'];
+        }
 
         return [
-            'total_gain' => $result['total_gain'] ?? 0,
-            'nombre_transaction' => $result['nombre_transaction'] ?? 0
+            'date' => $date,
+            'par_operation' => $lignes,
+            'total_gain' => $totalGeneral,
+            'nombre_transaction' => $nombreTotal,
         ];
     }
+
     public function situationGainClient(int $clientId, string $date): array
     {
-        // Récupérer le client
         $client = $this->getUserById($clientId);
 
-
         if (!$client) {
-            throw new \RuntimeException(
-                "Client introuvable."
-            );
+            throw new \RuntimeException("Client introuvable.");
         }
-
 
         if ($client['type_user_id'] != 2) {
-            throw new \RuntimeException(
-                "Cet utilisateur n'est pas un client."
-            );
+            throw new \RuntimeException("Cet utilisateur n'est pas un client.");
         }
 
+        $dateFinJournee = $date . ' 23:59:59';
 
-        $db = $this->userModel->db;
-
-
-        $transaction = $db->table('historique_transaction')
+        $transaction = $this->historiqueModel
             ->select("
             COUNT(id) AS nombre_transaction,
-
-            SUM(
-                CASE 
-                    WHEN type_mouvement = 'credit'
-                    THEN montant
-                    ELSE 0
-                END
-            ) AS total_credit,
-
-            SUM(
-                CASE
-                    WHEN type_mouvement = 'debit'
-                    THEN montant
-                    ELSE 0
-                END
-            ) AS total_debit,
-
+            SUM(CASE WHEN type_mouvement = 'credit' THEN montant ELSE 0 END) AS total_credit,
+            SUM(CASE WHEN type_mouvement = 'debit' THEN montant ELSE 0 END) AS total_debit,
             SUM(frais) AS total_frais
         ")
             ->where('user_id', $clientId)
-            ->where('date <=', $date)
-            ->get()
-            ->getRowArray();
-
-
+            ->where('date <=', $dateFinJournee)
+            ->first();
 
         return [
             'client_id' => $client['id'],
             'telephone' => $client['telephone'],
-
             'date_situation' => $date,
-
             'solde_actuel' => $client['solde'],
-
-            'nombre_transaction' =>
-                $transaction['nombre_transaction'] ?? 0,
-
-            'total_credit' =>
-                $transaction['total_credit'] ?? 0,
-
-            'total_debit' =>
-                $transaction['total_debit'] ?? 0,
-
-            'total_frais' =>
-                $transaction['total_frais'] ?? 0
+            'nombre_transaction' => $transaction['nombre_transaction'] ?? 0,
+            'total_credit' => $transaction['total_credit'] ?? 0,
+            'total_debit' => $transaction['total_debit'] ?? 0,
+            'total_frais' => $transaction['total_frais'] ?? 0,
         ];
     }
 
