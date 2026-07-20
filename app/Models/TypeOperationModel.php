@@ -16,14 +16,12 @@ class TypeOperationModel extends Model
     ];
 
     protected $validationRules = [
-        'libelle' => 'required|min_length[3]|max_length[50]'
+        'libelle' => 'required|max_length[50]'
     ];
 
     protected $validationMessages = [
         'libelle' => [
-            'required' => 'Le libellé est obligatoire.',
-            'min_length' => 'Le libellé doit contenir au moins 3 caractères.',
-            'max_length' => 'Le libellé ne doit pas dépasser 50 caractères.'
+            'required' => "Le libellé est obligatoire."
         ]
     ];
 }
