@@ -4,8 +4,6 @@ namespace App\Controllers;
 
 use App\Models\ConfigurationModel;
 use App\Services\UserService;
-
-use App\Services\UserService;
 use CodeIgniter\HTTP\ResponseInterface;
 
 class UserController extends BaseController
@@ -19,12 +17,6 @@ class UserController extends BaseController
         $this->userService = new UserService();
     }
 
-
-
-    /**
-     * GET /users
-     * Liste tous les utilisateurs
-     */
     public function index()
     {
         $users = $this->userService->getAllUsers();
@@ -81,6 +73,7 @@ class UserController extends BaseController
             'user' => $user
         ]);
     }
+
     public function update($id)
     {
         $data = [
@@ -108,20 +101,7 @@ class UserController extends BaseController
             ->to('/users');
     }
 
-
-
-
-
-  
-
-    private UserService $userService;
-
-    public function __construct()
-    {
-        $this->userService = new UserService();
-    }
-
-    public function index()
+    public function seConnecter()
     {
         if (session()->get('user_id')) {
             return session()->get('type_user_id') === 1
