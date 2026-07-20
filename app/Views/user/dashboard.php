@@ -16,10 +16,10 @@ $solde = $solde ?? 0;
 
 <nav>
     <ul>
-        <li><a href="<?= site_url('client/depot') ?>">Faire un dépôt</a></li>
-        <li><a href="<?= site_url('client/retrait') ?>">Faire un retrait</a></li>
-        <li><a href="<?= site_url('client/transfert') ?>">Faire un transfert</a></li>
-        <li><a href="<?= site_url('client/historique') ?>">Voir l'historique des transactions</a></li>
+        <li><a href="<?= site_url('operations/depot') ?>">Faire un dépôt</a></li>
+        <li><a href="<?= site_url('operations/retrait') ?>">Faire un retrait</a></li>
+        <li><a href="<?= site_url('operations/transfert') ?>">Faire un transfert</a></li>
+        <li><a href="<?= site_url('operations/historique') ?>">Voir l'historique des transactions</a></li>
         <li><a href="<?= site_url('user/logout') ?>">Se déconnecter</a></li>
     </ul>
 </nav>

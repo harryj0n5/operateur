@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\ConfigurationModel;
+use App\Models\FraisOperationModel;
+use App\Services\TransactionService;
 use App\Services\UserService;
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -10,10 +12,12 @@ class UserController extends BaseController
 {
 
     protected UserService $userService;
+    protected TransactionService $transactionService;
 
     public function __construct()
     {
         $this->userService = new UserService();
+        $this->transactionService = new TransactionService();
     }
 
     public function index()
@@ -192,6 +196,82 @@ class UserController extends BaseController
         return view('user/dashboard', ['solde' => $solde]);
     }
 
+    public function depot()
+    {
+        return view('operations/depot');
+    }
 
+    public function storeDepot()
+    {
+        $userId = session()->get('user_id');
+        $montant = (float)$this->request->getPost('montant');
+
+        try {
+            $this->transactionService->depot($userId, $montant);
+            return redirect()->to('/operations/depot')->with('success', 'Dépôt de ' . $montant . ' Ar effectué.');
+        } catch (\RuntimeException $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+    }
+
+    public function retrait()
+    {
+        $fraisModel = new FraisOperationModel();
+
+        $bareme = $fraisModel
+            ->where('type_operation_id', 2)
+            ->orderBy('montant_min', 'ASC')
+            ->findAll();
+
+        return view('operations/retrait', ['bareme' => $bareme]);
+    }
+
+    public function storeRetrait()
+    {
+        $userId = session()->get('user_id');
+        $montant = (float)$this->request->getPost('montant');
+
+        try {
+            $this->transactionService->retrait($userId, $montant);
+            return redirect()->to('/operations/retrait')->with('success', 'Retrait de ' . $montant . ' Ar effectué.');
+        } catch (\RuntimeException $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+    }
+
+    public function transfert(): string
+    {
+        $fraisModel = new FraisOperationModel();
+
+        $bareme = $fraisModel
+            ->where('type_operation_id', 3)
+            ->orderBy('montant_min', 'ASC')
+            ->findAll();
+
+        return view('operations/transfert', ['bareme' => $bareme]);
+    }
+
+    public function storeTransfert()
+    {
+        $userId = session()->get('user_id');
+        $telephoneDestinataire = $this->request->getPost('telephone_destinataire');
+        $montant = (float)$this->request->getPost('montant');
+
+        try {
+            $this->transactionService->transfert($userId, $telephoneDestinataire, $montant);
+            return redirect()->to('/operations/transfert')
+                ->with('success', 'Transfert de ' . $montant . ' Ar vers ' . $telephoneDestinataire . ' effectué.');
+        } catch (\RuntimeException $e) {
+            return redirect()->back()->withInput()->with('error', $e->getMessage());
+        }
+    }
+
+    public function historique()
+    {
+        $userId = session()->get('user_id');
+        $historique = $this->transactionService->historiqueDetaille($userId);
+
+        return view('operations/historique', ['historique' => $historique]);
+    }
 }
 
