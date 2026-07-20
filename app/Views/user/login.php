@@ -2,8 +2,8 @@
 $prefixes = $prefixes ?? [];
 $prefixesStr = implode(',', $prefixes); // ex: "033,037"
 $placeholder = !empty($prefixes)
-    ? 'Ex: ' . $prefixes[0] . 'XXXXXXX'
-    : 'Numéro de téléphone';
+        ? 'Ex: ' . $prefixes[0] . 'XXXXXXX'
+        : 'Numéro de téléphone';
 ?>
 
 <!doctype html>
@@ -62,7 +62,7 @@ $placeholder = !empty($prefixes)
             const data = await response.json();
 
             if (response.ok) {
-                window.location.href = data.type_user_id === 1 ? '/operateur/dashboard' : '/client/dashboard';
+                window.location.href = Number(data.type_user_id) === 1 ? '/operateur/dashboard' : '/client/dashboard';
             } else {
                 document.getElementById('errorMessage').textContent = data.error;
             }

@@ -11,7 +11,6 @@ class UserController extends BaseController
 
     protected UserService $userService;
 
-
     public function __construct()
     {
         $this->userService = new UserService();
@@ -138,5 +137,21 @@ class UserController extends BaseController
         } catch (\RuntimeException $e) {
             return $this->response->setStatusCode(400)->setJSON(['error' => $e->getMessage()]);
         }
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/');
+    }
+
+    public function dashboard_client()
+    {
+        if (!session()->get('user_id') || session()->get('type_user_id') !== 2) {
+            return redirect()->to('/');
+        }
+
+        $solde = $this->userService->soldeClient(session()->get('user_id'));
+        return view('user/dashboard', ["solde" => $solde]);
     }
 }

@@ -3,17 +3,20 @@
 namespace App\Services;
 
 use App\Models\ConfigurationModel;
+use App\Models\HistoriqueTransactionModel;
 use App\Models\UserModel;
 
 class UserService
 {
     protected UserModel $userModel;
     private ConfigurationModel $configurationModel;
+    protected HistoriqueTransactionModel $historiqueTransactionModel;
 
     public function __construct()
     {
         $this->userModel = new UserModel();
         $this->configurationModel = new ConfigurationModel();
+        $this->historiqueTransactionModel = new HistoriqueTransactionModel();
     }
 
     public function prefixeValide(string $telephone): bool
@@ -49,6 +52,7 @@ class UserService
 
         return $this->userModel->find($id);
     }
+
     public function getAllUsers(): array
     {
         return $this->userModel->findAll();
@@ -59,6 +63,7 @@ class UserService
         return $this->userModel
             ->find($id);
     }
+
     public function deleteUser(int $id): bool
     {
 
@@ -75,10 +80,12 @@ class UserService
         return $this->userModel
             ->delete($id);
     }
+
     public function updateUser(
-        int $id,
+        int   $id,
         array $data
-    ): array {
+    ): array
+    {
 
         $user = $this->getUserById($id);
 
@@ -97,5 +104,16 @@ class UserService
         return $this->getUserById($id);
     }
 
+    public function soldeClient(int $clientId)
+    {
+        $user = $this->getUserById($clientId);
 
+        if (!$user) {
+            throw new \RuntimeException(
+                "Utilisateur introuvable."
+            );
+        }
+
+        return $user['solde'];
+    }
 }
