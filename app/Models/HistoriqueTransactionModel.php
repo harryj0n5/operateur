@@ -14,6 +14,7 @@ class HistoriqueTransactionModel extends Model
     protected $allowedFields = [
         'montant',
         'frais',
+        'frais_operateur2',
         'type_mouvement',
         'date',
         'user_id',
@@ -25,6 +26,7 @@ class HistoriqueTransactionModel extends Model
     protected $validationRules = [
         'montant' => 'required|numeric',
         'frais' => 'required|numeric',
+        'frais_operateur2' => 'required|numeric',
         'type_mouvement' => 'required|in_list[credit,debit]',
         'user_id' => 'required|integer',
         'type_operation_id' => 'required|integer'
@@ -39,6 +41,10 @@ class HistoriqueTransactionModel extends Model
         'frais' => [
             'required' => 'Le frais est obligatoire.',
             'numeric' => 'Le frais doit être numérique.'
+        ],
+        'frais_operateur2' => [
+            'required' => 'Le montant est obligatoire.',
+            'numeric' => 'Le montant doit être numérique.'
         ],
 
         'type_mouvement' => [

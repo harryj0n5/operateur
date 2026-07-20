@@ -61,6 +61,7 @@ CREATE TABLE historique_transaction
     id                   INTEGER PRIMARY KEY AUTOINCREMENT,
     montant              REAL    NOT NULL,
     frais                REAL    NOT NULL DEFAULT 0,
+    frais_operateur2     REAL    NOT NULL DEFAULT 0,
     type_mouvement       TEXT    NOT NULL CHECK (type_mouvement IN ('credit', 'debit')),
     date                 TEXT             DEFAULT CURRENT_TIMESTAMP,
     user_id              INTEGER NOT NULL,
