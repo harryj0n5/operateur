@@ -8,7 +8,8 @@ $solde = $solde ?? 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vola - Tableau de bord</title>
-    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
@@ -45,7 +46,8 @@ $solde = $solde ?? 0;
             </button>
         </div>
         <div class="amount">
-            <span id="balanceValue" data-amount="<?= esc($solde) ?>"><?= esc(number_format((float) $solde, 0, ',', ' ')) ?></span>
+            <span id="balanceValue"
+                  data-amount="<?= esc($solde) ?>"><?= esc(number_format((float)$solde, 0, ',', ' ')) ?></span>
             <span class="unit">Ar</span>
         </div>
     </div>
@@ -77,7 +79,9 @@ $solde = $solde ?? 0;
             <span class="qa-icon" style="flex-shrink:0;"><i class="ti ti-headset"></i></span>
             <div>
                 <div style="font-weight:600;font-size:13.5px;">Une question sur une operation ?</div>
-                <div style="font-size:12.5px;color:var(--ink-500);margin-top:2px;">Consultez l'historique de vos transactions pour verifier un montant ou des frais.</div>
+                <div style="font-size:12.5px;color:var(--ink-500);margin-top:2px;">Consultez l'historique de vos
+                    transactions pour verifier un montant ou des frais.
+                </div>
             </div>
         </div>
     </div>

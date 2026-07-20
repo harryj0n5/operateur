@@ -1,0 +1,15 @@
+CRITICAL - 2026-07-20 11:20:54 --> ErrorException: Undefined variable $users
+[Method: GET, Route: client/dashboard]
+in APPPATH\Views\user\dashboard.php on line 531.
+ 1 APPPATH\Views\user\dashboard.php(531): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $users', 'D:\\Cours_S4\\SI\\PROJETS\\operateur\\app\\Views\\user\\dashboard.php', 531)
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\Cours_S4\\SI\\PROJETS\\operateur\\app\\Views\\user\\dashboard.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('user/dashboard', [], true)
+ 5 APPPATH\Controllers\UserController.php(196): view('user/dashboard', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\UserController->dashboard_client()
+ 7 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\UserController))
+ 8 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\Cours_S4\\SI\\PROJETS\\operateur\\public\\index.php')

@@ -1,63 +1,58 @@
-/* =========================================================
-   VOLA — Design System Mobile Money (v2)
-   Inspiration : ravinala (vert profond) + or malgache
-   Version modernisée : plus aérée, plus douce, plus intuitive
-   ========================================================= */
 
 :root {
-    /* ---- Palette forêt (vert ravinala, plus vibrant) ---- */
-    --forest-950: #062A20;
-    --forest-900: #0B3D2E;
-    --forest-800: #0F4A38;
-    --forest-700: #145C43;
-    --forest-600: #1B7350;
-    --forest-500: #228A63;
-    --forest-400: #4DAE85;
-    --forest-200: #B7DFC9;
-    --forest-100: #DDEFE4;
-    --forest-50: #F1F8F4;
+    /* ---- Palette bleue froide ---- */
+    --forest-950: #07111F;
+    --forest-900: #0B1C33;
+    --forest-800: #10294A;
+    --forest-700: #163963;
+    --forest-600: #1E4F89;
+    --forest-500: #2E6FE6;
+    --forest-400: #5A92F0;
+    --forest-200: #C7D9F6;
+    --forest-100: #E4ECFB;
+    --forest-50: #F3F7FE;
 
-    /* ---- Or malgache (plus lumineux) ---- */
-    --gold-700: #A86A1F;
-    --gold-600: #C9852B;
-    --gold-500: #E8A33D;
-    --gold-400: #F5BE68;
-    --gold-300: #FBD498;
-    --gold-100: #FBEBD2;
-    --gold-50: #FDF7EB;
+    /* ---- Accent blanc/bleu glacier ---- */
+    --gold-700: #51657F;
+    --gold-600: #6D82A0;
+    --gold-500: #AFC4E8;
+    --gold-400: #D6E2F8;
+    --gold-300: #E8F0FC;
+    --gold-100: #F4F8FE;
+    --gold-50: #FFFFFF;
 
     /* ---- Surfaces & encre ---- */
-    --paper: #F6FAF7;
+    --paper: #F5F8FF;
     --surface: #FFFFFF;
-    --surface-alt: #FBFDFC;
-    --ink-900: #0F211D;
-    --ink-800: #1B2E29;
-    --ink-700: #2B3B36;
-    --ink-500: #5B6B65;
-    --ink-400: #7B8A83;
-    --ink-300: #A6B4AD;
-    --line: #E4EEE8;
-    --line-strong: #CFDDD5;
+    --surface-alt: #FAFCFF;
+    --ink-900: #0C1728;
+    --ink-800: #1A2840;
+    --ink-700: #32445F;
+    --ink-500: #667792;
+    --ink-400: #8091AD;
+    --ink-300: #A8B6CC;
+    --line: #E0E8F5;
+    --line-strong: #C8D6EA;
 
     /* ---- Signaux (plus doux) ---- */
-    --credit: #1E7C5B;
-    --credit-bg: #E6F5EE;
+    --credit: #235C9A;
+    --credit-bg: #EAF2FD;
     --debit: #C24545;
     --debit-bg: #FCECEC;
     --danger: #B93A3A;
     --danger-bg: #FDECEC;
-    --success: #1E7C5B;
-    --success-bg: #E6F5EE;
-    --warning: #B4761A;
-    --warning-bg: #FBEFD6;
-    --info: #1C6F87;
-    --info-bg: #E1F1F6;
+    --success: #235C9A;
+    --success-bg: #EAF2FD;
+    --warning: #7A8AA3;
+    --warning-bg: #F3F7FE;
+    --info: #2E6FE6;
+    --info-bg: #EAF2FD;
 
     /* ---- Dégradés signature ---- */
-    --grad-forest: linear-gradient(135deg, #0B3D2E 0%, #145C43 60%, #1B7350 100%);
-    --grad-forest-soft: linear-gradient(160deg, #0F4A38 0%, #0B3D2E 100%);
-    --grad-gold: linear-gradient(135deg, #F5BE68 0%, #E8A33D 55%, #C9852B 100%);
-    --grad-paper: linear-gradient(180deg, #F6FAF7 0%, #EDF4EF 100%);
+    --grad-forest: linear-gradient(135deg, #0B1C33 0%, #163963 55%, #2E6FE6 100%);
+    --grad-forest-soft: linear-gradient(160deg, #10294A 0%, #0B1C33 100%);
+    --grad-gold: linear-gradient(135deg, #FFFFFF 0%, #EEF4FD 55%, #D7E3F7 100%);
+    --grad-paper: linear-gradient(180deg, #FFFFFF 0%, #F3F7FE 100%);
 
     /* ---- Rayons (plus arrondis, plus doux) ---- */
     --radius-xs: 6px;
@@ -68,11 +63,11 @@
     --radius-pill: 999px;
 
     /* ---- Ombres (multi-couches, subtiles) ---- */
-    --shadow-xs: 0 1px 2px rgba(11, 61, 46, .05);
-    --shadow-sm: 0 2px 6px rgba(11, 61, 46, .06), 0 1px 2px rgba(11, 61, 46, .04);
-    --shadow-card: 0 4px 12px rgba(11, 61, 46, .05), 0 12px 32px rgba(11, 61, 46, .06);
-    --shadow-pop: 0 20px 48px rgba(11, 61, 46, .22), 0 6px 16px rgba(11, 61, 46, .10);
-    --shadow-gold: 0 8px 24px rgba(232, 163, 61, .35);
+    --shadow-xs: 0 1px 2px rgba(11, 28, 51, .05);
+    --shadow-sm: 0 2px 6px rgba(11, 28, 51, .07), 0 1px 2px rgba(11, 28, 51, .04);
+    --shadow-card: 0 4px 12px rgba(11, 28, 51, .06), 0 12px 32px rgba(11, 28, 51, .08);
+    --shadow-pop: 0 20px 48px rgba(11, 28, 51, .18), 0 6px 16px rgba(11, 28, 51, .10);
+    --shadow-gold: 0 8px 24px rgba(46, 111, 230, .22);
     --shadow-inset: inset 0 1px 0 rgba(255, 255, 255, .06);
 
     /* ---- Typo ---- */
@@ -190,8 +185,8 @@ button {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 85% -20%, rgba(232, 163, 61, .25), transparent 55%),
-    radial-gradient(circle at 10% 110%, rgba(77, 174, 133, .18), transparent 60%);
+    background: radial-gradient(circle at 85% -20%, rgba(255, 255, 255, .22), transparent 55%),
+    radial-gradient(circle at 10% 110%, rgba(90, 146, 240, .18), transparent 60%);
     pointer-events: none;
 }
 
@@ -302,7 +297,7 @@ button {
     right: -20%;
     width: 70%;
     height: 180%;
-    background: radial-gradient(circle, rgba(232, 163, 61, .22), transparent 60%);
+    background: radial-gradient(circle, rgba(255, 255, 255, .22), transparent 60%);
     pointer-events: none;
 }
 
@@ -736,7 +731,7 @@ input:hover, select:hover, textarea:hover {
 
 input:focus, select:focus, textarea:focus {
     border-color: var(--forest-500);
-    box-shadow: 0 0 0 4px rgba(34, 138, 99, .14);
+    box-shadow: 0 0 0 4px rgba(46, 111, 230, .14);
     background: var(--surface-alt);
 }
 
@@ -837,17 +832,17 @@ select {
 }
 
 .btn-primary:hover {
-    box-shadow: 0 12px 32px rgba(232, 163, 61, .45);
+    box-shadow: 0 12px 32px rgba(46, 111, 230, .28);
 }
 
 .btn-secondary {
     background: var(--grad-forest);
     color: #fff;
-    box-shadow: 0 6px 20px rgba(11, 61, 46, .24);
+    box-shadow: 0 6px 20px rgba(11, 28, 51, .18);
 }
 
 .btn-secondary:hover {
-    box-shadow: 0 10px 28px rgba(11, 61, 46, .32);
+    box-shadow: 0 10px 28px rgba(11, 28, 51, .24);
 }
 
 .btn-ghost {
@@ -1088,7 +1083,7 @@ select {
 }
 
 .admin-nav a.active {
-    background: rgba(232, 163, 61, .16);
+    background: rgba(255, 255, 255, .12);
     color: #fff;
 }
 
@@ -1402,8 +1397,8 @@ table.data tbody tr:hover td {
     content: "";
     position: absolute;
     inset: 0;
-    background: radial-gradient(circle at 90% 10%, rgba(232, 163, 61, .28), transparent 55%),
-    radial-gradient(circle at 0% 100%, rgba(77, 174, 133, .20), transparent 60%);
+    background: radial-gradient(circle at 90% 10%, rgba(255, 255, 255, .24), transparent 55%),
+    radial-gradient(circle at 0% 100%, rgba(90, 146, 240, .20), transparent 60%);
     pointer-events: none;
 }
 
