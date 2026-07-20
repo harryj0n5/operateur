@@ -35,3 +35,5 @@ $routes->get(
     'users/delete/(:num)',
     'UserController::delete/$1'
 );
+$routes->get('/', 'UserController::index');
+$routes->post('user/login', 'UserController::login');
