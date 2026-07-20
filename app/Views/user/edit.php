@@ -31,7 +31,8 @@
         <h1 style="margin-bottom:20px;">Modifier un utilisateur</h1>
 
         <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert error" style="margin:0 0 16px;"><i class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
+            <div class="alert error" style="margin:0 0 16px;"><i
+                        class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
         <?php endif; ?>
 
         <div class="form-card">
@@ -44,17 +45,12 @@
                 </div>
 
                 <div class="field">
-                    <label>Solde</label>
-                    <input type="number" name="solde" value="<?= esc(old('solde') ?? $user['solde']) ?>">
-                </div>
-
-                <div class="field">
                     <label>Type utilisateur</label>
                     <select name="type_user_id">
                         <?php foreach ($typeUsers as $typeUser): ?>
                             <option
-                                value="<?= esc($typeUser['id']) ?>"
-                                <?= (string) (old('type_user_id') ?? $user['type_user_id']) === (string) $typeUser['id'] ? 'selected' : '' ?>
+                                    value="<?= esc($typeUser['id']) ?>"
+                                    <?= (string)(old('type_user_id') ?? $user['type_user_id']) === (string)$typeUser['id'] ? 'selected' : '' ?>
                             >
                                 <?= esc($typeUser['libelle']) ?>
                             </option>

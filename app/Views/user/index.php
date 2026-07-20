@@ -33,11 +33,13 @@
         </div>
 
         <?php if (session()->getFlashdata('success')): ?>
-            <div class="alert success" style="margin:0 0 16px;"><i class="ti ti-circle-check"></i> <?= esc(session()->getFlashdata('success')) ?></div>
+            <div class="alert success" style="margin:0 0 16px;"><i
+                        class="ti ti-circle-check"></i> <?= esc(session()->getFlashdata('success')) ?></div>
         <?php endif; ?>
 
         <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert error" style="margin:0 0 16px;"><i class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
+            <div class="alert error" style="margin:0 0 16px;"><i
+                        class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
         <?php endif; ?>
 
         <div class="table-card">
@@ -45,7 +47,6 @@
                 <tr>
                     <th>ID</th>
                     <th>Telephone</th>
-                    <th>Solde</th>
                     <th>Type</th>
                     <th>Actions</th>
                 </tr>
@@ -54,14 +55,17 @@
                     <tr>
                         <td>#<?= esc($user['id']) ?></td>
                         <td><?= esc($user['telephone']) ?></td>
-                        <td class="money"><?= esc(number_format((float) $user['solde'], 0, ',', ' ')) ?> Ar</td>
                         <td><span class="badge op"><?= esc($user['type_user_libelle']) ?></span></td>
                         <td>
                             <div class="row-actions">
-                                <a href="/users/edit/<?= esc($user['id']) ?>" class="btn btn-ghost btn-sm"><i class="ti ti-edit"></i> Modifier</a>
-                                <form method="post" action="/users/delete/<?= esc($user['id']) ?>" onsubmit="return confirm('Supprimer ?')">
+                                <a href="/users/edit/<?= esc($user['id']) ?>" class="btn btn-ghost btn-sm"><i
+                                            class="ti ti-edit"></i> Modifier</a>
+                                <form method="post" action="/users/delete/<?= esc($user['id']) ?>"
+                                      onsubmit="return confirm('Supprimer ?')">
                                     <?= csrf_field() ?>
-                                    <button type="submit" class="btn btn-danger btn-sm"><i class="ti ti-trash"></i> Supprimer</button>
+                                    <button type="submit" class="btn btn-danger btn-sm"><i class="ti ti-trash"></i>
+                                        Supprimer
+                                    </button>
                                 </form>
                             </div>
                         </td>
