@@ -162,7 +162,7 @@ class TransactionService
 
         $destinataire = $this->userModel->where('telephone', $telephoneDestinataire)->first();
 
-        if (!$destinataire && !$this->prefixeValide($telephoneDestinataire)) {
+        if (!$this->prefixeValide($telephoneDestinataire)) {
             throw new \RuntimeException("Ce préfixe n'est pas pris en charge par l'opérateur.");
         }
 
