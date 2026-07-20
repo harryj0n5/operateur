@@ -2,18 +2,19 @@
 
 ## Etape 1 : Conception MCD du projet
 
-- Identifier les entités principales du projet.
-- Définir les relations entre les entités.
-- Créer un diagramme MCD (Modèle Conceptuel de Données) pour représenter visuellement les entités et leurs relations.
-- Assurer que le MCD respecte les règles de normalisation pour éviter les redondances et les anomalies.
+- Identifier les entités principales du projet. (Tous)
+- Définir les relations entre les entités. (Tous)
+- Créer un diagramme MCD (Modèle Conceptuel de Données) pour représenter visuellement les entités et leurs relations. (
+  Juan)
+- Assurer que le MCD respecte les règles de normalisation pour éviter les redondances et les anomalies. (Tous)
 
 ## Etape 2 : Creer les entity dans le projet
 
-- Créer les classes d'entités correspondant aux entités identifiées dans le MCD.
-- Définir les attributs et les méthodes pour chaque classe d'entité.
+- Créer les classes d'entités correspondant aux entités identifiées dans le MCD. (Harry)
+- Définir les attributs et les méthodes pour chaque classe d'entité. (Harry)
 - Implémenter les relations entre les entités en utilisant des associations, des agrégations ou des compositions selon
-  les besoins du projet.
-- Ajouter des contraintes et des validations pour garantir l'intégrité des données. (prefix, etc)
+  les besoins du projet. (Harry)
+- Ajouter des contraintes et des validations pour garantir l'intégrité des données. (prefix, etc) (Harry)
 
 ## Etape 3 : Definir les metiers et les services
 
