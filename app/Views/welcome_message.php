@@ -1,13 +1,11 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>Vola - Votre argent, partout</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/png" href="/favicon.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
@@ -28,33 +26,33 @@
             </g>
         </svg>
         <div class="brand"><span class="brand-mark">V</span> Vola</div>
-        <p class="tagline">Envoyez, recevez et gérez votre argent depuis votre téléphone, en toute confiance.</p>
+        <p class="tagline">Envoyez, recevez et gerez votre argent depuis votre telephone, en toute confiance.</p>
     </div>
 
     <div class="auth-card" style="display:flex;flex-direction:column;">
         <h1>Bienvenue</h1>
-        <p class="sub">Dépôts, retraits et transferts en quelques secondes.</p>
+        <p class="sub">Depots, retraits et transferts en quelques secondes.</p>
 
         <div class="list" style="margin-bottom:28px;">
             <div class="tx-row" style="align-items:flex-start;">
                 <span class="qa-icon" style="flex-shrink:0;"><i class="ti ti-plus"></i></span>
                 <div class="tx-main">
-                    <div class="tx-title">Dépôt instantané</div>
-                    <div class="tx-sub">Créditez votre compte auprès d'un point de dépôt agréé.</div>
+                    <div class="tx-title">Depot instantane</div>
+                    <div class="tx-sub">Creditez votre compte aupres d'un point de depot agree.</div>
                 </div>
             </div>
             <div class="tx-row" style="align-items:flex-start;">
                 <span class="qa-icon" style="flex-shrink:0;"><i class="ti ti-send"></i></span>
                 <div class="tx-main">
                     <div class="tx-title">Transfert vers un contact</div>
-                    <div class="tx-sub">Envoyez de l'argent à n'importe quel numéro en quelques secondes.</div>
+                    <div class="tx-sub">Envoyez de l'argent a n'importe quel numero en quelques secondes.</div>
                 </div>
             </div>
             <div class="tx-row" style="align-items:flex-start;">
                 <span class="qa-icon" style="flex-shrink:0;"><i class="ti ti-receipt"></i></span>
                 <div class="tx-main">
                     <div class="tx-title">Historique clair</div>
-                    <div class="tx-sub">Suivez chaque opération, montant et frais en toute transparence.</div>
+                    <div class="tx-sub">Suivez chaque operation, montant et frais en toute transparence.</div>
                 </div>
             </div>
         </div>
@@ -66,3 +64,5 @@
 
 </body>
 </html>
+
+

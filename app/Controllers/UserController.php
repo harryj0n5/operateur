@@ -42,7 +42,6 @@ class UserController extends BaseController
 
             $data = [
                 'telephone' => $this->request->getPost('telephone'),
-                'solde' => $this->request->getPost('solde'),
                 'type_user_id' => $this->request->getPost('type_user_id')
             ];
 
@@ -87,7 +86,6 @@ class UserController extends BaseController
 
             $data = [
                 'telephone' => $this->request->getPost('telephone'),
-                'solde' => $this->request->getPost('solde'),
                 'type_user_id' => $this->request->getPost('type_user_id')
             ];
 
@@ -192,7 +190,7 @@ class UserController extends BaseController
             return redirect()->to('/')->with('error', 'Votre session a expiré, veuillez vous reconnecter.');
         }
 
-        $solde = $user['solde'];
+        $solde = $this->userService->soldeClient($userId);
         return view('user/dashboard', ['solde' => $solde]);
     }
 
@@ -203,7 +201,11 @@ class UserController extends BaseController
         try {
             $gain = $this->userService->situationGain($date);
         } catch (\Exception $e) {
-            $gain = ['total_gain' => 0, 'nombre_transaction' => 0];
+            $gain = [
+                'total_operateur_principal' => 0,
+                'total_autres_operateurs' => 0,
+                'nombre_transaction' => 0
+            ];
         }
 
         return view('user/dashboard_operateur', [
@@ -314,15 +316,31 @@ class UserController extends BaseController
     public function storeTransfert()
     {
         $userId = session()->get('user_id');
-        $telephoneDestinataire = $this->request->getPost('telephone_destinataire');
+
+        $telephones = $this->request->getPost('telephones');
         $montant = (float)$this->request->getPost('montant');
 
+        $inclureFraisRetrait = $this->request->getPost('inclure_frais_retrait') == 1;
+
         try {
-            $this->transactionService->transfert($userId, $telephoneDestinataire, $montant);
-            return redirect()->to('/operations/transfert')
-                ->with('success', 'Transfert de ' . $montant . ' Ar vers ' . $telephoneDestinataire . ' effectué.');
+
+            $this->transactionService->transfertMultiple(
+                $userId,
+                $telephones,
+                $montant,
+                $inclureFraisRetrait
+            );
+
+            return redirect()
+                ->to('/operations/transfert')
+                ->with('success', 'Transfert effectué.');
+
         } catch (\RuntimeException $e) {
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
         }
     }
 

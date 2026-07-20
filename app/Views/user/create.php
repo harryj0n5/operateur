@@ -1,12 +1,10 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vola - Ajouter un utilisateur</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
@@ -18,12 +16,13 @@
         <nav class="admin-nav">
             <a href="/operateur/dashboard"><i class="ti ti-layout-dashboard"></i> Tableau de bord</a>
             <a href="/users" class="active"><i class="ti ti-users"></i> Utilisateurs</a>
+            <a href="/operateur"><i class="ti ti-building-bank"></i> Opérateurs</a>
             <a href="/configurations"><i class="ti ti-settings"></i> Configurations</a>
-            <a href="/type-operations"><i class="ti ti-category"></i> Types d'opération</a>
-            <a href="/frais-operations"><i class="ti ti-receipt-2"></i> Frais d'opération</a>
+            <a href="/type-operations"><i class="ti ti-category"></i> Types d'operation</a>
+            <a href="/frais-operations"><i class="ti ti-receipt-2"></i> Frais d'operation</a>
             <a href="/operateur/situation-gain"><i class="ti ti-chart-bar"></i> Situation des gains</a>
             <a href="/operateur/situation-gain-client"><i class="ti ti-user-search"></i> Situation client</a>
-            <a href="/user/logout" style="margin-top:16px;"><i class="ti ti-logout"></i> Déconnexion</a>
+            <a href="/user/logout" style="margin-top:16px;"><i class="ti ti-logout"></i> Deconnexion</a>
         </nav>
     </aside>
 
@@ -33,7 +32,8 @@
         <h1 style="margin-bottom:20px;">Ajouter un utilisateur</h1>
 
         <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert error" style="margin:0 0 16px;"><i class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
+            <div class="alert error" style="margin:0 0 16px;"><i
+                        class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
         <?php endif; ?>
 
         <div class="form-card">
@@ -41,7 +41,7 @@
                 <?= csrf_field() ?>
 
                 <div class="field">
-                    <label>Téléphone</label>
+                    <label>Telephone</label>
                     <input type="text" name="telephone" value="<?= esc(old('telephone')) ?>" placeholder="034XXXXXXX">
                 </div>
 
@@ -55,8 +55,8 @@
                     <select name="type_user_id">
                         <?php foreach ($typeUsers as $typeUser): ?>
                             <option
-                                value="<?= esc($typeUser['id']) ?>"
-                                <?= (string) old('type_user_id') === (string) $typeUser['id'] ? 'selected' : '' ?>
+                                    value="<?= esc($typeUser['id']) ?>"
+                                    <?= (string)old('type_user_id') === (string)$typeUser['id'] ? 'selected' : '' ?>
                             >
                                 <?= esc($typeUser['libelle']) ?>
                             </option>
@@ -77,3 +77,5 @@
 
 </body>
 </html>
+
+

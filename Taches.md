@@ -1,5 +1,7 @@
 # Examen Projet Final - S4 Info et Design Juillet 2026
 
+# Version 1
+
 ## Etape 1 : Conception MCD du projet
 
 - Identifier les entités principales du projet. (Tous)
@@ -46,3 +48,35 @@
 - Concevoir les interfaces utilisateur pour chaque fonctionnalité du projet. (Tous)
 - Assurer que les interfaces sont intuitives et faciles à utiliser. (Tous)
 - Intégrer les vues avec les controllers pour permettre l'interaction entre l'utilisateur et le système. (Tous)
+
+=====================================================================================================================
+
+# Version 2
+
+## Etape 1 : Conception MCD du projet
+
+- Ajouter une table operateur
+- Ajouter une colonne "operateur_id" dans la table configuration pour lier chaque prefix à un opérateur
+  spécifique.
+- Ajouter une colonne "operateur_id" dans la table transactions pour lier chaque transaction à un opérateur spécifique.
+- Ajouter une colonne boolean "frais_retrait_inclus" dans la table transactions pour indiquer si les frais de retrait
+  sont inclus dans le montant du retrait ou non.
+- Au lieu de destinataire_id, ajouter une colonne "destinataire_numero" dans la table transactions pour stocker le
+  numéro de téléphone du destinataire du transfert.
+
+## Etape 2 : Creer les entity dans le projet
+
+- Modifier la classe Configuration pour inclure l'attribut "operateur_id" et les méthodes associées pour gérer cette
+  relation.
+- Modifier la classe Transaction pour inclure l'attribut "operateur_id", "frais retrait_inclus" et "
+  destinataire_numero", ainsi que les méthodes associées pour gérer ces relations et attributs.
+- Créer la classe Operateur avec les attributs nécessaires (nom, code, etc.) et les méthodes associées pour gérer les
+  opérateurs.
+
+## Etape 3 : Definir les metiers et les services
+
+- Gestion des opérateurs: création, modification, suppression des opérateurs. (Juan)
+- Gestion des configurations: création, modification, suppression des configurations avec l'association à un opérateur
+  spécifique. (Harry)
+- Gestion des transactions: création, lecture, mise à jour et suppression des transactions avec l'association à un
+  opérateur spécifique et la gestion des frais de retrait inclus ou non.

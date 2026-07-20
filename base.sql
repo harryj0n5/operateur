@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS historique_transaction;
 DROP TABLE IF EXISTS frais_operation;
 DROP TABLE IF EXISTS configuration;
+DROP TABLE IF EXISTS operateur;
 DROP TABLE IF EXISTS type_operation;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS type_user;
@@ -15,17 +16,27 @@ CREATE TABLE user
 (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     telephone    TEXT    NOT NULL UNIQUE,
-    solde        REAL    NOT NULL DEFAULT 0,
     type_user_id INTEGER NOT NULL,
 
     FOREIGN KEY (type_user_id)
         REFERENCES type_user (id)
 );
 
+CREATE TABLE operateur
+(
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    libelle           TEXT    NOT NULL,
+    principale        BOOLEAN NOT NULL DEFAULT 0,
+    pourcentage_frais REAL    NOT NULL DEFAULT 0
+);
+
 CREATE TABLE configuration
 (
-    id     INTEGER PRIMARY KEY AUTOINCREMENT,
-    prefix TEXT NOT NULL UNIQUE
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    prefix       TEXT    NOT NULL UNIQUE,
+    operateur_id INTEGER NOT NULL,
+    FOREIGN KEY (operateur_id)
+        REFERENCES operateur (id)
 );
 
 CREATE TABLE type_operation
@@ -48,19 +59,18 @@ CREATE TABLE frais_operation
 
 CREATE TABLE historique_transaction
 (
-    id                INTEGER PRIMARY KEY AUTOINCREMENT,
-    montant           REAL    NOT NULL,
-    frais             REAL    NOT NULL DEFAULT 0,
-    type_mouvement    TEXT    NOT NULL CHECK (type_mouvement IN ('credit', 'debit')),
-    solde_apres       REAL    NOT NULL,
-    date              TEXT             DEFAULT CURRENT_TIMESTAMP,
-    user_id           INTEGER NOT NULL,
-    destinataire_id   INTEGER,
-    type_operation_id INTEGER NOT NULL,
+    id                   INTEGER PRIMARY KEY AUTOINCREMENT,
+    montant              REAL    NOT NULL,
+    frais                REAL    NOT NULL DEFAULT 0,
+    frais_operateur2     REAL    NOT NULL DEFAULT 0,
+    type_mouvement       TEXT    NOT NULL CHECK (type_mouvement IN ('credit', 'debit')),
+    date                 TEXT             DEFAULT CURRENT_TIMESTAMP,
+    user_id              INTEGER NOT NULL,
+    destinataire_numero  TEXT,
+    type_operation_id    INTEGER NOT NULL,
+    frais_retrait_inclus BOOLEAN NOT NULL DEFAULT 0,
 
     FOREIGN KEY (user_id)
-        REFERENCES user (id),
-    FOREIGN KEY (destinataire_id)
         REFERENCES user (id),
     FOREIGN KEY (type_operation_id)
         REFERENCES type_operation (id)
@@ -71,14 +81,19 @@ INSERT INTO type_user(libelle)
 VALUES ('Operateur'),
        ('Client');
 
-INSERT INTO user(telephone, solde, type_user_id)
-VALUES ('0338632043', 0, 1),     -- operateur
-       ('0331234567', 50000, 2), -- client de test avec solde initial
-       ('0379876543', 20000, 2); -- client de test avec solde initial
+INSERT INTO user(telephone, type_user_id)
+VALUES ('0338632043', 1), -- operateur
+       ('0331234567', 2), -- client de test avec solde initial
+       ('0379876543', 2); -- client de test avec solde initial
 
-INSERT INTO configuration(prefix)
-VALUES ('033'),
-       ('037');
+INSERT INTO operateur(libelle, principale, pourcentage_frais)
+VALUES ('Orange Money', 1, 0),
+       ('Yas', 0, 20),
+       ('Airtel', 0, 40);
+
+INSERT INTO configuration(prefix, operateur_id)
+VALUES ('033', 1),
+       ('037', 1);
 
 INSERT INTO type_operation(libelle)
 VALUES ('Depot'),
