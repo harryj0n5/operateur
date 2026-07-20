@@ -42,6 +42,7 @@ class UserController extends BaseController
 
             $data = [
                 'telephone' => $this->request->getPost('telephone'),
+                'solde' => $this->request->getPost('solde'),
                 'type_user_id' => $this->request->getPost('type_user_id')
             ];
 
@@ -86,6 +87,7 @@ class UserController extends BaseController
 
             $data = [
                 'telephone' => $this->request->getPost('telephone'),
+                'solde' => $this->request->getPost('solde'),
                 'type_user_id' => $this->request->getPost('type_user_id')
             ];
 
@@ -190,7 +192,7 @@ class UserController extends BaseController
             return redirect()->to('/')->with('error', 'Votre session a expiré, veuillez vous reconnecter.');
         }
 
-        $solde = $this->userService->soldeClient($userId);
+        $solde = $user['solde'];
         return view('user/dashboard', ['solde' => $solde]);
     }
 

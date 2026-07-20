@@ -3,25 +3,19 @@
 namespace App\Services;
 
 use App\Models\ConfigurationModel;
-use App\Models\OperateurModel;
 
 class ConfigurationService
 {
     protected ConfigurationModel $configurationModel;
-    protected OperateurModel $operateurModel;
 
     public function __construct()
     {
         $this->configurationModel = new ConfigurationModel();
-        $this->operateurModel = new OperateurModel();
     }
 
     public function getAll(): array
     {
-        return $this->configurationModel
-            ->select('configuration.*, operateur.libelle as operateur_libelle')
-            ->join('operateur', 'operateur.id = configuration.operateur_id')
-            ->findAll();
+        return $this->configurationModel->findAll();
     }
 
     public function getById(int $id): array|null
@@ -29,25 +23,9 @@ class ConfigurationService
         return $this->configurationModel->find($id);
     }
 
-    public function getOperateurs(): array
-    {
-        return $this->operateurModel->findAll();
-    }
-
-    private function verifierOperateur(int $operateurId): void
-    {
-        if (!$this->operateurModel->find($operateurId)) {
-            throw new \RuntimeException("L'opérateur sélectionné est invalide.");
-        }
-    }
-
     public function create(array $data): array
     {
         $data['prefix'] = trim((string) ($data['prefix'] ?? ''));
-
-        if (!empty($data['operateur_id'])) {
-            $this->verifierOperateur((int) $data['operateur_id']);
-        }
 
         $id = $this->configurationModel->insert($data);
 
@@ -69,10 +47,6 @@ class ConfigurationService
         }
 
         $data['prefix'] = trim((string) ($data['prefix'] ?? ''));
-
-        if (!empty($data['operateur_id'])) {
-            $this->verifierOperateur((int) $data['operateur_id']);
-        }
 
         $updated = $this->configurationModel->update($id, $data);
 

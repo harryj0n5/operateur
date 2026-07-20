@@ -101,11 +101,6 @@ class UserService
             throw new \RuntimeException("Utilisateur introuvable.");
         }
 
-        // 'solde' n'est pas une colonne de la table user (il est calculé
-        // à partir de l'historique des transactions) : on ne le transmet
-        // jamais au modèle.
-        unset($data['solde']);
-
         $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         if ($data['telephone'] !== '' && $data['telephone'] !== $user['telephone']) {
@@ -167,11 +162,6 @@ class UserService
 
     public function creerUser(array $data): array
     {
-        // 'solde' n'est pas une colonne de la table user (il est calculé
-        // à partir de l'historique des transactions) : on ne le transmet
-        // jamais au modèle.
-        unset($data['solde']);
-
         $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         if ($data['telephone'] === '') {

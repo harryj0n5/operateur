@@ -22,9 +22,7 @@ class ConfigurationController extends BaseController
 
     public function create()
     {
-        return view('configuration/create', [
-            'operateurs' => $this->configurationService->getOperateurs()
-        ]);
+        return view('configuration/create');
     }
 
     public function store()
@@ -32,8 +30,7 @@ class ConfigurationController extends BaseController
         try {
 
             $data = [
-                'prefix' => $this->request->getPost('prefix'),
-                'operateur_id' => $this->request->getPost('operateur_id')
+                'prefix' => $this->request->getPost('prefix')
             ];
 
             $this->configurationService->create($data);
@@ -61,8 +58,7 @@ class ConfigurationController extends BaseController
         }
 
         return view('configuration/edit', [
-            'configuration' => $configuration,
-            'operateurs' => $this->configurationService->getOperateurs()
+            'configuration' => $configuration
         ]);
     }
 
@@ -71,8 +67,7 @@ class ConfigurationController extends BaseController
         try {
 
             $data = [
-                'prefix' => $this->request->getPost('prefix'),
-                'operateur_id' => $this->request->getPost('operateur_id')
+                'prefix' => $this->request->getPost('prefix')
             ];
 
             $this->configurationService->update((int) $id, $data);
