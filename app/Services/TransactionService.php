@@ -176,4 +176,25 @@ class TransactionService
             ->orderBy('date', 'DESC')
             ->findAll();
     }
+
+    public function historiqueDetaille(int $userId): array
+    {
+        $lignes = $this->historiqueModel
+            ->select('historique_transaction.*, type_operation.libelle as type_operation_libelle')
+            ->join('type_operation', 'type_operation.id = historique_transaction.type_operation_id')
+            ->where('historique_transaction.user_id', $userId)
+            ->orderBy('historique_transaction.date', 'DESC')
+            ->findAll();
+
+        foreach ($lignes as &$ligne) {
+            $ligne['contrepartie_telephone'] = null;
+
+            if (!empty($ligne['destinataire_id'])) {
+                $contrepartie = $this->userModel->find($ligne['destinataire_id']);
+                $ligne['contrepartie_telephone'] = $contrepartie['telephone'] ?? null;
+            }
+        }
+
+        return $lignes;
+    }
 }

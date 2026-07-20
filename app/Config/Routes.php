@@ -54,8 +54,17 @@ $routes->group('operateur', ['filter' => 'auth:operateur'], function ($routes) {
 $routes->group('client', ['filter' => 'auth:client'], function ($routes) {
     $routes->get('dashboard', 'UserController::dashboard_client');
     $routes->get('solde', 'UserController::solde');
-    $routes->post('depot', 'UserController::depot');
-    $routes->post('retrait', 'UserController::retrait');
-    $routes->post('transfert', 'UserController::transfert');
+});
+
+$routes->group('operations', ['filter' => 'auth:client'], function ($routes) {
+    $routes->get('depot', 'UserController::depot');
+    $routes->post('depot', 'UserController::storeDepot');
+
+    $routes->get('retrait', 'UserController::retrait');
+    $routes->post('retrait', 'UserController::storeRetrait');
+
+    $routes->get('transfert', 'UserController::transfert');
+    $routes->post('transfert', 'UserController::storeTransfert');
+
     $routes->get('historique', 'UserController::historique');
 });
