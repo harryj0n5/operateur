@@ -99,7 +99,7 @@ class UserService
             );
         }
 
-        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
+        $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         // Vérifie le préfixe uniquement si le numéro a changé
         if ($data['telephone'] !== '' && $data['telephone'] !== $user['telephone'] && !$this->prefixeValide($data['telephone'])) {
@@ -123,9 +123,22 @@ class UserService
         return $this->getUserById($id);
     }
 
+    public function soldeClient(int $clientId)
+    {
+        $user = $this->getUserById($clientId);
+
+        if (!$user) {
+            throw new \RuntimeException(
+                "Utilisateur introuvable."
+            );
+        }
+
+        return $user['solde'];
+    }
+
     public function creerUser(array $data): array
     {
-        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
+        $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         if ($data['telephone'] === '') {
             throw new \RuntimeException(

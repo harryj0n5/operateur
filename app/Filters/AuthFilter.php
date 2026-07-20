@@ -19,7 +19,7 @@ class AuthFilter implements FilterInterface
         }
 
         if ($arguments) {
-            $typeUserId = session()->get('type_user_id');
+            $typeUserId = (int)session()->get('type_user_id');
 
             $typesAutorises = [
                 'operateur' => 1,
@@ -31,13 +31,12 @@ class AuthFilter implements FilterInterface
             if ($attendu !== null && $typeUserId !== $attendu) {
                 return service('response')
                     ->setStatusCode(403)
-                    ->setJSON(['error' => 'Accès non autorisé pour ce type d\'utilisateur.']);
+                    ->setJSON(['error' => "Accès non autorisé pour ce type d'utilisateur."]);
             }
         }
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-
     }
 }

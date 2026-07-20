@@ -63,7 +63,7 @@ class UserController extends BaseController
 
     public function edit($id)
     {
-        $user = $this->userService->getUserById((int) $id);
+        $user = $this->userService->getUserById((int)$id);
 
 
         if (!$user) {
@@ -89,7 +89,7 @@ class UserController extends BaseController
 
 
             $this->userService->updateUser(
-                (int) $id,
+                (int)$id,
                 $data
             );
 
@@ -112,7 +112,7 @@ class UserController extends BaseController
     {
         try {
 
-            $this->userService->deleteUser((int) $id);
+            $this->userService->deleteUser((int)$id);
 
             return redirect()
                 ->to('/users')
@@ -130,7 +130,7 @@ class UserController extends BaseController
     public function seConnecter()
     {
         if (session()->get('user_id')) {
-            return session()->get('type_user_id') === 1
+            return (int)session()->get('type_user_id') === 1
                 ? redirect()->to('/operateur/dashboard')
                 : redirect()->to('/client/dashboard');
         }
@@ -174,12 +174,24 @@ class UserController extends BaseController
 
     public function dashboard_client()
     {
-        if (!session()->get('user_id') || session()->get('type_user_id') !== 2) {
+        $userId = session()->get('user_id');
+
+        if (!$userId || (int)session()->get('type_user_id') !== 2) {
             return redirect()->to('/');
         }
 
-        $solde = $this->userService->soldeClient(session()->get('user_id'));
-        return view('user/dashboard', ["solde" => $solde]);
+        $user = $this->userService->getUserById($userId);
+
+        if (!$user) {
+            // Session obsolète (utilisateur supprimé ou base réinitialisée)
+            session()->destroy();
+            return redirect()->to('/')->with('error', 'Votre session a expiré, veuillez vous reconnecter.');
+        }
+
+        $solde = $user['solde'];
+        return view('user/dashboard', ['solde' => $solde]);
     }
+
+    
 }
 
