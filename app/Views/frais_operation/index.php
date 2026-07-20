@@ -1,4 +1,4 @@
-<h1>Liste utilisateurs</h1>
+<h1>Liste des frais d'opération</h1>
 
 <?php if (session()->getFlashdata('success')): ?>
     <p style="color: green;"><?= esc(session()->getFlashdata('success')) ?></p>
@@ -8,8 +8,8 @@
     <p style="color: red;"><?= esc(session()->getFlashdata('error')) ?></p>
 <?php endif; ?>
 
-<a href="/users/create">
-    Ajouter utilisateur
+<a href="/frais-operations/create">
+    Ajouter un frais d'opération
 </a>
 
 
@@ -17,43 +17,47 @@
 
     <tr>
         <th>ID</th>
-        <th>Téléphone</th>
-        <th>Solde</th>
-        <th>Type</th>
+        <th>Type d'opération</th>
+        <th>Montant min</th>
+        <th>Montant max</th>
+        <th>Frais</th>
         <th>Actions</th>
     </tr>
 
 
-    <?php foreach ($users as $user): ?>
+    <?php foreach ($fraisOperations as $fraisOperation): ?>
 
         <tr>
 
             <td>
-                <?= esc($user['id']) ?>
+                <?= esc($fraisOperation['id']) ?>
             </td>
 
             <td>
-                <?= esc($user['telephone']) ?>
+                <?= esc($fraisOperation['type_operation_libelle']) ?>
             </td>
 
             <td>
-                <?= esc($user['solde']) ?>
+                <?= esc($fraisOperation['montant_min']) ?>
             </td>
 
             <td>
-                <?= esc($user['type_user_libelle']) ?>
+                <?= esc($fraisOperation['montant_max']) ?>
             </td>
 
+            <td>
+                <?= esc($fraisOperation['frais']) ?>
+            </td>
 
             <td>
 
-                <a href="/users/edit/<?= esc($user['id']) ?>">
+                <a href="/frais-operations/<?= esc($fraisOperation['id']) ?>/edit">
                     Modifier
                 </a>
 
                 <form
                     method="post"
-                    action="/users/delete/<?= esc($user['id']) ?>"
+                    action="/frais-operations/<?= esc($fraisOperation['id']) ?>/delete"
                     style="display:inline"
                     onsubmit="return confirm('Supprimer ?')"
                 >

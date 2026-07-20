@@ -27,7 +27,9 @@ class UserController extends BaseController
 
     public function create()
     {
-        return view('user/create');
+        return view('user/create', [
+            'typeUsers' => $this->userService->getTypeUsers()
+        ]);
     }
 
     public function store()
@@ -70,7 +72,8 @@ class UserController extends BaseController
 
 
         return view('user/edit', [
-            'user' => $user
+            'user' => $user,
+            'typeUsers' => $this->userService->getTypeUsers()
         ]);
     }
 

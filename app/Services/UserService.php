@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ConfigurationModel;
 use App\Models\HistoriqueTransactionModel;
+use App\Models\TypeUserModel;
 use App\Models\UserModel;
 
 class UserService
@@ -11,12 +12,14 @@ class UserService
     protected UserModel $userModel;
     private ConfigurationModel $configurationModel;
     protected HistoriqueTransactionModel $historiqueTransactionModel;
+    protected TypeUserModel $typeUserModel;
 
     public function __construct()
     {
         $this->userModel = new UserModel();
         $this->configurationModel = new ConfigurationModel();
         $this->historiqueTransactionModel = new HistoriqueTransactionModel();
+        $this->typeUserModel = new TypeUserModel();
     }
 
     public function prefixeValide(string $telephone): bool
@@ -55,7 +58,10 @@ class UserService
 
     public function getAllUsers(): array
     {
-        return $this->userModel->findAll();
+        return $this->userModel
+            ->select('user.*, type_user.libelle as type_user_libelle')
+            ->join('type_user', 'type_user.id = user.type_user_id')
+            ->findAll();
     }
 
     public function getUserById(int $id): array|null
@@ -64,11 +70,14 @@ class UserService
             ->find($id);
     }
 
+    public function getTypeUsers(): array
+    {
+        return $this->typeUserModel->findAll();
+    }
+
     public function deleteUser(int $id): bool
     {
-
         $user = $this->getUserById($id);
-
 
         if (!$user) {
             throw new \RuntimeException(
@@ -76,19 +85,13 @@ class UserService
             );
         }
 
-
         return $this->userModel
             ->delete($id);
     }
 
-    public function updateUser(
-        int   $id,
-        array $data
-    ): array
+    public function updateUser(int $id, array $data): array
     {
-
         $user = $this->getUserById($id);
-
 
         if (!$user) {
             throw new \RuntimeException(
@@ -98,28 +101,10 @@ class UserService
 
         $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
 
-        if ($data['telephone'] === '') {
-            throw new \RuntimeException(
-                "Le numéro de téléphone est obligatoire."
-            );
-        }
-
         // Vérifie le préfixe uniquement si le numéro a changé
-        if ($data['telephone'] !== $user['telephone'] && !$this->prefixeValide($data['telephone'])) {
+        if ($data['telephone'] !== '' && $data['telephone'] !== $user['telephone'] && !$this->prefixeValide($data['telephone'])) {
             throw new \RuntimeException(
                 "Ce préfixe n'est pas pris en charge par l'opérateur."
-            );
-        }
-
-        // Vérifie qu'un AUTRE utilisateur n'utilise pas déjà ce numéro
-        $userExiste = $this->userModel
-            ->where('telephone', $data['telephone'])
-            ->where('id !=', $id)
-            ->first();
-
-        if ($userExiste) {
-            throw new \RuntimeException(
-                "Ce numéro existe déjà."
             );
         }
 
@@ -138,19 +123,6 @@ class UserService
         return $this->getUserById($id);
     }
 
-    public function soldeClient(int $clientId)
-    {
-        $user = $this->getUserById($clientId);
-
-        if (!$user) {
-            throw new \RuntimeException(
-                "Utilisateur introuvable."
-            );
-        }
-
-        return $user['solde'];
-    }
-}
     public function creerUser(array $data): array
     {
         $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
@@ -168,28 +140,12 @@ class UserService
             );
         }
 
-
-        // Vérifier si le téléphone existe déjà
-        $userExiste = $this->userModel
-            ->where('telephone', $data['telephone'])
-            ->first();
-
-
-        if ($userExiste) {
-            throw new \RuntimeException(
-                "Ce numéro existe déjà."
-            );
-        }
-
-
         // Valeurs par défaut
         $data['solde'] = $data['solde'] ?? 0;
         $data['type_user_id'] = $data['type_user_id'] ?? 2;
 
-
-        // Insertion
+        // Insertion (la vérification d'unicité du téléphone est gérée par le modèle)
         $id = $this->userModel->insert($data);
-
 
         if (!$id) {
             throw new \RuntimeException(
@@ -200,10 +156,20 @@ class UserService
             );
         }
 
-
         // Retourner l'utilisateur créé
         return $this->getUserById($id);
     }
 
+    public function soldeClient(int $clientId)
+    {
+        $user = $this->getUserById($clientId);
 
+        if (!$user) {
+            throw new \RuntimeException(
+                "Utilisateur introuvable."
+            );
+        }
+
+        return $user['solde'];
+    }
 }

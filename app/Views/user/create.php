@@ -24,7 +24,16 @@
 
     <label>Type utilisateur</label>
 
-    <input type="number" name="type_user_id" value="<?= esc(old('type_user_id') ?? '2') ?>">
+    <select name="type_user_id">
+        <?php foreach ($typeUsers as $typeUser): ?>
+            <option
+                value="<?= esc($typeUser['id']) ?>"
+                <?= (string) old('type_user_id') === (string) $typeUser['id'] ? 'selected' : '' ?>
+            >
+                <?= esc($typeUser['libelle']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
 
 
     <br>

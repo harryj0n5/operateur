@@ -18,7 +18,7 @@ class UserModel extends Model
     ];
 
     protected $validationRules = [
-        'telephone' => 'required|max_length[15]|is_unique[user.telephone]',
+        'telephone' => 'required|max_length[15]|is_unique[user.telephone,id,{id}]',
         'solde' => 'required|numeric',
         'type_user_id' => 'required|integer'
     ];

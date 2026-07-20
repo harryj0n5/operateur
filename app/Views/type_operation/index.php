@@ -1,4 +1,4 @@
-<h1>Liste utilisateurs</h1>
+<h1>Liste des types d'opération</h1>
 
 <?php if (session()->getFlashdata('success')): ?>
     <p style="color: green;"><?= esc(session()->getFlashdata('success')) ?></p>
@@ -8,8 +8,8 @@
     <p style="color: red;"><?= esc(session()->getFlashdata('error')) ?></p>
 <?php endif; ?>
 
-<a href="/users/create">
-    Ajouter utilisateur
+<a href="/type-operations/create">
+    Ajouter un type d'opération
 </a>
 
 
@@ -17,43 +17,32 @@
 
     <tr>
         <th>ID</th>
-        <th>Téléphone</th>
-        <th>Solde</th>
-        <th>Type</th>
+        <th>Libellé</th>
         <th>Actions</th>
     </tr>
 
 
-    <?php foreach ($users as $user): ?>
+    <?php foreach ($typeOperations as $typeOperation): ?>
 
         <tr>
 
             <td>
-                <?= esc($user['id']) ?>
+                <?= esc($typeOperation['id']) ?>
             </td>
 
             <td>
-                <?= esc($user['telephone']) ?>
+                <?= esc($typeOperation['libelle']) ?>
             </td>
 
             <td>
-                <?= esc($user['solde']) ?>
-            </td>
 
-            <td>
-                <?= esc($user['type_user_libelle']) ?>
-            </td>
-
-
-            <td>
-
-                <a href="/users/edit/<?= esc($user['id']) ?>">
+                <a href="/type-operations/<?= esc($typeOperation['id']) ?>/edit">
                     Modifier
                 </a>
 
                 <form
                     method="post"
-                    action="/users/delete/<?= esc($user['id']) ?>"
+                    action="/type-operations/<?= esc($typeOperation['id']) ?>/delete"
                     style="display:inline"
                     onsubmit="return confirm('Supprimer ?')"
                 >

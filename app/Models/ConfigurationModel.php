@@ -16,7 +16,7 @@ class ConfigurationModel extends Model
     ];
 
     protected $validationRules = [
-        'prefix' => 'required|max_length[10]|is_unique[configuration.prefix]'
+        'prefix' => 'required|max_length[10]|is_unique[configuration.prefix,id,{id}]'
     ];
 
     protected $validationMessages = [

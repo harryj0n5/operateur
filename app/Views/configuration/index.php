@@ -1,4 +1,4 @@
-<h1>Liste utilisateurs</h1>
+<h1>Liste des configurations</h1>
 
 <?php if (session()->getFlashdata('success')): ?>
     <p style="color: green;"><?= esc(session()->getFlashdata('success')) ?></p>
@@ -8,8 +8,8 @@
     <p style="color: red;"><?= esc(session()->getFlashdata('error')) ?></p>
 <?php endif; ?>
 
-<a href="/users/create">
-    Ajouter utilisateur
+<a href="/configurations/create">
+    Ajouter une configuration
 </a>
 
 
@@ -17,43 +17,32 @@
 
     <tr>
         <th>ID</th>
-        <th>Téléphone</th>
-        <th>Solde</th>
-        <th>Type</th>
+        <th>Préfixe</th>
         <th>Actions</th>
     </tr>
 
 
-    <?php foreach ($users as $user): ?>
+    <?php foreach ($configurations as $configuration): ?>
 
         <tr>
 
             <td>
-                <?= esc($user['id']) ?>
+                <?= esc($configuration['id']) ?>
             </td>
 
             <td>
-                <?= esc($user['telephone']) ?>
+                <?= esc($configuration['prefix']) ?>
             </td>
 
             <td>
-                <?= esc($user['solde']) ?>
-            </td>
 
-            <td>
-                <?= esc($user['type_user_libelle']) ?>
-            </td>
-
-
-            <td>
-
-                <a href="/users/edit/<?= esc($user['id']) ?>">
+                <a href="/configurations/<?= esc($configuration['id']) ?>/edit">
                     Modifier
                 </a>
 
                 <form
                     method="post"
-                    action="/users/delete/<?= esc($user['id']) ?>"
+                    action="/configurations/<?= esc($configuration['id']) ?>/delete"
                     style="display:inline"
                     onsubmit="return confirm('Supprimer ?')"
                 >

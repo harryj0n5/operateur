@@ -18,11 +18,32 @@ $routes->group('users', ['filter' => 'auth:operateur'], function ($routes) {
     $routes->post('(:num)/delete', 'UserController::delete/$1');
 });
 
+$routes->group('configurations', ['filter' => 'auth:operateur'], function ($routes) {
+    $routes->get('/', 'ConfigurationController::index');
+    $routes->get('create', 'ConfigurationController::create');
+    $routes->post('store', 'ConfigurationController::store');
+    $routes->get('(:num)/edit', 'ConfigurationController::edit/$1');
+    $routes->post('(:num)/update', 'ConfigurationController::update/$1');
+    $routes->post('(:num)/delete', 'ConfigurationController::delete/$1');
+});
 
-$routes->post(
-    'users/delete/(:num)',
-    'UserController::delete/$1'
-);
+$routes->group('type-operations', ['filter' => 'auth:operateur'], function ($routes) {
+    $routes->get('/', 'TypeOperationController::index');
+    $routes->get('create', 'TypeOperationController::create');
+    $routes->post('store', 'TypeOperationController::store');
+    $routes->get('(:num)/edit', 'TypeOperationController::edit/$1');
+    $routes->post('(:num)/update', 'TypeOperationController::update/$1');
+    $routes->post('(:num)/delete', 'TypeOperationController::delete/$1');
+});
+
+$routes->group('frais-operations', ['filter' => 'auth:operateur'], function ($routes) {
+    $routes->get('/', 'FraisOperationController::index');
+    $routes->get('create', 'FraisOperationController::create');
+    $routes->post('store', 'FraisOperationController::store');
+    $routes->get('(:num)/edit', 'FraisOperationController::edit/$1');
+    $routes->post('(:num)/update', 'FraisOperationController::update/$1');
+    $routes->post('(:num)/delete', 'FraisOperationController::delete/$1');
+});
 
 $routes->group('client', ['filter' => 'auth:client'], function ($routes) {
     $routes->get('dashboard', 'UserController::dashboard_user');
