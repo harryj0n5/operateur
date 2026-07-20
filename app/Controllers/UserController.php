@@ -20,14 +20,14 @@ class UserController extends BaseController
     {
         $users = $this->userService->getAllUsers();
 
-        return view('users/index', [
+        return view('user/index', [
             'users' => $users
         ]);
     }
 
     public function create()
     {
-        return view('users/create');
+        return view('user/create');
     }
 
     public function store()
@@ -41,7 +41,7 @@ class UserController extends BaseController
             ];
 
 
-            $this->userService->creer($data);
+            $this->userService->creerUser($data);
 
 
             return redirect()
@@ -53,6 +53,7 @@ class UserController extends BaseController
 
             return redirect()
                 ->back()
+                ->withInput()
                 ->with('error', $e->getMessage());
 
         }
@@ -60,7 +61,7 @@ class UserController extends BaseController
 
     public function edit($id)
     {
-        $user = $this->userService->getUserById($id);
+        $user = $this->userService->getUserById((int) $id);
 
 
         if (!$user) {
@@ -68,36 +69,59 @@ class UserController extends BaseController
         }
 
 
-        return view('users/edit', [
+        return view('user/edit', [
             'user' => $user
         ]);
     }
 
     public function update($id)
     {
-        $data = [
-            'telephone' => $this->request->getPost('telephone'),
-            'solde' => $this->request->getPost('solde'),
-            'type_user_id' => $this->request->getPost('type_user_id')
-        ];
+        try {
+
+            $data = [
+                'telephone' => $this->request->getPost('telephone'),
+                'solde' => $this->request->getPost('solde'),
+                'type_user_id' => $this->request->getPost('type_user_id')
+            ];
 
 
-        $this->userService->updateUser(
-            $id,
-            $data
-        );
+            $this->userService->updateUser(
+                (int) $id,
+                $data
+            );
 
 
-        return redirect()
-            ->to('/users');
+            return redirect()
+                ->to('/users')
+                ->with('success', 'Utilisateur modifié');
+
+        } catch (\Exception $e) {
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+
+        }
     }
 
     public function delete($id)
     {
-        $this->userService->deleteUser($id);
+        try {
 
-        return redirect()
-            ->to('/users');
+            $this->userService->deleteUser((int) $id);
+
+            return redirect()
+                ->to('/users')
+                ->with('success', 'Utilisateur supprimé');
+
+        } catch (\Exception $e) {
+
+            return redirect()
+                ->to('/users')
+                ->with('error', $e->getMessage());
+
+        }
     }
 
     public function seConnecter()
@@ -154,4 +178,5 @@ class UserController extends BaseController
         $solde = $this->userService->soldeClient(session()->get('user_id'));
         return view('user/dashboard', ["solde" => $solde]);
     }
+}
 }

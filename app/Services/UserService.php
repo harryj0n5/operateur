@@ -96,10 +96,44 @@ class UserService
             );
         }
 
+        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
 
-        $this->userModel
+        if ($data['telephone'] === '') {
+            throw new \RuntimeException(
+                "Le numéro de téléphone est obligatoire."
+            );
+        }
+
+        // Vérifie le préfixe uniquement si le numéro a changé
+        if ($data['telephone'] !== $user['telephone'] && !$this->prefixeValide($data['telephone'])) {
+            throw new \RuntimeException(
+                "Ce préfixe n'est pas pris en charge par l'opérateur."
+            );
+        }
+
+        // Vérifie qu'un AUTRE utilisateur n'utilise pas déjà ce numéro
+        $userExiste = $this->userModel
+            ->where('telephone', $data['telephone'])
+            ->where('id !=', $id)
+            ->first();
+
+        if ($userExiste) {
+            throw new \RuntimeException(
+                "Ce numéro existe déjà."
+            );
+        }
+
+        $data['solde'] = $data['solde'] ?? $user['solde'];
+        $data['type_user_id'] = $data['type_user_id'] ?? $user['type_user_id'];
+
+        $updated = $this->userModel
             ->update($id, $data);
 
+        if (!$updated) {
+            throw new \RuntimeException(
+                implode(", ", $this->userModel->errors() ?: ["Échec de la mise à jour."])
+            );
+        }
 
         return $this->getUserById($id);
     }
@@ -116,4 +150,60 @@ class UserService
 
         return $user['solde'];
     }
+}
+    public function creerUser(array $data): array
+    {
+        $data['telephone'] = trim((string) ($data['telephone'] ?? ''));
+
+        if ($data['telephone'] === '') {
+            throw new \RuntimeException(
+                "Le numéro de téléphone est obligatoire."
+            );
+        }
+
+        // Vérification du préfixe opérateur
+        if (!$this->prefixeValide($data['telephone'])) {
+            throw new \RuntimeException(
+                "Ce préfixe n'est pas pris en charge par l'opérateur."
+            );
+        }
+
+
+        // Vérifier si le téléphone existe déjà
+        $userExiste = $this->userModel
+            ->where('telephone', $data['telephone'])
+            ->first();
+
+
+        if ($userExiste) {
+            throw new \RuntimeException(
+                "Ce numéro existe déjà."
+            );
+        }
+
+
+        // Valeurs par défaut
+        $data['solde'] = $data['solde'] ?? 0;
+        $data['type_user_id'] = $data['type_user_id'] ?? 2;
+
+
+        // Insertion
+        $id = $this->userModel->insert($data);
+
+
+        if (!$id) {
+            throw new \RuntimeException(
+                implode(
+                    ", ",
+                    $this->userModel->errors() ?: ["Échec de la création."]
+                )
+            );
+        }
+
+
+        // Retourner l'utilisateur créé
+        return $this->getUserById($id);
+    }
+
+
 }

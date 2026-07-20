@@ -19,7 +19,7 @@ $routes->group('users', ['filter' => 'auth:operateur'], function ($routes) {
 });
 
 
-$routes->get(
+$routes->post(
     'users/delete/(:num)',
     'UserController::delete/$1'
 );
