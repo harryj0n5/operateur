@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS operateur;
 DROP TABLE IF EXISTS type_operation;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS type_user;
+DROP TABLE IF EXISTS promotion;
 
 CREATE TABLE type_user
 (
@@ -74,6 +75,16 @@ CREATE TABLE historique_transaction
         REFERENCES type_operation (id)
 );
 
+CREATE TABLE promotion
+(
+    id           INTEGER PRIMARY KEY AUTOINCREMENT,
+    pourcentage  REAL    NOT NULL DEFAULT 0,
+    created_at   TEXT             DEFAULT CURRENT_TIMESTAMP,
+    operateur_id INTEGER NOT NULL,
+
+    FOREIGN KEY (operateur_id)
+        REFERENCES operateur (id)
+);
 
 INSERT INTO type_user(libelle)
 VALUES ('Operateur'),
@@ -120,3 +131,6 @@ VALUES (100, 1000, 50, 2),
        (250001, 500000, 1500, 3),
        (500001, 1000000, 2500, 3),
        (1000001, 2000000, 3000, 3);
+
+INSERT INTO promotion (pourcentage, operateur_id)
+VALUES (50, 1);
