@@ -86,6 +86,16 @@ CREATE TABLE promotion
         REFERENCES operateur (id)
 );
 
+
+CREATE TABLE coffre_eparge(
+    id  INTEGER PRIMARY KEY AUTOINCREMENT,
+    telephone INTEGER,
+    pourcentage  REAL    NOT NULL DEFAULT 0,
+    solde REAL    NOT NULL
+);
+
+
+
 INSERT INTO type_user(libelle)
 VALUES ('Operateur'),
        ('Client');
@@ -107,7 +117,8 @@ VALUES ('033', 1),
 INSERT INTO type_operation(libelle)
 VALUES ('Depot'),
        ('Retrait'),
-       ('Transfert');
+       ('Transfert'),
+       ('Epargne');
 
 INSERT INTO frais_operation (montant_min, montant_max, frais, type_operation_id)
 VALUES (100, 1000, 50, 2),

@@ -12,6 +12,7 @@ $menuItems = [
         ['key' => 'situation-gain', 'url' => 'operateur/situation-gain', 'icon' => 'bi-bar-chart', 'label' => 'Situation des gains'],
         ['key' => 'situation-gain-client', 'url' => 'operateur/situation-gain-client', 'icon' => 'bi-search', 'label' => 'Situation client'],
         ['key' => 'promotions', 'url' => 'promotions', 'icon' => 'bi-speedometer2', 'label' => 'Promotions'],
+        ['key' => 'epargne', 'url' => 'epargne', 'icon' => 'bi-speedometer2', 'label' => 'Epargne'],
 ];
 ?>
 

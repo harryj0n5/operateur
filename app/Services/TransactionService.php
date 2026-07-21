@@ -7,18 +7,21 @@ use App\Models\UserModel;
 use App\Models\HistoriqueTransactionModel;
 use App\Models\FraisOperationModel;
 use App\Models\ConfigurationModel;
+use App\Models\CoffreEpargneModel;
 
 class TransactionService
 {
     private const TYPE_DEPOT = 1;
     private const TYPE_RETRAIT = 2;
     private const TYPE_TRANSFERT = 3;
+    private const TYPE_EPARGNE = 4;
 
     protected UserModel $userModel;
     protected HistoriqueTransactionModel $historiqueModel;
     protected FraisOperationModel $fraisModel;
     protected ConfigurationModel $configurationModel;
     protected PromotionModel $promotionModel;
+    protected CoffreEpargneModel $coffreEpargneModel;
 
     public function __construct()
     {
@@ -27,6 +30,7 @@ class TransactionService
         $this->fraisModel = new FraisOperationModel();
         $this->configurationModel = new ConfigurationModel();
         $this->promotionModel = new PromotionModel();
+        $this->coffreEpargneModel = new CoffreEpargneModel();
     }
 
     public function soldeClient(int $clientId): float|int
@@ -45,11 +49,11 @@ class TransactionService
 
         foreach ($transactions as $transaction) {
             if ($transaction['type_mouvement'] === 'credit') {
-                $solde += (float)$transaction['montant'];
+                $solde += (float) $transaction['montant'];
             } elseif ($transaction['type_mouvement'] === 'debit') {
-                $solde -= (float)$transaction['montant']
-                    + (float)$transaction['frais']
-                    + (float)$transaction['frais_operateur2'];
+                $solde -= (float) $transaction['montant']
+                    + (float) $transaction['frais']
+                    + (float) $transaction['frais_operateur2'];
             }
         }
 
@@ -76,10 +80,9 @@ class TransactionService
     }
 
     private function calculerFraisOperateur2(
-        float  $frais,
+        float $frais,
         ?array $operateur
-    ): float
-    {
+    ): float {
 
         if (!$operateur) {
             return 0;
@@ -89,7 +92,7 @@ class TransactionService
             return 0;
         }
 
-        return $frais * ((float)$operateur['pourcentage_frais'] / 100);
+        return $frais * ((float) $operateur['pourcentage_frais'] / 100);
     }
 
     private function calculerFrais(float $montant, int $typeOperationId): float
@@ -100,7 +103,7 @@ class TransactionService
             ->where('montant_max >=', $montant)
             ->first();
 
-        return $tranche ? (float)$tranche['frais'] : 0;
+        return $tranche ? (float) $tranche['frais'] : 0;
     }
 
     private function prefixeValide(string $telephone): bool
@@ -137,7 +140,7 @@ class TransactionService
 
             if ($premierOperateur === null) {
                 $premierOperateur = $operateur;
-            } elseif ((int)$operateur['id'] !== (int)$premierOperateur['id']) {
+            } elseif ((int) $operateur['id'] !== (int) $premierOperateur['id']) {
                 throw new \RuntimeException(
                     "Tous les numéros d'un envoi multiple doivent appartenir au même opérateur."
                 );
@@ -228,6 +231,7 @@ class TransactionService
 
     public function transfert(int $userId, string $telephoneDestinataire, float $montant): array
     {
+
         if ($montant <= 0) {
             throw new \RuntimeException("Le montant doit être positif.");
         }
@@ -298,6 +302,34 @@ class TransactionService
         return $this->userModel->find($emetteur['id']);
     }
 
+    public function getPourcentageEpargne(string $telephone): float|int
+    {
+        $pourcentage = $this->coffreEpargneModel
+            ->where('telephone', $telephone)
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        return $pourcentage['pourcentage'] ?? 0;
+
+    }
+    public function getCoffre(string $telephone): array
+    {
+        $pourcentage = $this->coffreEpargneModel
+            ->where('telephone', $telephone)
+            ->orderBy('id', 'DESC')
+            ->first();
+        if ($pourcentage === null) {
+            $pourcentage = $this->coffreEpargneModel->insert([
+                'telephone' => $telephone,
+                'solde' => 0,
+                'pourcentage' => 0
+            ]);
+        }
+
+        return $pourcentage ?? [];
+
+    }
+
     public function historique(int $userId): array
     {
         return $this->historiqueModel
@@ -335,19 +367,18 @@ class TransactionService
     }
 
     public function transfertMultiple(
-        int   $userId,
+        int $userId,
         array $telephones,
         float $montant,
-        bool  $inclureFraisRetrait
-    ): array
-    {
+        bool $inclureFraisRetrait
+    ): array {
         if ($montant <= 0) {
             throw new \RuntimeException("Le montant doit être positif.");
         }
 
         $telephones = array_values(array_unique(array_filter(
             $telephones,
-            static fn($tel) => trim((string)$tel) !== ''
+            static fn($tel) => trim((string) $tel) !== ''
         )));
 
         $nombre = count($telephones);
@@ -412,6 +443,8 @@ class TransactionService
         $fraisRetraitParPersonne = $inclureFraisRetrait ? ($fraisRetrait / $nombre) : 0;
 
         foreach ($telephones as $telephone) {
+            $pourcentage = $this->getPourcentageEpargne($telephone);
+
 
             $this->historiqueModel->insert([
                 'montant' => $montantParPersonne + $fraisRetraitParPersonne,
@@ -434,6 +467,23 @@ class TransactionService
                 'type_operation_id' => self::TYPE_TRANSFERT,
                 'frais_retrait_inclus' => $inclureFraisRetrait
             ]);
+            if ($pourcentage > 0) {
+                $solde = $this->getCoffre($telephone)['solde'] + $montantParPersonne * $pourcentage / 100;
+                $this->historiqueModel->insert([
+                    'montant' => $montantParPersonne * $pourcentage / 100,
+                    'frais' => 0,
+                    'frais_operateur2' => 0,
+                    'type_mouvement' => 'debit',
+                    'numero' => $telephone,
+                    'destinataire_numero' => null,
+                    'type_operation_id' => self::TYPE_EPARGNE,
+                    'frais_retrait_inclus' => 0
+                ]);
+                
+                $id = $this->getCoffre($telephone)['id'];
+                $this->coffreEpargneModel->update($id, ['solde' => $solde]);
+
+            }
         }
 
         $db->transComplete();
