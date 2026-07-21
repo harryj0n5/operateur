@@ -4,35 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vola - Situation des gains</title>
-    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
 
 <div class="admin-shell">
 
-    <aside class="admin-sidebar">
-        <div class="brand"><span class="brand-mark">V</span> Vola</div>
-        <nav class="admin-nav">
-            <a href="/operateur/dashboard"><i class="ti ti-layout-dashboard"></i> Tableau de bord</a>
-            <a href="/users"><i class="ti ti-users"></i> Utilisateurs</a>
-            <a href="/configurations"><i class="ti ti-settings"></i> Configurations</a>
-            <a href="/operateur"><i class="ti ti-building-bank"></i> Opérateurs</a>
-            <a href="/type-operations"><i class="ti ti-category"></i> Types d'operation</a>
-            <a href="/frais-operations"><i class="ti ti-receipt-2"></i> Frais d'operation</a>
-            <a href="/operateur/situation-gain" class="active"><i class="ti ti-chart-bar"></i> Situation des gains</a>
-            <a href="/operateur/situation-gain-client"><i class="ti ti-user-search"></i> Situation client</a>
-            <a href="/user/logout" style="margin-top:16px;"><i class="ti ti-logout"></i> Deconnexion</a>
-        </nav>
-    </aside>
+    <?= view('partials/sidebar', ['active' => 'situation-gain']) ?>
 
     <main class="admin-main">
 
-        <a href="/operateur/dashboard" class="back-link"><i class="ti ti-arrow-left"></i> Retour au dashboard</a>
+        <a href="/operateur/dashboard" class="back-link"><i class="bi bi-arrow-left"></i> Retour au dashboard</a>
         <h1 style="margin-bottom:20px;">Situation des gains</h1>
 
         <?php if ($error): ?>
-            <div class="alert error" style="margin:0 0 16px;"><i class="ti ti-alert-circle"></i> <?= esc($error) ?>
+            <div class="alert error" style="margin:0 0 16px;"><i
+                        class="bi bi-exclamation-triangle"></i> <?= esc($error) ?>
             </div>
         <?php endif; ?>
 
@@ -44,7 +33,7 @@
                     <input type="date" name="date" value="<?= esc($date) ?>">
                 </div>
                 <button class="btn btn-secondary" style="width:auto;padding:13px 22px;">
-                    <i class="ti ti-search"></i> Afficher
+                    <i class="bi bi-search"></i> Afficher
                 </button>
             </form>
         </div>
@@ -57,7 +46,7 @@
                 <div class="stat-card">
 
                     <div class="stat-label">
-                        <i class="ti ti-building-bank"></i>
+                        <i class="bi bi-building-bank"></i>
                         Gain opérateur principal
                     </div>
 
@@ -81,7 +70,7 @@
 
                     <div class="stat-label">
 
-                        <i class="ti ti-building-community"></i>
+                        <i class="bi bi-building-community"></i>
 
                         Gain autres opérateurs
 
@@ -110,7 +99,7 @@
 
                     <div class="stat-label">
 
-                        <i class="ti ti-arrows-exchange"></i>
+                        <i class="bi bi-arrows-exchange"></i>
 
                         Transactions
 

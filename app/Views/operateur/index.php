@@ -4,10 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Vola - Opérateurs</title>
-
-    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 
@@ -17,21 +16,7 @@
 <div class="admin-shell">
 
 
-    <aside class="admin-sidebar">
-        <div class="brand"><span class="brand-mark">V</span> Vola</div>
-        <nav class="admin-nav">
-            <a href="/operateur/dashboard"><i class="ti ti-layout-dashboard"></i> Tableau de bord</a>
-            <a href="/users"><i class="ti ti-users"></i> Utilisateurs</a>
-            <a href="/operateur" class="active"><i class="active"></i> Opérateurs</a>
-            <a href="/configurations"><i class="ti ti-settings"></i> Configurations</a>
-            <a href="/type-operations"><i class="ti ti-category"></i> Types d'operation</a>
-            <a href="/frais-operations" class="ti bi-ticket-fill"><i class="ti ti-receipt-2"></i> Frais d'operation</a>
-            <a href="/operateur/situation-gain"><i class="ti ti-chart-bar"></i> Situation des gains</a>
-            <a href="/operateur/situation-gain-client"><i class="ti ti-user-search"></i> Situation client</a>
-            <a href="/user/logout" style="margin-top:16px;"><i class="ti ti-logout"></i> Deconnexion</a>
-        </nav>
-    </aside>
-
+    <?= view('partials/sidebar', ['active' => 'operateur']) ?>
 
     <main class="admin-main">
 
@@ -44,7 +29,7 @@
             <a href="/operateur/create"
                class="btn btn-secondary btn-sm">
 
-                <i class="ti ti-plus"></i>
+                <i class="bi bi-plus"></i>
                 Ajouter un opérateur
 
             </a>

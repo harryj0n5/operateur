@@ -7,24 +7,31 @@ $fraisDepot = 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vola - Depot</title>
-    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
 
-<div class="app" style="padding-bottom:24px;">
+<div class="client-shell">
 
-    <div class="topbar">
-        <a href="<?= site_url('client/dashboard') ?>" class="back-btn" aria-label="Retour"><i class="ti ti-arrow-left"></i></a>
+    <?= view('partials/header', ['active' => 'dashboard']) ?>
+
+    <div class="page-topline">
+        <a href="<?= site_url('client/dashboard') ?>" class="back-btn" aria-label="Retour">
+            <i class="bi bi-arrow-left"></i>
+        </a>
         <h1>Depot d'argent</h1>
     </div>
 
     <?php if (session()->getFlashdata('success')): ?>
-        <div class="alert success"><i class="ti ti-circle-check"></i> <?= esc(session()->getFlashdata('success')) ?></div>
+        <div class="alert success"><i class="bi bi-check-circle"></i> <?= esc(session()->getFlashdata('success')) ?>
+        </div>
     <?php endif; ?>
 
     <?php if (session()->getFlashdata('error')): ?>
-        <div class="alert error"><i class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
+        <div class="alert error"><i class="bi bi-exclamation-circle"></i> <?= esc(session()->getFlashdata('error')) ?>
+        </div>
     <?php endif; ?>
 
     <div class="form-page">
@@ -40,26 +47,26 @@ $fraisDepot = 0;
                 <div class="hint">Ce montant sera credite sur votre compte.</div>
             </div>
 
-            <button type="submit" class="btn btn-primary" id="submitBtn">
-                <i class="ti ti-plus"></i> Deposer
+            <button type="submit" class="btn-vola-primary w-100" id="submitBtn">
+                <i class="bi bi-plus-lg"></i> Deposer
             </button>
         </form>
     </div>
 
 </div>
 
-<div class="sheet-backdrop" id="confirmBackdrop">
-    <div class="sheet">
-        <div class="sheet-handle"></div>
+<div class="modal-backdrop" id="confirmBackdrop">
+    <div class="modal-card">
         <h3>Confirmer le depot</h3>
         <div class="fee-box">
             <div class="fee-row"><span>Montant du depot</span><span class="val" id="sMontant">0 Ar</span></div>
             <div class="fee-row"><span>Frais appliques</span><span class="val" id="sFrais">0 Ar</span></div>
-            <div class="fee-row total"><span>Debite du point de depot</span><span class="val" id="sTotal">0 Ar</span></div>
+            <div class="fee-row total"><span>Debite du point de depot</span><span class="val" id="sTotal">0 Ar</span>
+            </div>
         </div>
-        <div class="sheet-actions">
-            <button type="button" class="btn btn-outline" id="cancelConfirm">Annuler</button>
-            <button type="button" class="btn btn-primary" id="validateConfirm">Confirmer</button>
+        <div class="modal-actions">
+            <button type="button" class="btn-vola-outline" id="cancelConfirm">Annuler</button>
+            <button type="button" class="btn-vola-primary" id="validateConfirm">Confirmer</button>
         </div>
     </div>
 </div>
@@ -101,5 +108,3 @@ $fraisDepot = 0;
 
 </body>
 </html>
-
-

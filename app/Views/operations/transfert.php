@@ -5,30 +5,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vola - Transfert multiple</title>
-    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 
 <body>
-<div class="app" style="padding-bottom:24px;">
+<div class="client-shell">
 
-    <div class="topbar">
-        <a href="<?= site_url('client/dashboard') ?>" class="back-btn">
-            <i class="ti ti-arrow-left"></i>
+    <?= view('partials/header', ['active' => 'dashboard']) ?>
+
+    <div class="page-topline">
+        <a href="<?= site_url('client/dashboard') ?>" class="back-btn" aria-label="Retour">
+            <i class="bi bi-arrow-left"></i>
         </a>
         <h1>Transfert multiple</h1>
     </div>
 
     <?php if (session()->getFlashdata('success')): ?>
         <div class="alert success">
-            <i class="ti ti-circle-check"></i>
+            <i class="bi bi-check-circle"></i>
             <?= esc(session()->getFlashdata('success')) ?>
         </div>
     <?php endif; ?>
 
     <?php if (session()->getFlashdata('error')): ?>
         <div class="alert error">
-            <i class="ti ti-alert-circle"></i>
+            <i class="bi bi-exclamation-circle"></i>
             <?= esc(session()->getFlashdata('error')) ?>
         </div>
     <?php endif; ?>
@@ -45,8 +48,8 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-outline" id="addDest">
-                    <i class="ti ti-plus"></i>
+                <button type="button" class="btn-vola-outline" id="addDest">
+                    <i class="bi bi-plus-lg"></i>
                     Ajouter un numéro
                 </button>
             </div>
@@ -60,26 +63,24 @@
                 <div class="hint" id="feePreview">
                     Les frais dépendent du montant transféré.
                 </div>
+                <div class="hint-secondary d-none" id="feePreviewRetrait"></div>
             </div>
 
-            <label>
-                <input type="checkbox" name="inclure_frais_retrait" value="1">
+            <label class="checkbox-field">
+                <input type="checkbox" name="inclure_frais_retrait" id="inclureRetrait" value="1">
                 Inclure les frais de retrait
             </label>
 
-            <br><br>
-
-            <button type="submit" class="btn btn-primary">
-                <i class="ti ti-send"></i>
+            <button type="submit" class="btn-vola-primary w-100">
+                <i class="bi bi-send"></i>
                 Transférer
             </button>
         </form>
     </div>
 </div>
 
-<div class="sheet-backdrop" id="confirmBackdrop">
-    <div class="sheet">
-        <div class="sheet-handle"></div>
+<div class="modal-backdrop" id="confirmBackdrop">
+    <div class="modal-card">
         <h3>Confirmer le transfert</h3>
 
         <div class="fee-box">
@@ -99,8 +100,13 @@
             </div>
 
             <div class="fee-row">
-                <span>Frais appliqués</span>
+                <span>Frais de transfert</span>
                 <span class="val" id="sFrais">0 Ar</span>
+            </div>
+
+            <div class="fee-row hidden" id="sFraisRetraitRow">
+                <span>Frais de retrait</span>
+                <span class="val" id="sFraisRetrait">0 Ar</span>
             </div>
 
             <div class="fee-row total">
@@ -109,11 +115,11 @@
             </div>
         </div>
 
-        <div class="sheet-actions">
-            <button type="button" class="btn btn-outline" id="cancelConfirm">
+        <div class="modal-actions">
+            <button type="button" class="btn-vola-outline" id="cancelConfirm">
                 Annuler
             </button>
-            <button type="button" class="btn btn-primary" id="validateConfirm">
+            <button type="button" class="btn-vola-primary" id="validateConfirm">
                 Confirmer
             </button>
         </div>
@@ -126,6 +132,8 @@
     const container = document.getElementById('destinataires');
     const montantInput = document.getElementById('montant');
     const feePreview = document.getElementById('feePreview');
+    const feePreviewRetrait = document.getElementById('feePreviewRetrait');
+    const inclureRetraitCheckbox = document.getElementById('inclureRetrait');
     const backdrop = document.getElementById('confirmBackdrop');
 
     function calculerFrais(montant) {
@@ -141,6 +149,33 @@
         return Number(n).toLocaleString('fr-FR').replace(/,/g, ' ') + ' Ar';
     }
 
+    function getNombreDestinataires() {
+        return document.querySelectorAll('input[name="telephones[]"]').length;
+    }
+
+    function updateFeePreview() {
+        const montant = Number(montantInput.value);
+        const nombre = getNombreDestinataires();
+
+        if (montant > 0 && nombre > 0) {
+            const part = montant / nombre;
+            const fraisTransfert = calculerFrais(part) * nombre;
+
+            feePreview.textContent = "Frais de transfert estimés : " + formatAr(fraisTransfert);
+
+            if (inclureRetraitCheckbox.checked) {
+                const fraisRetrait = calculerFrais(part) * nombre;
+                feePreviewRetrait.textContent = "Frais de retrait estimés : " + formatAr(fraisRetrait);
+                feePreviewRetrait.classList.remove('d-none');
+            } else {
+                feePreviewRetrait.classList.add('d-none');
+            }
+        } else {
+            feePreview.textContent = "Les frais dépendent du montant transféré.";
+            feePreviewRetrait.classList.add('d-none');
+        }
+    }
+
     document.getElementById('addDest').addEventListener('click', function () {
         const div = document.createElement('div');
         div.className = "dest-item";
@@ -149,31 +184,24 @@
         <button type="button" class="remove">✕</button>
     `;
         container.appendChild(div);
+        updateFeePreview();
     });
 
     container.addEventListener('click', function (e) {
         if (e.target.classList.contains('remove')) {
             if (container.children.length > 1) {
                 e.target.parentElement.remove();
+                updateFeePreview();
             }
         }
     });
 
-    montantInput.addEventListener('input', function () {
-        const montant = Number(montantInput.value);
-
-        if (montant > 0) {
-            feePreview.textContent =
-                "Frais estimés : " + formatAr(calculerFrais(montant));
-        } else {
-            feePreview.textContent =
-                "Les frais dépendent du montant transféré.";
-        }
-    });
+    montantInput.addEventListener('input', updateFeePreview);
+    inclureRetraitCheckbox.addEventListener('change', updateFeePreview);
 
     form.addEventListener('submit', function (e) {
         const montant = Number(montantInput.value);
-        const nombres = document.querySelectorAll('input[name="telephones[]"]');
+        const nombre = getNombreDestinataires();
 
         if (!montant || montant <= 0) {
             return;
@@ -181,28 +209,27 @@
 
         e.preventDefault();
 
-        const nombre = nombres.length;
         const part = montant / nombre;
-        const inclureRetrait =
-            document.querySelector(
-                'input[name="inclure_frais_retrait"]'
-            ).checked;
+        const inclureRetrait = inclureRetraitCheckbox.checked;
 
-
-        let frais = calculerFrais(part) * nombre;
-
-
-        if (inclureRetrait) {
-            frais += calculerFrais(part) * nombre;
-        }
-
-
+        const fraisTransfert = calculerFrais(part) * nombre;
+        const fraisRetrait = inclureRetrait ? calculerFrais(part) * nombre : 0;
+        const frais = fraisTransfert + fraisRetrait;
         const total = montant + frais;
 
         document.getElementById('sNombre').textContent = nombre;
         document.getElementById('sMontant').textContent = formatAr(montant);
         document.getElementById('sPart').textContent = formatAr(part);
-        document.getElementById('sFrais').textContent = formatAr(frais);
+        document.getElementById('sFrais').textContent = formatAr(fraisTransfert);
+
+        const sFraisRetraitRow = document.getElementById('sFraisRetraitRow');
+        if (inclureRetrait) {
+            document.getElementById('sFraisRetrait').textContent = formatAr(fraisRetrait);
+            sFraisRetraitRow.classList.remove('hidden');
+        } else {
+            sFraisRetraitRow.classList.add('hidden');
+        }
+
         document.getElementById('sTotal').textContent = formatAr(total);
 
         backdrop.classList.add('open');

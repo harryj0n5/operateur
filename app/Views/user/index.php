@@ -4,43 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Vola - Utilisateurs</title>
-    <link rel="stylesheet" href="/assets/css/tabler-icons-fallback.css">
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/bootstrap/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
 
 <div class="admin-shell">
 
-    <aside class="admin-sidebar">
-        <div class="brand"><span class="brand-mark">V</span> Vola</div>
-        <nav class="admin-nav">
-            <a href="/operateur/dashboard"><i class="ti ti-layout-dashboard"></i> Tableau de bord</a>
-            <a href="/users" class="active"><i class="ti ti-users"></i> Utilisateurs</a>
-            <a href="/operateur"><i class="ti ti-building-bank"></i> Opérateurs</a>
-            <a href="/configurations"><i class="ti ti-settings"></i> Configurations</a>
-            <a href="/type-operations"><i class="ti ti-category"></i> Types d'operation</a>
-            <a href="/frais-operations"><i class="ti ti-receipt-2"></i> Frais d'operation</a>
-            <a href="/operateur/situation-gain"><i class="ti ti-chart-bar"></i> Situation des gains</a>
-            <a href="/operateur/situation-gain-client"><i class="ti ti-user-search"></i> Situation client</a>
-            <a href="/user/logout" style="margin-top:16px;"><i class="ti ti-logout"></i> Deconnexion</a>
-        </nav>
-    </aside>
+    <?= view('partials/sidebar', ['active' => 'users']) ?>
 
     <main class="admin-main">
 
         <div class="admin-topline">
             <h1>Utilisateurs</h1>
-            <a href="/users/create" class="btn btn-secondary btn-sm"><i class="ti ti-plus"></i> Ajouter utilisateur</a>
+            <a href="<?= site_url('users/create') ?>" class="btn btn-secondary btn-sm">
+                <i class="bi bi-plus-lg"></i> Ajouter utilisateur
+            </a>
         </div>
 
         <?php if (session()->getFlashdata('success')): ?>
-            <div class="alert success" style="margin:0 0 16px;"><i
-                        class="ti ti-circle-check"></i> <?= esc(session()->getFlashdata('success')) ?></div>
+            <div class="alert success" style="margin:0 0 16px;">
+                <i class="bi bi-check-circle"></i> <?= esc(session()->getFlashdata('success')) ?>
+            </div>
         <?php endif; ?>
 
         <?php if (session()->getFlashdata('error')): ?>
-            <div class="alert error" style="margin:0 0 16px;"><i
-                        class="ti ti-alert-circle"></i> <?= esc(session()->getFlashdata('error')) ?></div>
+            <div class="alert error" style="margin:0 0 16px;">
+                <i class="bi bi-exclamation-circle"></i> <?= esc(session()->getFlashdata('error')) ?>
+            </div>
         <?php endif; ?>
 
         <div class="table-card">
@@ -59,13 +51,14 @@
                         <td><span class="badge op"><?= esc($user['type_user_libelle']) ?></span></td>
                         <td>
                             <div class="row-actions">
-                                <a href="/users/edit/<?= esc($user['id']) ?>" class="btn btn-ghost btn-sm"><i
-                                            class="ti ti-edit"></i> Modifier</a>
-                                <form method="post" action="/users/delete/<?= esc($user['id']) ?>"
+                                <a href="<?= site_url('users/edit/' . $user['id']) ?>" class="btn btn-ghost btn-sm">
+                                    <i class="bi bi-pencil"></i> Modifier
+                                </a>
+                                <form method="post" action="<?= site_url('users/delete/' . $user['id']) ?>"
                                       onsubmit="return confirm('Supprimer ?')">
                                     <?= csrf_field() ?>
-                                    <button type="submit" class="btn btn-danger btn-sm"><i class="ti ti-trash"></i>
-                                        Supprimer
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Supprimer
                                     </button>
                                 </form>
                             </div>
@@ -81,5 +74,3 @@
 
 </body>
 </html>
-
-
