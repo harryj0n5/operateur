@@ -29,6 +29,20 @@ class UserService
         $this->operateurModel = new OperateurModel();
     }
 
+    public function prefixePrincipaleValide(string $telephone): bool
+    {
+        $prefixes = $this->configurationModel->findAll();
+
+        foreach ($prefixes as $row) {
+            if (str_starts_with($telephone, $row['prefix'])) {
+                $operateur = $this->operateurModel->find($row['operateur_id']);
+                return $operateur && (int)$operateur['principale'] === 1;
+            }
+        }
+
+        return false;
+    }
+
     public function prefixeValide(string $telephone): bool
     {
         $prefixes = $this->configurationModel->select('prefix')->findAll();
@@ -44,8 +58,10 @@ class UserService
 
     public function loginOuCreer(string $telephone): array
     {
-        if (!$this->prefixeValide($telephone)) {
-            throw new \RuntimeException("Ce préfixe n'est pas pris en charge par l'opérateur.");
+        if (!$this->prefixePrincipaleValide($telephone)) {
+            throw new \RuntimeException(
+                "Seuls les numéros appartenant à l'opérateur principal peuvent se connecter."
+            );
         }
 
         $user = $this->userModel->where('telephone', $telephone)->first();

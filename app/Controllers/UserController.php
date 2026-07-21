@@ -138,7 +138,10 @@ class UserController extends BaseController
         }
 
         $configurationModel = new ConfigurationModel();
-        $prefixes = $configurationModel->select('prefix')
+        $prefixes = $configurationModel
+            ->select('configuration.prefix')
+            ->join('operateur', 'operateur.id = configuration.operateur_id')
+            ->where('operateur.principale', 1)
             ->findAll();
 
         $prefixes = array_column($prefixes, 'prefix');
