@@ -42,7 +42,6 @@ class UserController extends BaseController
 
             $data = [
                 'telephone' => $this->request->getPost('telephone'),
-                'solde' => $this->request->getPost('solde'),
                 'type_user_id' => $this->request->getPost('type_user_id')
             ];
 
@@ -87,7 +86,6 @@ class UserController extends BaseController
 
             $data = [
                 'telephone' => $this->request->getPost('telephone'),
-                'solde' => $this->request->getPost('solde'),
                 'type_user_id' => $this->request->getPost('type_user_id')
             ];
 
@@ -140,7 +138,13 @@ class UserController extends BaseController
         }
 
         $configurationModel = new ConfigurationModel();
-        $prefixes = array_column($configurationModel->select('prefix')->findAll(), 'prefix');
+        $prefixes = $configurationModel
+            ->select('configuration.prefix')
+            ->join('operateur', 'operateur.id = configuration.operateur_id')
+            ->where('operateur.principale', 1)
+            ->findAll();
+
+        $prefixes = array_column($prefixes, 'prefix');
 
         return view('user/login', ['prefixes' => $prefixes]);
     }
@@ -192,7 +196,7 @@ class UserController extends BaseController
             return redirect()->to('/')->with('error', 'Votre session a expiré, veuillez vous reconnecter.');
         }
 
-        $solde = $user['solde'];
+        $solde = $this->userService->soldeClient($userId);
         return view('user/dashboard', ['solde' => $solde]);
     }
 
@@ -203,7 +207,11 @@ class UserController extends BaseController
         try {
             $gain = $this->userService->situationGain($date);
         } catch (\Exception $e) {
-            $gain = ['total_gain' => 0, 'nombre_transaction' => 0];
+            $gain = [
+                'total_operateur_principal' => 0,
+                'total_autres_operateurs' => 0,
+                'nombre_transaction' => 0
+            ];
         }
 
         return view('user/dashboard_operateur', [
@@ -226,6 +234,31 @@ class UserController extends BaseController
         }
 
         return view('user/situation_gain', [
+            'date' => $date,
+            'situation' => $situation,
+            'error' => $error
+        ]);
+    }
+
+    /**
+     * NOUVEAU : "Situation des montants à envoyer à chaque opérateur".
+     * Nécessite une route, par exemple :
+     *   $routes->get('operateur/montants-a-envoyer', 'UserController::situationMontantsOperateurs');
+     * et une vue user/situation_montants_operateurs.php.
+     */
+    public function situationMontantsOperateurs()
+    {
+        $date = $this->request->getGet('date') ?: date('Y-m-d');
+        $situation = null;
+        $error = null;
+
+        try {
+            $situation = $this->userService->situationMontantsOperateurs($date);
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+        }
+
+        return view('user/situation_montants_operateurs', [
             'date' => $date,
             'situation' => $situation,
             'error' => $error
@@ -302,27 +335,58 @@ class UserController extends BaseController
     public function transfert(): string
     {
         $fraisModel = new FraisOperationModel();
+        $configurationModel = new ConfigurationModel();
 
-        $bareme = $fraisModel
+        $bareme_transfert = $fraisModel
             ->where('type_operation_id', 3)
             ->orderBy('montant_min', 'ASC')
             ->findAll();
 
-        return view('operations/transfert', ['bareme' => $bareme]);
+        $bareme_retrait = $fraisModel
+            ->where('type_operation_id', 2)
+            ->orderBy('montant_min', 'ASC')
+            ->findAll();
+
+        $operateurs = $configurationModel
+            ->select('configuration.prefix, operateur.id as operateur_id, operateur.libelle, operateur.principale, operateur.pourcentage_frais')
+            ->join('operateur', 'operateur.id = configuration.operateur_id')
+            ->findAll();
+
+        return view('operations/transfert', [
+            'bareme_transfert' => $bareme_transfert,
+            'bareme_retrait' => $bareme_retrait,
+            'operateurs' => $operateurs,
+        ]);
     }
 
     public function storeTransfert()
     {
         $userId = session()->get('user_id');
-        $telephoneDestinataire = $this->request->getPost('telephone_destinataire');
+
+        $telephones = $this->request->getPost('telephones');
         $montant = (float)$this->request->getPost('montant');
 
+        $inclureFraisRetrait = $this->request->getPost('inclure_frais_retrait') == 1;
+
         try {
-            $this->transactionService->transfert($userId, $telephoneDestinataire, $montant);
-            return redirect()->to('/operations/transfert')
-                ->with('success', 'Transfert de ' . $montant . ' Ar vers ' . $telephoneDestinataire . ' effectué.');
+
+            $this->transactionService->transfertMultiple(
+                $userId,
+                $telephones,
+                $montant,
+                $inclureFraisRetrait
+            );
+
+            return redirect()
+                ->to('/operations/transfert')
+                ->with('success', 'Transfert effectué.');
+
         } catch (\RuntimeException $e) {
-            return redirect()->back()->withInput()->with('error', $e->getMessage());
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
         }
     }
 
@@ -334,4 +398,3 @@ class UserController extends BaseController
         return view('operations/historique', ['historique' => $historique]);
     }
 }
-

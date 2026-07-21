@@ -49,6 +49,12 @@ $routes->group('operateur', ['filter' => 'auth:operateur'], function ($routes) {
     $routes->get('dashboard', 'UserController::dashboardOperateur');
     $routes->get('situation-gain', 'UserController::situationGain');
     $routes->get('situation-gain-client', 'UserController::situationGainClient');
+    $routes->get('/', 'OperateurController::index');
+    $routes->get('create', 'OperateurController::create');
+    $routes->post('store', 'OperateurController::store');
+    $routes->get('(:num)/edit', 'OperateurController::edit/$1');
+    $routes->post('(:num)/update', 'OperateurController::update/$1');
+    $routes->post('(:num)/delete', 'OperateurController::delete/$1');
 });
 
 $routes->group('client', ['filter' => 'auth:client'], function ($routes) {

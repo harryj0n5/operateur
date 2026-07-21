@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ConfigurationModel;
 use App\Models\HistoriqueTransactionModel;
+use App\Models\OperateurModel;
 use App\Models\TypeUserModel;
 use App\Models\UserModel;
 
@@ -14,18 +15,32 @@ class UserService
     private const TYPE_TRANSFERT = 3;
 
     protected UserModel $userModel;
-    private ConfigurationModel $configurationModel;
-    protected HistoriqueTransactionModel $historiqueTransactionModel;
+    protected ConfigurationModel $configurationModel;
+    protected HistoriqueTransactionModel $historiqueModel;
     protected TypeUserModel $typeUserModel;
-    private HistoriqueTransactionModel $historiqueModel;
+    protected OperateurModel $operateurModel;
 
     public function __construct()
     {
         $this->userModel = new UserModel();
         $this->configurationModel = new ConfigurationModel();
-        $this->historiqueTransactionModel = new HistoriqueTransactionModel();
-        $this->typeUserModel = new TypeUserModel();
         $this->historiqueModel = new HistoriqueTransactionModel();
+        $this->typeUserModel = new TypeUserModel();
+        $this->operateurModel = new OperateurModel();
+    }
+
+    public function prefixePrincipaleValide(string $telephone): bool
+    {
+        $prefixes = $this->configurationModel->findAll();
+
+        foreach ($prefixes as $row) {
+            if (str_starts_with($telephone, $row['prefix'])) {
+                $operateur = $this->operateurModel->find($row['operateur_id']);
+                return $operateur && (int)$operateur['principale'] === 1;
+            }
+        }
+
+        return false;
     }
 
     public function prefixeValide(string $telephone): bool
@@ -43,8 +58,10 @@ class UserService
 
     public function loginOuCreer(string $telephone): array
     {
-        if (!$this->prefixeValide($telephone)) {
-            throw new \RuntimeException("Ce préfixe n'est pas pris en charge par l'opérateur.");
+        if (!$this->prefixePrincipaleValide($telephone)) {
+            throw new \RuntimeException(
+                "Seuls les numéros appartenant à l'opérateur principal peuvent se connecter."
+            );
         }
 
         $user = $this->userModel->where('telephone', $telephone)->first();
@@ -55,7 +72,6 @@ class UserService
 
         $id = $this->userModel->insert([
             'telephone' => $telephone,
-            'solde' => 0,
             'type_user_id' => 2,
         ]);
 
@@ -104,6 +120,8 @@ class UserService
             throw new \RuntimeException("Utilisateur introuvable.");
         }
 
+        unset($data['solde']);
+
         $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         if ($data['telephone'] !== '' && $data['telephone'] !== $user['telephone']) {
@@ -117,10 +135,6 @@ class UserService
             }
         }
 
-        $ancienSolde = (float)$user['solde'];
-        $nouveauSolde = isset($data['solde']) ? (float)$data['solde'] : $ancienSolde;
-
-        $data['solde'] = $nouveauSolde;
         $data['type_user_id'] = $data['type_user_id'] ?? $user['type_user_id'];
 
         $db = db_connect();
@@ -134,40 +148,46 @@ class UserService
             );
         }
 
-        if ($nouveauSolde !== $ancienSolde) {
-            $ecart = $nouveauSolde - $ancienSolde;
-
-            $this->historiqueTransactionModel->insert([
-                'montant' => abs($ecart),
-                'frais' => 0,
-                'type_mouvement' => $ecart > 0 ? 'credit' : 'debit',
-                'solde_apres' => $nouveauSolde,
-                'user_id' => $id,
-                'destinataire_id' => null,
-                'type_operation_id' => $ecart > 0 ? self::TYPE_DEPOT : self::TYPE_RETRAIT,
-            ]);
-        }
-
         $db->transComplete();
+
+        if ($db->transStatus() === false) {
+            throw new \RuntimeException("Échec de la mise à jour de l'utilisateur.");
+        }
 
         return $this->getUserById($id);
     }
 
-    public function soldeClient(int $clientId)
+    public function soldeClient(int $clientId): float|int
     {
-        $user = $this->getUserById($clientId);
+        $user = $this->userModel->find($clientId);
 
         if (!$user) {
-            throw new \RuntimeException(
-                "Utilisateur introuvable."
-            );
+            throw new \RuntimeException("Client introuvable.");
         }
 
-        return $user['solde'];
+        $transactions = $this->historiqueModel
+            ->where('numero', $user['telephone'])
+            ->findAll();
+
+        $solde = 0;
+
+        foreach ($transactions as $transaction) {
+            if ($transaction['type_mouvement'] === 'credit') {
+                $solde += (float)$transaction['montant'];
+            } elseif ($transaction['type_mouvement'] === 'debit') {
+                $solde -= (float)$transaction['montant']
+                    + (float)$transaction['frais']
+                    + (float)$transaction['frais_operateur2'];
+            }
+        }
+
+        return $solde;
     }
 
     public function creerUser(array $data): array
     {
+        unset($data['solde']);
+
         $data['telephone'] = trim((string)($data['telephone'] ?? ''));
 
         if ($data['telephone'] === '') {
@@ -180,14 +200,13 @@ class UserService
         if ($existant) {
             throw new \RuntimeException("Ce numéro existe déjà.");
         }
-        
+
         if (!$this->prefixeValide($data['telephone'])) {
             throw new \RuntimeException(
                 "Ce préfixe n'est pas pris en charge par l'opérateur."
             );
         }
 
-        $data['solde'] = $data['solde'] ?? 0;
         $data['type_user_id'] = $data['type_user_id'] ?? 2;
 
         $id = $this->userModel->insert($data);
@@ -210,26 +229,109 @@ class UserService
         $dateFinJournee = $date . ' 23:59:59';
 
         $lignes = $this->historiqueModel
-            ->select('type_operation.libelle as type_operation_libelle, SUM(historique_transaction.frais) as total_gain, COUNT(historique_transaction.id) as nombre_transaction')
-            ->join('type_operation', 'type_operation.id = historique_transaction.type_operation_id')
-            ->where('historique_transaction.date >=', $dateDebutJournee)
-            ->where('historique_transaction.date <=', $dateFinJournee)
-            ->groupBy('historique_transaction.type_operation_id')
+            ->select('
+            type_operation.libelle as type_operation_libelle,
+            SUM(historique_transaction.frais) as gain_operateur_principal,
+            SUM(historique_transaction.frais_operateur2) as gain_autre_operateur,
+            COUNT(historique_transaction.id) as nombre_transaction
+        ')
+            ->join(
+                'type_operation',
+                'type_operation.id = historique_transaction.type_operation_id'
+            )
+            ->where(
+                'historique_transaction.date >=',
+                $dateDebutJournee
+            )
+            ->where(
+                'historique_transaction.date <=',
+                $dateFinJournee
+            )
+            ->groupBy(
+                'historique_transaction.type_operation_id'
+            )
             ->findAll();
 
-        $totalGeneral = 0;
+        $totalPrincipal = 0;
+        $totalAutre = 0;
         $nombreTotal = 0;
 
+
         foreach ($lignes as $ligne) {
-            $totalGeneral += (float)$ligne['total_gain'];
+            $totalPrincipal += (float)$ligne['gain_operateur_principal'];
+            $totalAutre += (float)$ligne['gain_autre_operateur'];
             $nombreTotal += (int)$ligne['nombre_transaction'];
         }
 
         return [
             'date' => $date,
             'par_operation' => $lignes,
-            'total_gain' => $totalGeneral,
-            'nombre_transaction' => $nombreTotal,
+            'total_operateur_principal' => $totalPrincipal,
+            'total_autres_operateurs' => $totalAutre,
+            'nombre_transaction' => $nombreTotal
+        ];
+    }
+
+    public function situationMontantsOperateurs(string $date): array
+    {
+        $dateDebutJournee = $date . ' 00:00:00';
+        $dateFinJournee = $date . ' 23:59:59';
+
+        $lignes = $this->historiqueModel
+            ->where('type_operation_id', self::TYPE_TRANSFERT)
+            ->where('type_mouvement', 'debit')
+            ->where('date >=', $dateDebutJournee)
+            ->where('date <=', $dateFinJournee)
+            ->where('destinataire_numero IS NOT NULL')
+            ->findAll();
+
+        $prefixes = $this->configurationModel->findAll();
+
+        $operateursParId = [];
+        foreach ($this->operateurModel->findAll() as $operateur) {
+            $operateursParId[$operateur['id']] = $operateur;
+        }
+
+        $resultats = [];
+
+        foreach ($lignes as $ligne) {
+            $operateurId = null;
+
+            foreach ($prefixes as $prefix) {
+                if (str_starts_with((string)$ligne['destinataire_numero'], $prefix['prefix'])) {
+                    $operateurId = $prefix['operateur_id'];
+                    break;
+                }
+            }
+
+            if ($operateurId === null || !isset($operateursParId[$operateurId])) {
+                continue;
+            }
+
+            $operateur = $operateursParId[$operateurId];
+
+            if (!empty($operateur['principale'])) {
+                continue;
+            }
+
+            if (!isset($resultats[$operateurId])) {
+                $resultats[$operateurId] = [
+                    'operateur_id' => $operateurId,
+                    'operateur_libelle' => $operateur['libelle'],
+                    'montant_a_envoyer' => 0,
+                    'commission' => 0,
+                    'nombre_transaction' => 0,
+                ];
+            }
+
+            $resultats[$operateurId]['montant_a_envoyer'] += (float)$ligne['montant'];
+            $resultats[$operateurId]['commission'] += (float)$ligne['frais_operateur2'];
+            $resultats[$operateurId]['nombre_transaction']++;
+        }
+
+        return [
+            'date' => $date,
+            'par_operateur' => array_values($resultats),
         ];
     }
 
@@ -252,9 +354,10 @@ class UserService
             COUNT(id) AS nombre_transaction,
             SUM(CASE WHEN type_mouvement = 'credit' THEN montant ELSE 0 END) AS total_credit,
             SUM(CASE WHEN type_mouvement = 'debit' THEN montant ELSE 0 END) AS total_debit,
-            SUM(frais) AS total_frais
+            SUM(frais) AS total_frais,
+            SUM(frais_operateur2) AS total_frais_operateur2
         ")
-            ->where('user_id', $clientId)
+            ->where('numero', $client['telephone'])
             ->where('date <=', $dateFinJournee)
             ->first();
 
@@ -262,11 +365,12 @@ class UserService
             'client_id' => $client['id'],
             'telephone' => $client['telephone'],
             'date_situation' => $date,
-            'solde_actuel' => $client['solde'],
+            'solde_actuel' => $this->soldeClient($clientId),
             'nombre_transaction' => $transaction['nombre_transaction'] ?? 0,
             'total_credit' => $transaction['total_credit'] ?? 0,
             'total_debit' => $transaction['total_debit'] ?? 0,
             'total_frais' => $transaction['total_frais'] ?? 0,
+            'total_frais_operateur2' => $transaction['total_frais_operateur2'] ?? 0,
         ];
     }
 
