@@ -1,54 +1,54 @@
 /* ==========================================================================
-   Vola — Design System
-   Fichier de base à compléter page par page.
-   Convention : variables globales ici, styles spécifiques à une page
-   dans un bloc commenté "PAGE: nom" pour garder le fichier organisé.
+   Vola — Design System (v2)
+   Thème sombre chaleureux, accent orange ambré.
+   Toutes les classes d'origine sont conservées : seuls les tokens,
+   quelques ombres, arrondis et détails typographiques évoluent.
    ========================================================================== */
-
+/* Police moderne : Space Grotesk (titres) + Inter (texte)
+   À charger côté HTML :
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+*/
 /* ---------- 1. Design tokens ---------- */
 :root {
-    /* Couleurs marque — bleu froid */
-    --vola-primary: #2563EB;
-    --vola-primary-dark: #1D4FBF;
-    --vola-primary-light: #E8F0FE;
-    --vola-accent: #38BDF8;
-    --vola-accent-dark: #0EA5E9;
-
-    /* Déclinaisons pour les gradients (bleu -> blanc/bleu très clair) */
-    --vola-gradient-start: #1D4FBF;
-    --vola-gradient-mid: #2563EB;
-    --vola-gradient-end: #BFDBFE;
-
-    /* Neutres */
-    --vola-bg: #F5F8FC;
-    --vola-surface: #FFFFFF;
-    --vola-border: #E3E9F3;
-    --vola-text: #101828;
-    --vola-text-muted: #64748B;
-    --vola-text-soft: #98A2B3;
-
+    /* Couleurs marque — orange ambré chaleureux */
+    --vola-primary: #FB923C; /* orange 400 */
+    --vola-primary-dark: #EA580C; /* orange 600 */
+    --vola-primary-light: #2A1D14; /* orange sur fond sombre (halo) */
+    --vola-accent: #FCD34D; /* amber 300 */
+    --vola-accent-dark: #F59E0B; /* amber 500 */
+    /* Gradient chaud (orange profond -> ambre) */
+    --vola-gradient-start: #B45309;
+    --vola-gradient-mid: #EA580C;
+    --vola-gradient-end: #FBBF24;
+    /* Neutres — palette sombre chaude */
+    --vola-bg: #0E0B08; /* fond principal (noir chaud) */
+    --vola-surface: #17130E; /* cartes / surfaces */
+    --vola-surface-2: #1F1912; /* surfaces surélevées */
+    --vola-border: #2A2118; /* bordures discrètes */
+    --vola-text: #F5EFE6; /* texte principal (ivoire) */
+    --vola-text-muted: #B8AFA1; /* texte secondaire */
+    --vola-text-soft: #7A6F60; /* texte tertiaire / placeholders */
     /* États */
-    --vola-success: #16A34A;
-    --vola-danger: #E11D48;
-    --vola-warning: #D97706;
-
-    /* Rayons */
-    --vola-radius-sm: 10px;
-    --vola-radius-md: 16px;
-    --vola-radius-lg: 24px;
+    --vola-success: #34D399;
+    --vola-danger: #F87171;
+    --vola-warning: #FBBF24;
+    /* Rayons — un peu plus doux */
+    --vola-radius-sm: 12px;
+    --vola-radius-md: 18px;
+    --vola-radius-lg: 26px;
     --vola-radius-pill: 999px;
-
-    /* Ombres */
-    --vola-shadow-sm: 0 2px 8px rgba(16, 24, 40, 0.06);
-    --vola-shadow-md: 0 12px 32px rgba(37, 99, 235, 0.14);
-    --vola-shadow-lg: 0 24px 60px rgba(37, 99, 235, 0.18);
-
+    /* Ombres — profondes et chaudes */
+    --vola-shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+    --vola-shadow-md: 0 14px 36px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(251, 146, 60, 0.05);
+    --vola-shadow-lg: 0 28px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(251, 146, 60, 0.08);
+    --vola-glow: 0 0 0 4px rgba(251, 146, 60, 0.18);
     /* Typo */
-    --vola-font: 'Segoe UI', system-ui, -apple-system, sans-serif;
-
+    --vola-font: 'Inter', system-ui, -apple-system, "Segoe UI", sans-serif;
+    --vola-font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
     /* Transitions */
-    --vola-transition: 0.2s ease;
-
+    --vola-transition: 0.22s cubic-bezier(.2, .7, .3, 1);
     /* Alias ton-sur-ton (utilisés en style inline ponctuel) */
     --ink-500: var(--vola-text-muted);
     --ink-900: var(--vola-text);
@@ -59,26 +59,39 @@
     font-family: var(--vola-font);
 }
 
-body {
+html, body {
     background: var(--vola-bg);
     color: var(--vola-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5,
+.brand, .vola-title {
+    font-family: var(--vola-font-display);
+    letter-spacing: -0.01em;
 }
 
 a {
     color: var(--vola-primary);
     text-decoration: none;
+    transition: color var(--vola-transition);
 }
 
 a:hover {
-    color: var(--vola-primary-dark);
+    color: var(--vola-accent);
+}
+
+::selection {
+    background: rgba(251, 146, 60, 0.35);
+    color: #fff;
 }
 
 /* ---------- 3. Composants génériques réutilisables ---------- */
-
 /* Cartes */
 .vola-card {
     background: var(--vola-surface);
-    border: none;
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-lg);
     box-shadow: var(--vola-shadow-md);
 }
@@ -89,17 +102,18 @@ a:hover {
     border-radius: var(--vola-radius-sm);
     font-weight: 600;
     font-size: 0.95rem;
-    background: var(--vola-primary);
+    background: linear-gradient(135deg, var(--vola-primary) 0%, var(--vola-primary-dark) 100%);
     border: none;
-    color: #fff;
-    transition: transform var(--vola-transition), box-shadow var(--vola-transition), background var(--vola-transition);
+    color: #1a0f06;
+    transition: transform var(--vola-transition), box-shadow var(--vola-transition), filter var(--vola-transition);
+    box-shadow: 0 8px 24px rgba(234, 88, 12, 0.35);
 }
 
 .btn-vola-primary:hover {
-    background: var(--vola-primary-dark);
-    color: #fff;
+    filter: brightness(1.06);
+    color: #1a0f06;
     transform: translateY(-2px);
-    box-shadow: var(--vola-shadow-md);
+    box-shadow: 0 14px 32px rgba(234, 88, 12, 0.45);
 }
 
 .btn-vola-primary:active {
@@ -107,9 +121,10 @@ a:hover {
 }
 
 .btn-vola-primary:disabled {
-    opacity: 0.6;
+    opacity: 0.55;
     transform: none;
     box-shadow: none;
+    filter: none;
 }
 
 /* Champs de formulaire */
@@ -118,17 +133,24 @@ a:hover {
     border-radius: 0 var(--vola-radius-sm) var(--vola-radius-sm) 0;
     border: 1.5px solid var(--vola-border);
     font-size: 0.95rem;
-    background: var(--vola-surface);
+    background: var(--vola-surface-2);
+    color: var(--vola-text);
+}
+
+.vola-input-group .form-control::placeholder {
+    color: var(--vola-text-soft);
 }
 
 .vola-input-group .form-control:focus {
     border-color: var(--vola-primary);
-    box-shadow: 0 0 0 0.2rem var(--vola-primary-light);
+    box-shadow: var(--vola-glow);
+    background: var(--vola-surface-2);
+    color: var(--vola-text);
 }
 
 .vola-input-group .input-group-text {
     border-radius: var(--vola-radius-sm) 0 0 var(--vola-radius-sm);
-    background: var(--vola-surface);
+    background: var(--vola-surface-2);
     border: 1.5px solid var(--vola-border);
     border-right: none;
     color: var(--vola-text-soft);
@@ -155,9 +177,9 @@ a:hover {
 .alert-vola-danger {
     border-radius: var(--vola-radius-sm);
     font-size: 0.88rem;
-    background: #FFEAEF;
-    border: 1px solid #FFD1DC;
-    color: #B3234A;
+    background: rgba(248, 113, 113, 0.10);
+    border: 1px solid rgba(248, 113, 113, 0.30);
+    color: #FCA5A5;
 }
 
 /* Badge pill (préfixes, tags, etc.) */
@@ -165,8 +187,9 @@ a:hover {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    background: rgba(251, 146, 60, 0.14);
+    color: var(--vola-accent);
+    border: 1px solid rgba(251, 146, 60, 0.25);
     border-radius: var(--vola-radius-pill);
     padding: 0.3rem 0.75rem;
     font-size: 0.78rem;
@@ -177,8 +200,8 @@ a:hover {
 .vola-spinner {
     width: 18px;
     height: 18px;
-    border: 2.5px solid rgba(255, 255, 255, 0.4);
-    border-top-color: #fff;
+    border: 2.5px solid rgba(26, 15, 6, 0.35);
+    border-top-color: #1a0f06;
     border-radius: 50%;
     display: inline-block;
     animation: vola-spin 0.7s linear infinite;
@@ -193,13 +216,15 @@ a:hover {
 /* ==========================================================================
    PAGE: login (connexion.php)
    ========================================================================== */
-
 .vola-auth-wrapper {
     min-height: 100vh;
+    background: var(--vola-bg);
 }
 
 .vola-hero {
-    background: linear-gradient(160deg, var(--vola-gradient-start) 0%, var(--vola-primary) 50%, var(--vola-gradient-end) 100%);
+    background: radial-gradient(1200px 500px at 20% 10%, rgba(251, 191, 36, 0.18), transparent 60%),
+    radial-gradient(900px 500px at 80% 90%, rgba(234, 88, 12, 0.35), transparent 60%),
+    linear-gradient(160deg, #1A0F06 0%, #2A1509 55%, #3A1B0A 100%);
     color: #fff;
     position: relative;
     overflow: hidden;
@@ -211,10 +236,11 @@ a:hover {
     position: absolute;
     width: 420px;
     height: 420px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 70%);
+    background: radial-gradient(circle, rgba(252, 211, 77, 0.22), transparent 70%);
     border-radius: 50%;
     top: -140px;
     left: -140px;
+    filter: blur(10px);
 }
 
 .vola-hero::after {
@@ -222,11 +248,12 @@ a:hover {
     position: absolute;
     width: 360px;
     height: 360px;
-    background: radial-gradient(circle, var(--vola-accent) 0%, transparent 70%);
-    opacity: 0.18;
+    background: radial-gradient(circle, var(--vola-primary) 0%, transparent 70%);
+    opacity: 0.28;
     border-radius: 50%;
     bottom: -140px;
     right: -120px;
+    filter: blur(4px);
 }
 
 .vola-hero-content {
@@ -238,21 +265,21 @@ a:hover {
     width: 96px;
     height: 96px;
     border-radius: 28px;
-    background: rgba(255, 255, 255, 0.14);
+    background: linear-gradient(135deg, rgba(251, 146, 60, 0.35), rgba(252, 211, 77, 0.15));
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 42px;
     margin: 0 auto 1.75rem;
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+    border: 1px solid rgba(252, 211, 77, 0.35);
+    box-shadow: 0 12px 40px rgba(234, 88, 12, 0.35);
 }
 
 .vola-hero h1 {
     letter-spacing: -1.5px;
-    font-weight: 800;
-    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    font-weight: 700;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
 }
 
 .vola-hero .lead {
@@ -274,7 +301,9 @@ a:hover {
 
 .vola-hero-stats .stat-value {
     font-size: 1.4rem;
-    font-weight: 800;
+    font-weight: 700;
+    font-family: var(--vola-font-display);
+    color: var(--vola-accent);
 }
 
 .vola-hero-stats .stat-label {
@@ -288,6 +317,9 @@ a:hover {
     max-width: 440px;
     width: 100%;
     border-radius: var(--vola-radius-lg) !important;
+    background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
+    box-shadow: var(--vola-shadow-lg);
 }
 
 .vola-login-card .card-body {
@@ -295,8 +327,9 @@ a:hover {
 }
 
 .vola-login-card .vola-title {
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: -0.5px;
+    color: var(--vola-text);
 }
 
 .vola-login-card .vola-subtitle {
@@ -315,23 +348,21 @@ a:hover {
 }
 
 /* ==========================================================================
-   PAGE: dashboard (client/dashboard.php)
-   Layout type "app mobile" : conteneur centré en colonne étroite,
-   pensé pour être utilisable en plein écran sur desktop et mobile.
+   PAGE: dashboard (client/dashboard.php) — mobile shell
    ========================================================================== */
-
 .app {
     max-width: 480px;
     margin: 0 auto;
     min-height: 100vh;
     background: var(--vola-bg);
-    padding-bottom: 6.5rem; /* laisse la place à la bottom nav */
+    padding-bottom: 6.5rem;
     position: relative;
 }
 
 /* --- En-tête --- */
 .app-header {
-    background: linear-gradient(160deg, var(--vola-gradient-start) 0%, var(--vola-primary) 55%, var(--vola-accent-dark) 100%);
+    background: radial-gradient(500px 220px at 90% 0%, rgba(252, 211, 77, 0.25), transparent 70%),
+    linear-gradient(160deg, #2A1509 0%, #EA580C 60%, #F59E0B 100%);
     color: #fff;
     padding: 1.75rem 1.25rem 2.5rem;
     position: relative;
@@ -345,7 +376,7 @@ a:hover {
     right: -40px;
     width: 180px;
     height: 180px;
-    opacity: 0.12;
+    opacity: 0.15;
     pointer-events: none;
 }
 
@@ -358,12 +389,13 @@ a:hover {
 }
 
 .app-header .brand {
-    font-weight: 800;
+    font-weight: 700;
     font-size: 1.15rem;
     letter-spacing: -0.3px;
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    font-family: var(--vola-font-display);
 }
 
 .brand-mark {
@@ -373,9 +405,9 @@ a:hover {
     width: 30px;
     height: 30px;
     border-radius: 9px;
-    background: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.22);
     font-size: 0.9rem;
-    font-weight: 800;
+    font-weight: 700;
     backdrop-filter: blur(6px);
 }
 
@@ -383,18 +415,19 @@ a:hover {
     width: 38px;
     height: 38px;
     border-radius: var(--vola-radius-pill);
-    background: rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.16);
     color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1rem;
-    transition: background var(--vola-transition);
+    transition: background var(--vola-transition), transform var(--vola-transition);
 }
 
 .app-header .icon-btn:hover {
-    background: rgba(255, 255, 255, 0.26);
+    background: rgba(255, 255, 255, 0.28);
     color: #fff;
+    transform: translateY(-1px);
 }
 
 .app-header .greeting {
@@ -402,12 +435,13 @@ a:hover {
     z-index: 1;
     margin-top: 1.5rem;
     font-size: 0.92rem;
-    opacity: 0.85;
+    opacity: 0.9;
 }
 
 /* --- Carte solde --- */
 .balance-card {
-    background: var(--vola-surface);
+    background: linear-gradient(180deg, var(--vola-surface-2) 0%, var(--vola-surface) 100%);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-lg);
     box-shadow: var(--vola-shadow-lg);
     margin: -2.75rem 1.25rem 0;
@@ -445,9 +479,10 @@ a:hover {
 .balance-card .amount {
     margin-top: 0.5rem;
     font-size: 2.1rem;
-    font-weight: 800;
+    font-weight: 700;
     color: var(--vola-text);
     letter-spacing: -0.5px;
+    font-family: var(--vola-font-display);
 }
 
 .balance-card .amount .unit {
@@ -475,14 +510,16 @@ a:hover {
     padding: 0.85rem 0.4rem;
     border-radius: var(--vola-radius-md);
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     box-shadow: var(--vola-shadow-sm);
-    transition: transform var(--vola-transition), box-shadow var(--vola-transition);
+    transition: transform var(--vola-transition), box-shadow var(--vola-transition), border-color var(--vola-transition);
 }
 
 .qa-item:hover {
     transform: translateY(-3px);
     box-shadow: var(--vola-shadow-md);
     color: var(--vola-text);
+    border-color: rgba(251, 146, 60, 0.35);
 }
 
 .qa-icon {
@@ -490,16 +527,19 @@ a:hover {
     height: 42px;
     border-radius: var(--vola-radius-pill);
     background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.1rem;
+    border: 1px solid rgba(251, 146, 60, 0.25);
 }
 
 .qa-item.accent .qa-icon {
-    background: var(--vola-primary);
-    color: #fff;
+    background: linear-gradient(135deg, var(--vola-primary), var(--vola-primary-dark));
+    color: #1a0f06;
+    border-color: transparent;
+    box-shadow: 0 6px 18px rgba(234, 88, 12, 0.4);
 }
 
 .qa-label {
@@ -516,10 +556,12 @@ a:hover {
     font-size: 1rem;
     font-weight: 700;
     margin-bottom: 0.75rem;
+    color: var(--vola-text);
 }
 
 .card {
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-md);
     box-shadow: var(--vola-shadow-sm);
     padding: 1rem 1.1rem;
@@ -533,12 +575,14 @@ a:hover {
     transform: translateX(-50%);
     width: 100%;
     max-width: 480px;
-    background: var(--vola-surface);
+    background: rgba(23, 19, 14, 0.85);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     border-top: 1px solid var(--vola-border);
     display: flex;
     justify-content: space-around;
     padding: 0.6rem 0.5rem calc(0.6rem + env(safe-area-inset-bottom));
-    box-shadow: 0 -8px 24px rgba(20, 20, 43, 0.06);
+    box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.4);
     z-index: 10;
 }
 
@@ -570,20 +614,20 @@ a:hover {
 }
 
 /* ==========================================================================
-   PAGE: operateur (admin_sidebar.php + toutes les pages back-office)
-   Layout type "admin shell" : sidebar fixe + contenu scrollable.
+   PAGE: operateur — admin shell
    ========================================================================== */
-
 .admin-shell {
     display: flex;
     min-height: 100vh;
+    background: var(--vola-bg);
 }
 
 /* --- Sidebar --- */
 .admin-sidebar {
     width: 260px;
     flex-shrink: 0;
-    background: linear-gradient(180deg, var(--vola-primary-dark) 0%, #0F2A5C 100%);
+    background: radial-gradient(400px 200px at 0% 0%, rgba(234, 88, 12, 0.18), transparent 70%),
+    linear-gradient(180deg, #17130E 0%, #0E0B08 100%);
     color: #fff;
     padding: 1.5rem 1rem;
     position: sticky;
@@ -592,16 +636,19 @@ a:hover {
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    border-right: 1px solid var(--vola-border);
 }
 
 .admin-sidebar .brand {
-    font-weight: 800;
+    font-weight: 700;
     font-size: 1.1rem;
     letter-spacing: -0.3px;
     display: flex;
     align-items: center;
     gap: 0.55rem;
     padding: 0.4rem 0.6rem 1.5rem;
+    color: var(--vola-text);
+    font-family: var(--vola-font-display);
 }
 
 .admin-sidebar .brand-mark {
@@ -611,9 +658,10 @@ a:hover {
     width: 30px;
     height: 30px;
     border-radius: 9px;
-    background: rgba(255, 255, 255, 0.16);
+    background: linear-gradient(135deg, var(--vola-primary), var(--vola-primary-dark));
+    color: #1a0f06;
     font-size: 0.9rem;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .admin-nav {
@@ -628,7 +676,7 @@ a:hover {
     gap: 0.75rem;
     padding: 0.65rem 0.75rem;
     border-radius: var(--vola-radius-sm);
-    color: rgba(255, 255, 255, 0.72);
+    color: var(--vola-text-muted);
     font-size: 0.87rem;
     font-weight: 500;
     transition: background var(--vola-transition), color var(--vola-transition);
@@ -641,25 +689,25 @@ a:hover {
 }
 
 .admin-nav a:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
+    background: rgba(251, 146, 60, 0.08);
+    color: var(--vola-text);
 }
 
 .admin-nav a.active {
-    background: rgba(255, 255, 255, 0.14);
-    color: #fff;
+    background: linear-gradient(90deg, rgba(251, 146, 60, 0.18), rgba(251, 146, 60, 0.04));
+    color: var(--vola-primary);
     font-weight: 600;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: inset 3px 0 0 var(--vola-primary);
 }
 
 .admin-nav a.logout-link {
     margin-top: 1rem;
-    color: #FFB3C1;
+    color: #FCA5A5;
 }
 
 .admin-nav a.logout-link:hover {
-    background: rgba(245, 72, 108, 0.15);
-    color: #fff;
+    background: rgba(248, 113, 113, 0.12);
+    color: #FCA5A5;
 }
 
 /* --- Contenu principal --- */
@@ -667,6 +715,7 @@ a:hover {
     flex: 1;
     padding: 2rem 2.25rem 3rem;
     min-width: 0;
+    background: var(--vola-bg);
 }
 
 .admin-topline {
@@ -678,10 +727,12 @@ a:hover {
 }
 
 .admin-topline h1 {
-    font-size: 1.35rem;
-    font-weight: 800;
+    font-size: 1.5rem;
+    font-weight: 700;
     letter-spacing: -0.4px;
     margin: 0 0 0.2rem;
+    color: var(--vola-text);
+    font-family: var(--vola-font-display);
 }
 
 .admin-topline-sub {
@@ -690,7 +741,7 @@ a:hover {
     margin: 0;
 }
 
-/* Boutons outline (topline, actions secondaires) */
+/* Boutons outline */
 .btn-outline {
     display: inline-flex;
     align-items: center;
@@ -700,12 +751,13 @@ a:hover {
     color: var(--vola-text);
     border-radius: var(--vola-radius-sm);
     font-weight: 600;
-    transition: border-color var(--vola-transition), color var(--vola-transition);
+    transition: border-color var(--vola-transition), color var(--vola-transition), background var(--vola-transition);
 }
 
 .btn-outline:hover {
     border-color: var(--vola-primary);
     color: var(--vola-primary);
+    background: var(--vola-primary-light);
 }
 
 .btn-sm {
@@ -723,9 +775,16 @@ a:hover {
 
 .stat-card {
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-md);
     box-shadow: var(--vola-shadow-sm);
     padding: 1.25rem 1.4rem;
+    transition: border-color var(--vola-transition), transform var(--vola-transition);
+}
+
+.stat-card:hover {
+    border-color: rgba(251, 146, 60, 0.35);
+    transform: translateY(-2px);
 }
 
 .stat-label {
@@ -740,11 +799,12 @@ a:hover {
 }
 
 .stat-value {
-    font-size: 1.55rem;
-    font-weight: 800;
+    font-size: 1.65rem;
+    font-weight: 700;
     color: var(--vola-text);
     margin-top: 0.5rem;
     letter-spacing: -0.3px;
+    font-family: var(--vola-font-display);
 }
 
 .stat-sub {
@@ -765,18 +825,20 @@ a:hover {
     align-items: center;
     gap: 0.9rem;
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-md);
     box-shadow: var(--vola-shadow-sm);
     padding: 1.1rem 1.25rem;
     text-decoration: none;
     color: var(--vola-text);
-    transition: transform var(--vola-transition), box-shadow var(--vola-transition);
+    transition: transform var(--vola-transition), box-shadow var(--vola-transition), border-color var(--vola-transition);
 }
 
 .manage-card:hover {
     transform: translateY(-3px);
     box-shadow: var(--vola-shadow-md);
     color: var(--vola-text);
+    border-color: rgba(251, 146, 60, 0.4);
 }
 
 .manage-card .mc-icon {
@@ -785,7 +847,8 @@ a:hover {
     flex-shrink: 0;
     border-radius: var(--vola-radius-sm);
     background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
+    border: 1px solid rgba(251, 146, 60, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -818,6 +881,8 @@ a:hover {
         flex-wrap: wrap;
         align-items: center;
         padding: 1rem;
+        border-right: none;
+        border-bottom: 1px solid var(--vola-border);
     }
 
     .admin-sidebar .brand {
@@ -837,10 +902,8 @@ a:hover {
 }
 
 /* ==========================================================================
-   PAGE: dashboard client — version desktop (client/dashboard.php)
-   Layout large avec header horizontal, bannière solde, grille d'actions.
+   PAGE: dashboard client — desktop
    ========================================================================== */
-
 .client-shell {
     max-width: 1180px;
     margin: 0 auto;
@@ -861,10 +924,11 @@ a:hover {
     display: flex;
     align-items: center;
     gap: 0.6rem;
-    font-weight: 800;
+    font-weight: 700;
     font-size: 1.2rem;
     letter-spacing: -0.3px;
     color: var(--vola-text);
+    font-family: var(--vola-font-display);
 }
 
 .client-topbar .brand-mark {
@@ -874,10 +938,11 @@ a:hover {
     width: 34px;
     height: 34px;
     border-radius: 10px;
-    background: var(--vola-primary);
-    color: #fff;
+    background: linear-gradient(135deg, var(--vola-primary), var(--vola-primary-dark));
+    color: #1a0f06;
     font-size: 1rem;
-    font-weight: 800;
+    font-weight: 700;
+    box-shadow: 0 6px 18px rgba(234, 88, 12, 0.35);
 }
 
 .client-nav {
@@ -900,12 +965,12 @@ a:hover {
 
 .client-nav a:hover {
     background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
 }
 
 .client-nav a.active {
     background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
 }
 
 .client-topbar .logout-btn {
@@ -917,19 +982,21 @@ a:hover {
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--vola-danger);
+    background: transparent;
     border: 1.5px solid var(--vola-border);
     transition: border-color var(--vola-transition), background var(--vola-transition);
 }
 
 .client-topbar .logout-btn:hover {
     border-color: var(--vola-danger);
-    background: #FEF1F3;
+    background: rgba(248, 113, 113, 0.10);
     color: var(--vola-danger);
 }
 
 /* --- Bannière solde --- */
 .client-hero {
-    background: linear-gradient(135deg, var(--vola-gradient-start) 0%, var(--vola-primary) 55%, var(--vola-accent-dark) 100%);
+    background: radial-gradient(600px 220px at 90% 0%, rgba(252, 211, 77, 0.28), transparent 70%),
+    linear-gradient(135deg, #2A1509 0%, #EA580C 55%, #F59E0B 100%);
     border-radius: var(--vola-radius-lg);
     color: #fff;
     padding: 2rem 2.25rem;
@@ -940,6 +1007,7 @@ a:hover {
     position: relative;
     overflow: hidden;
     box-shadow: var(--vola-shadow-lg);
+    border: 1px solid rgba(252, 211, 77, 0.15);
 }
 
 .client-hero .ravinala-pattern {
@@ -948,7 +1016,7 @@ a:hover {
     right: -20px;
     width: 220px;
     height: 220px;
-    opacity: 0.1;
+    opacity: 0.12;
     pointer-events: none;
 }
 
@@ -959,7 +1027,7 @@ a:hover {
 
 .client-hero .greeting {
     font-size: 0.9rem;
-    opacity: 0.82;
+    opacity: 0.9;
     margin-bottom: 0.4rem;
 }
 
@@ -971,11 +1039,11 @@ a:hover {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.4px;
-    opacity: 0.85;
+    opacity: 0.9;
 }
 
 .client-hero .toggle-eye {
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.18);
     border: none;
     color: #fff;
     width: 28px;
@@ -989,20 +1057,21 @@ a:hover {
 }
 
 .client-hero .toggle-eye:hover {
-    background: rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.30);
 }
 
 .client-hero .amount {
     margin-top: 0.5rem;
-    font-size: 2.5rem;
-    font-weight: 800;
+    font-size: 2.75rem;
+    font-weight: 700;
     letter-spacing: -0.5px;
+    font-family: var(--vola-font-display);
 }
 
 .client-hero .amount .unit {
     font-size: 1.1rem;
     font-weight: 600;
-    opacity: 0.85;
+    opacity: 0.9;
     margin-left: 0.4rem;
 }
 
@@ -1016,9 +1085,9 @@ a:hover {
     width: 76px;
     height: 76px;
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.16);
+    background: rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1038,18 +1107,20 @@ a:hover {
     align-items: center;
     gap: 0.85rem;
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-md);
     box-shadow: var(--vola-shadow-sm);
     padding: 1.15rem 1.25rem;
     text-decoration: none;
     color: var(--vola-text);
-    transition: transform var(--vola-transition), box-shadow var(--vola-transition);
+    transition: transform var(--vola-transition), box-shadow var(--vola-transition), border-color var(--vola-transition);
 }
 
 .client-action-card:hover {
     transform: translateY(-3px);
     box-shadow: var(--vola-shadow-md);
     color: var(--vola-text);
+    border-color: rgba(251, 146, 60, 0.4);
 }
 
 .client-action-card .ca-icon {
@@ -1058,7 +1129,8 @@ a:hover {
     flex-shrink: 0;
     border-radius: var(--vola-radius-sm);
     background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
+    border: 1px solid rgba(251, 146, 60, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1066,8 +1138,10 @@ a:hover {
 }
 
 .client-action-card.accent .ca-icon {
-    background: var(--vola-primary);
-    color: #fff;
+    background: linear-gradient(135deg, var(--vola-primary), var(--vola-primary-dark));
+    color: #1a0f06;
+    border-color: transparent;
+    box-shadow: 0 6px 18px rgba(234, 88, 12, 0.4);
 }
 
 .client-action-card .ca-title {
@@ -1093,6 +1167,7 @@ a:hover {
 
 .client-panel {
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-lg);
     box-shadow: var(--vola-shadow-sm);
     padding: 1.5rem 1.75rem;
@@ -1100,8 +1175,10 @@ a:hover {
 
 .client-panel h2 {
     font-size: 1.05rem;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 1rem;
+    color: var(--vola-text);
+    font-family: var(--vola-font-display);
 }
 
 .help-card {
@@ -1116,7 +1193,8 @@ a:hover {
     flex-shrink: 0;
     border-radius: var(--vola-radius-sm);
     background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
+    border: 1px solid rgba(251, 146, 60, 0.25);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1126,6 +1204,7 @@ a:hover {
 .help-card .help-title {
     font-weight: 700;
     font-size: 0.9rem;
+    color: var(--vola-text);
 }
 
 .help-card .help-text {
@@ -1168,9 +1247,8 @@ a:hover {
 }
 
 /* ==========================================================================
-   PAGE: historique (client) — liste de transactions, layout desktop
+   PAGE: historique
    ========================================================================== */
-
 .page-topline {
     display: flex;
     align-items: center;
@@ -1183,6 +1261,7 @@ a:hover {
     height: 38px;
     border-radius: var(--vola-radius-pill);
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     box-shadow: var(--vola-shadow-sm);
     color: var(--vola-text-muted);
     display: flex;
@@ -1190,24 +1269,28 @@ a:hover {
     justify-content: center;
     font-size: 1rem;
     flex-shrink: 0;
-    transition: background var(--vola-transition), color var(--vola-transition);
+    transition: background var(--vola-transition), color var(--vola-transition), border-color var(--vola-transition);
 }
 
 .page-topline .back-btn:hover {
     background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
+    border-color: rgba(251, 146, 60, 0.35);
 }
 
 .page-topline h1 {
-    font-size: 1.3rem;
-    font-weight: 800;
+    font-size: 1.4rem;
+    font-weight: 700;
     letter-spacing: -0.4px;
     margin: 0;
+    color: var(--vola-text);
+    font-family: var(--vola-font-display);
 }
 
 /* --- Liste de transactions --- */
 .tx-list {
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-lg);
     box-shadow: var(--vola-shadow-sm);
     overflow: hidden;
@@ -1227,7 +1310,7 @@ a:hover {
 }
 
 .tx-row:hover {
-    background: var(--vola-bg);
+    background: var(--vola-surface-2);
 }
 
 .tx-icon {
@@ -1242,13 +1325,15 @@ a:hover {
 }
 
 .tx-icon.credit {
-    background: #E7F8EF;
+    background: rgba(52, 211, 153, 0.14);
     color: var(--vola-success);
+    border: 1px solid rgba(52, 211, 153, 0.25);
 }
 
 .tx-icon.debit {
-    background: #FDEAEE;
+    background: rgba(248, 113, 113, 0.14);
     color: var(--vola-danger);
+    border: 1px solid rgba(248, 113, 113, 0.25);
 }
 
 .tx-main {
@@ -1274,8 +1359,9 @@ a:hover {
 }
 
 .tx-amount {
-    font-weight: 800;
+    font-weight: 700;
     font-size: 0.95rem;
+    font-family: var(--vola-font-display);
 }
 
 .tx-amount.credit {
@@ -1295,6 +1381,7 @@ a:hover {
 /* --- État vide --- */
 .empty-state {
     background: var(--vola-surface);
+    border: 1px dashed var(--vola-border);
     border-radius: var(--vola-radius-lg);
     box-shadow: var(--vola-shadow-sm);
     padding: 3.5rem 2rem;
@@ -1315,11 +1402,8 @@ a:hover {
 }
 
 /* ==========================================================================
-   PAGE: operations — formulaires (depot / retrait / transfert)
-   Layout desktop : panneau centre + modale de confirmation.
+   PAGE: operations
    ========================================================================== */
-
-/* --- Alertes flash --- */
 .alert {
     display: flex;
     align-items: center;
@@ -1332,15 +1416,15 @@ a:hover {
 }
 
 .alert.success {
-    background: #E7F8EF;
-    color: #0F7A44;
-    border: 1px solid #BEEBD1;
+    background: rgba(52, 211, 153, 0.10);
+    color: #6EE7B7;
+    border: 1px solid rgba(52, 211, 153, 0.30);
 }
 
 .alert.error {
-    background: #FDEAEE;
-    color: #B3234A;
-    border: 1px solid #FBD0D9;
+    background: rgba(248, 113, 113, 0.10);
+    color: #FCA5A5;
+    border: 1px solid rgba(248, 113, 113, 0.30);
 }
 
 /* --- Panneau de formulaire --- */
@@ -1348,8 +1432,9 @@ a:hover {
     max-width: 480px;
     margin: 0 auto;
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-lg);
-    box-shadow: var(--vola-shadow-sm);
+    box-shadow: var(--vola-shadow-md);
     padding: 2rem 2.25rem;
 }
 
@@ -1370,14 +1455,14 @@ a:hover {
     align-items: center;
     border: 1.5px solid var(--vola-border);
     border-radius: var(--vola-radius-sm);
-    background: var(--vola-surface);
+    background: var(--vola-surface-2);
     padding: 0 1rem;
     transition: border-color var(--vola-transition), box-shadow var(--vola-transition);
 }
 
 .amount-input-wrap:focus-within {
     border-color: var(--vola-primary);
-    box-shadow: 0 0 0 0.2rem var(--vola-primary-light);
+    box-shadow: var(--vola-glow);
 }
 
 .amount-input-wrap input {
@@ -1385,10 +1470,11 @@ a:hover {
     height: 56px;
     border: none;
     outline: none;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--vola-text);
     background: transparent;
+    font-family: var(--vola-font-display);
 }
 
 .amount-input-wrap input::placeholder {
@@ -1399,7 +1485,7 @@ a:hover {
 .amount-input-wrap .suffix {
     font-size: 0.95rem;
     font-weight: 700;
-    color: var(--vola-text-muted);
+    color: var(--vola-primary);
     margin-left: 0.5rem;
 }
 
@@ -1409,28 +1495,30 @@ a:hover {
     margin-top: 0.5rem;
 }
 
-/* --- Boutons de formulaire (pleine largeur) --- */
+/* --- Boutons de formulaire --- */
 .btn-vola-outline {
     height: 52px;
     border-radius: var(--vola-radius-sm);
     font-weight: 600;
     font-size: 0.95rem;
-    background: var(--vola-surface);
+    background: transparent;
     border: 1.5px solid var(--vola-border);
     color: var(--vola-text);
-    transition: border-color var(--vola-transition), color var(--vola-transition);
+    transition: border-color var(--vola-transition), color var(--vola-transition), background var(--vola-transition);
 }
 
 .btn-vola-outline:hover {
     border-color: var(--vola-primary);
     color: var(--vola-primary);
+    background: var(--vola-primary-light);
 }
 
 /* --- Modale de confirmation --- */
 .modal-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(16, 24, 40, 0.45);
+    background: rgba(0, 0, 0, 0.65);
+    backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1448,6 +1536,7 @@ a:hover {
 
 .modal-card {
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-lg);
     box-shadow: var(--vola-shadow-lg);
     padding: 2rem;
@@ -1462,13 +1551,16 @@ a:hover {
 }
 
 .modal-card h3 {
-    font-size: 1.1rem;
-    font-weight: 800;
+    font-size: 1.15rem;
+    font-weight: 700;
     margin-bottom: 1.25rem;
+    color: var(--vola-text);
+    font-family: var(--vola-font-display);
 }
 
 .fee-box {
-    background: var(--vola-bg);
+    background: var(--vola-surface-2);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-md);
     padding: 1rem 1.1rem;
     margin-bottom: 1.5rem;
@@ -1497,7 +1589,7 @@ a:hover {
 }
 
 .fee-row.total .val {
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
     font-size: 1rem;
 }
 
@@ -1517,8 +1609,7 @@ a:hover {
     }
 }
 
-/* --- Ajouts : transfert multiple (destinataires dynamiques + checkbox) --- */
-
+/* --- Transfert multiple --- */
 .dest-item {
     display: flex;
     align-items: center;
@@ -1534,29 +1625,34 @@ a:hover {
     padding: 0 1rem;
     font-size: 0.92rem;
     color: var(--vola-text);
+    background: var(--vola-surface-2);
     transition: border-color var(--vola-transition), box-shadow var(--vola-transition);
+}
+
+.dest-item input::placeholder {
+    color: var(--vola-text-soft);
 }
 
 .dest-item input:focus {
     outline: none;
     border-color: var(--vola-primary);
-    box-shadow: 0 0 0 0.2rem var(--vola-primary-light);
+    box-shadow: var(--vola-glow);
 }
 
 .dest-item .remove {
     width: 38px;
     height: 38px;
     flex-shrink: 0;
-    border: none;
+    border: 1px solid rgba(248, 113, 113, 0.25);
     border-radius: var(--vola-radius-pill);
-    background: #FDEAEE;
+    background: rgba(248, 113, 113, 0.10);
     color: var(--vola-danger);
     font-size: 0.9rem;
     transition: background var(--vola-transition);
 }
 
 .dest-item .remove:hover {
-    background: #FBD0D9;
+    background: rgba(248, 113, 113, 0.22);
 }
 
 #addDest {
@@ -1585,7 +1681,6 @@ a:hover {
     cursor: pointer;
 }
 
-/* Sous-ligne d'aperçu des frais (retrait, en plus du transfert) */
 .hint-secondary {
     font-size: 0.8rem;
     color: var(--vola-text-muted);
@@ -1597,11 +1692,8 @@ a:hover {
 }
 
 /* ==========================================================================
-   PAGE: gestion CRUD (users / operateur / configurations / etc.)
-   Tables, badges, formulaires admin — utilisé avec .admin-shell + partials/sidebar
+   PAGE: gestion CRUD
    ========================================================================== */
-
-/* --- Boutons admin génériques --- */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -1613,19 +1705,20 @@ a:hover {
     border: 1.5px solid transparent;
     text-decoration: none;
     cursor: pointer;
-    transition: background var(--vola-transition), border-color var(--vola-transition), color var(--vola-transition);
+    transition: background var(--vola-transition), border-color var(--vola-transition), color var(--vola-transition), transform var(--vola-transition);
 }
 
 .btn-secondary {
-    background: var(--vola-primary);
-    border-color: var(--vola-primary);
-    color: #fff;
+    background: linear-gradient(135deg, var(--vola-primary), var(--vola-primary-dark));
+    border-color: transparent;
+    color: #1a0f06;
+    box-shadow: 0 6px 18px rgba(234, 88, 12, 0.30);
 }
 
 .btn-secondary:hover {
-    background: var(--vola-primary-dark);
-    border-color: var(--vola-primary-dark);
-    color: #fff;
+    filter: brightness(1.06);
+    color: #1a0f06;
+    transform: translateY(-1px);
 }
 
 .btn-ghost {
@@ -1636,22 +1729,22 @@ a:hover {
 
 .btn-ghost:hover {
     background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
 }
 
 .btn-danger {
-    background: #FDEAEE;
-    border-color: #FBD0D9;
+    background: rgba(248, 113, 113, 0.10);
+    border-color: rgba(248, 113, 113, 0.30);
     color: var(--vola-danger);
 }
 
 .btn-danger:hover {
     background: var(--vola-danger);
     border-color: var(--vola-danger);
-    color: #fff;
+    color: #1a0606;
 }
 
-/* --- Lien retour (pages create/edit) --- */
+/* --- Lien retour --- */
 .back-link {
     display: inline-flex;
     align-items: center;
@@ -1669,6 +1762,7 @@ a:hover {
 /* --- Tableau de données --- */
 .table-card {
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-lg);
     box-shadow: var(--vola-shadow-sm);
     overflow: hidden;
@@ -1686,13 +1780,13 @@ table.data th {
     text-transform: uppercase;
     letter-spacing: 0.4px;
     color: var(--vola-text-muted);
-    background: var(--vola-bg);
-    padding: 0.85rem 1.25rem;
+    background: var(--vola-surface-2);
+    padding: 0.9rem 1.25rem;
     border-bottom: 1px solid var(--vola-border);
 }
 
 table.data td {
-    padding: 0.9rem 1.25rem;
+    padding: 0.95rem 1.25rem;
     border-bottom: 1px solid var(--vola-border);
     font-size: 0.87rem;
     color: var(--vola-text);
@@ -1704,7 +1798,7 @@ table.data tr:last-child td {
 }
 
 table.data tbody tr:hover td {
-    background: var(--vola-bg);
+    background: var(--vola-surface-2);
 }
 
 .row-actions {
@@ -1726,27 +1820,31 @@ table.data tbody tr:hover td {
     border-radius: var(--vola-radius-pill);
     font-size: 0.74rem;
     font-weight: 700;
+    border: 1px solid transparent;
 }
 
 .badge.op {
     background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    color: var(--vola-primary);
+    border-color: rgba(251, 146, 60, 0.25);
 }
 
 .badge.principal {
-    background: var(--vola-primary-light);
-    color: var(--vola-primary-dark);
+    background: rgba(252, 211, 77, 0.14);
+    color: var(--vola-accent);
+    border-color: rgba(252, 211, 77, 0.25);
 }
 
 .badge.secondaire {
-    background: var(--vola-bg);
+    background: var(--vola-surface-2);
     color: var(--vola-text-muted);
-    border: 1px solid var(--vola-border);
+    border-color: var(--vola-border);
 }
 
 /* --- Carte de formulaire admin --- */
 .form-card {
     background: var(--vola-surface);
+    border: 1px solid var(--vola-border);
     border-radius: var(--vola-radius-lg);
     box-shadow: var(--vola-shadow-sm);
     padding: 2rem 2.25rem;
@@ -1764,8 +1862,12 @@ table.data tbody tr:hover td {
     padding: 0 0.9rem;
     font-size: 0.9rem;
     color: var(--vola-text);
-    background: var(--vola-surface);
+    background: var(--vola-surface-2);
     transition: border-color var(--vola-transition), box-shadow var(--vola-transition);
+}
+
+.form-card .field input::placeholder {
+    color: var(--vola-text-soft);
 }
 
 .form-card .field input[type="text"]:focus,
@@ -1774,12 +1876,12 @@ table.data tbody tr:hover td {
 .form-card .field select:focus {
     outline: none;
     border-color: var(--vola-primary);
-    box-shadow: 0 0 0 0.2rem var(--vola-primary-light);
+    box-shadow: var(--vola-glow);
 }
 
 .form-card .field select {
     appearance: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2364748B'><path d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%2364748B' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23B8AFA1'><path d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%23B8AFA1' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
     background-repeat: no-repeat;
     background-position: right 0.85rem center;
     padding-right: 2.25rem;
@@ -1792,8 +1894,7 @@ table.data tbody tr:hover td {
     margin-top: 0.5rem;
 }
 
-/* --- Ajouts : formulaire de filtre inline + colonnes montant --- */
-
+/* --- Filtre inline + colonnes montant --- */
 .filter-form {
     display: flex;
     gap: 0.9rem;
@@ -1815,6 +1916,7 @@ table.data td.money {
     text-align: right;
     font-weight: 700;
     color: var(--vola-text);
+    font-family: var(--vola-font-display);
 }
 
 table.data th.money-col {
