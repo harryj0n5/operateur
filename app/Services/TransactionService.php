@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\PromotionModel;
 use App\Models\UserModel;
 use App\Models\HistoriqueTransactionModel;
 use App\Models\FraisOperationModel;
@@ -17,6 +18,7 @@ class TransactionService
     protected HistoriqueTransactionModel $historiqueModel;
     protected FraisOperationModel $fraisModel;
     protected ConfigurationModel $configurationModel;
+    protected PromotionModel $promotionModel;
 
     public function __construct()
     {
@@ -24,6 +26,7 @@ class TransactionService
         $this->historiqueModel = new HistoriqueTransactionModel();
         $this->fraisModel = new FraisOperationModel();
         $this->configurationModel = new ConfigurationModel();
+        $this->promotionModel = new PromotionModel();
     }
 
     public function soldeClient(int $clientId): float|int
@@ -142,6 +145,12 @@ class TransactionService
         }
 
         return $premierOperateur;
+    }
+
+    private function memeOperateur(string $telephone_emeteur, ?array $telephones): array
+    {
+        $telephones[] = $telephone_emeteur;
+        return $this->verifierMemeOperateur($telephones);
     }
 
     public function depot(int $userId, float $montant): array
@@ -315,6 +324,16 @@ class TransactionService
         return $lignes;
     }
 
+    private function getPromotion(?array $operateur): float
+    {
+        $promotion = $this->promotionModel
+            ->where('operateur_id', $operateur['id'])
+            ->orderBy('created_at', 'DESC')
+            ->first();
+
+        return $promotion['pourcentage'] ?? 0;
+    }
+
     public function transfertMultiple(
         int   $userId,
         array $telephones,
@@ -361,6 +380,11 @@ class TransactionService
                 $montantParPersonne,
                 self::TYPE_TRANSFERT
             ) * $nombre;
+
+        if ($this->memeOperateur($emetteur['telephone'], $telephones)) {
+            $promotion = $this->getPromotion($operateurDestinataire);
+            $fraisTransfert -= $fraisTransfert * $promotion / 100;
+        }
 
         $fraisOperateur2 = $this->calculerFraisOperateur2($fraisTransfert, $operateurDestinataire);
 

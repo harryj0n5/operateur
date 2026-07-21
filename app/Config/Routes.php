@@ -74,3 +74,12 @@ $routes->group('operations', ['filter' => 'auth:client'], function ($routes) {
 
     $routes->get('historique', 'UserController::historique');
 });
+
+$routes->group('promotions', ['filter' => 'auth:operateur'], function ($routes) {
+    $routes->get('/', 'PromotionController::index');
+    $routes->get('create', 'PromotionController::create');
+    $routes->post('store', 'PromotionController::store');
+    $routes->get('(:num)/edit', 'PromotionController::edit/$1');
+    $routes->post('(:num)/update', 'PromotionController::update/$1');
+    $routes->post('(:num)/delete', 'PromotionController::delete/$1');
+});
