@@ -335,13 +335,28 @@ class UserController extends BaseController
     public function transfert(): string
     {
         $fraisModel = new FraisOperationModel();
+        $configurationModel = new ConfigurationModel();
 
-        $bareme = $fraisModel
+        $bareme_transfert = $fraisModel
             ->where('type_operation_id', 3)
             ->orderBy('montant_min', 'ASC')
             ->findAll();
 
-        return view('operations/transfert', ['bareme' => $bareme]);
+        $bareme_retrait = $fraisModel
+            ->where('type_operation_id', 2)
+            ->orderBy('montant_min', 'ASC')
+            ->findAll();
+
+        $operateurs = $configurationModel
+            ->select('configuration.prefix, operateur.id as operateur_id, operateur.libelle, operateur.principale, operateur.pourcentage_frais')
+            ->join('operateur', 'operateur.id = configuration.operateur_id')
+            ->findAll();
+
+        return view('operations/transfert', [
+            'bareme_transfert' => $bareme_transfert,
+            'bareme_retrait' => $bareme_retrait,
+            'operateurs' => $operateurs,
+        ]);
     }
 
     public function storeTransfert()
